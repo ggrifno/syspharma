@@ -37,10 +37,10 @@ dydt(6) = k34*y(5) - k43*y(6); % DCQ peripheral comparmtent
 dydt(7) = k30*y(5); % virtual clearance of DCQ, is only cleared from central DCQ
 
 %two-compartment model of Vancomycin ORIGINAL
-dydt = zeros(3,1);
-dydt(1) = qinf/VD1 + (VD2/VD1)*k21*y(2) - k12*y(1) -kcl*y(1); %drug in central compartment
-dydt(2) =            (VD1/VD2)*k12*y(1) - k21*y(2);           %drug in peripheral compartment
-dydt(3) =                                           kcl*y(1); %cleared compartment
+% dydt = zeros(3,1);
+% dydt(1) = qinf/VD1 + (VD2/VD1)*k21*y(2) - k12*y(1) -kcl*y(1); %drug in central compartment
+% dydt(2) =            (VD1/VD2)*k12*y(1) - k21*y(2);           %drug in peripheral compartment
+% dydt(3) =                                           kcl*y(1); %cleared compartment
 
 % %two-compartment model of Vancomycin NEW
 % dydt = zeros(3,1);

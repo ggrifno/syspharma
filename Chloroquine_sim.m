@@ -20,7 +20,7 @@ y0 = Y1(end,:);
 % inter-infusion period
 qinf = 0 ; % no infusion
 p = [kCL VD1 VD2 k12 k21 qinf]; % parameter array
-[T2,Y2] = ode45(@Vancomycin_Eqns_ggrifno,[InfusionTime:0.01:TimeFreq],y0,options,p);
+[T2,Y2] = ode45(@Chloroquine_eqns,[InfusionTime:0.01:TimeFreq],y0,options,p);
 y0 = Y2(end,:); %find the concentrations in each compartment at the end of the simulation for the next sim
 T1 = [T1(1:length(T1)-1);T2]; %update time with inter-infusion period
 Y1 = [Y1(1:length(Y1)-1,:);Y2]; %update concentration values in each compartment
