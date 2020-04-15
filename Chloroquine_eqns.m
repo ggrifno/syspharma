@@ -1,17 +1,5 @@
 function dydt = Chloroquine_eqns(t ,y, p)
 
-%define parameters from input parameter vector
-q=p(1);
-V1=p(2);
-V2=p(3);
-V3=p(4);
-V4=p(5);
-kc1=p(6);
-kc2=p(7);
-k12=p(8);
-k21=p(9);
-ka =p(10);
-
 % 1 - concentration of drug in central compartment (infusion included here, 
 % but typically set to zero in simulations of oral delivery)
 % 2 - conceentration of drug in peripheral compartment (clearance included 
@@ -23,6 +11,18 @@ ka =p(10);
 % amount, not a concentration.
 % 4 - amount of drug in virtual gut compartment. Again, the units here are
 % in amount, not concentration. Note how y4 is divided by V in equation 1
+%...
+%define parameters from input parameter vector
+q=p(1);
+V1=p(2);
+V2=p(3);
+V3=p(4);
+V4=p(5);
+kc1=p(6);
+kc2=p(7);
+k12=p(8);
+k21=p(9);
+ka =p(10);
 
 %two-compartment model of Chloroquine ORIGINAL
 %question: model drawing implies that drug is only cleared from blood, not
