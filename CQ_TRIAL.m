@@ -14,12 +14,12 @@ Weight = 50;  %units = kg
 
 % Dosing
 Tablet = 250; %units = mg
-DoseC  = 25;  %units - mg/kg
-Dose = 25*Weight; %units = mg
+DoseC  = 250;  %units - mg/kg
+Dose = DoseC*Weight; %units = mg
 NumberOfDoses = 3;
 TimeBetweenDoses = 0;
 q = 0;
-ka = 10;
+ka = 5;
 
 
 %25mg/kg body weight chloroquine phosphate over 3 days
@@ -45,7 +45,7 @@ k21 = 37.7;   % units - L/h, chloroquine from peripheral to central
 k23 = 6.13;      % units = , CQ transforming to DCQ
 k34 = 31.46;  % units = L/h, DCQ from central to peripheral
 k43 = 31.46;  % units = L/h, DCQ from peripheral to central
-k10 = 0;      % units, clearance of CQ
+k10 = 2.04;      % units, clearance of CQ
 k30 = 2.04;   % units = L/h, peripheral compartment of DCQ
 kon = 0;
 koff = 0;
@@ -59,7 +59,7 @@ DHF = 8.74; %units = days, half-life DCQ
 %Set innitial concentration of the gut to the dose
 %set time framre
 
-y0 = [0 0 Dose 0 0 0 0 0 0]
+y0 = [0 0 Dose 0 0 0 0]
 % (1) Concentration of CQ in the central compartment
 % (2) Concentration of CQ in the peripheral compartment
 % (3) Amount of Drug in Virtual Clearance Compartment
@@ -100,41 +100,52 @@ y00 = [];
 
 
 %% Plot
+figure; 
+plot(T1, Y1(:,1))
+title('CQ, Central Compartment')
+ylabel('C (nM)')
+xlabel('time (hrs)')
+
 
 figure; 
 ax1=subplot(4,2,1);
-
 plot(ax1, T1, Y1(:,1),'b-','linewidth',3)
 title('CQ, Central Compartment')
 ylabel('C (nM)')
 xlabel('time (hrs)')
 
+ax1=subplot(4,2,2);
 plot(ax1,T1,Y1(:,2))
 title(ax1,'CQ, Peripheral Compartment')
 ylabel(ax1,'C (nM)')
 xlabel(ax1,'time (hrs)')
 
+ax1=subplot(4,2,3);
 plot(ax1,T1,Y1(:,3))
 title(ax1,'CQ, gut')
 ylabel(ax1,'Amount (nM)')
 xlabel(ax1,'time (hrs)')
 
+ax1=subplot(4,2,4);
 plot(ax1,T1,Y1(:,4))
 title(ax1,'DCQ, Central Compartment')
 ylabel(ax1,'C (nM)')
 xlabel(ax1,'time (hrs)')
 
+ax1=subplot(4,2,5);
 plot(ax1,T1,Y1(:,5))
 title(ax1,'DCQ, Peripheral Compartment')
 ylabel(ax1,'C (nM)')
 xlabel(ax1,'time (hrs)')
 
-plot(ax1,T1,Y1(:,8))
+ax1=subplot(4,2,6);
+plot(ax1,T1,Y1(:,6))
 title(ax1,'CQ Cleared')
 ylabel(ax1,'[D] (nM)')
 xlabel(ax1,'time (hrs)')
 
-plot(ax1,T1,Y1(:,9))
+ax1=subplot(4,2,7);
+plot(ax1,T1,Y1(:,7))
 title(ax1,'DCQ Cleared')
 ylabel(ax1,'[D] (nM)')
 xlabel(ax1,'time (hrs)')

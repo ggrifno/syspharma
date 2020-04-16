@@ -24,13 +24,13 @@ ka = p(13);  %absorption from gut to central compartment
 %question: model drawing implies that drug is only cleared from blood, not
 %from peripheral tissues...
 dydt = zeros(7,1); %column vector contains all of the values for the 
-dydt(1) = q/V1 + ka*y(4)/V1 - k10*y(1) - k12*y(1) + (V2/V1)*k21*y(2) - k23*y(1); % CQ central compartment, q is only used in case of IV delivery, but chloroquine is always delivered orally
+dydt(1) = q/V1 + ka*y(3)/V1 - k10*y(1) - k12*y(1) + (V2/V1)*k21*y(2) - k23*y(1); % CQ central compartment, q is only used in case of IV delivery, but chloroquine is always delivered orally
 dydt(2) = (V1/V2)*k12*y(1) - k21*y(2); % CQ peripheral compartment
-dydt(3) = -ka*y(4); % GUT CQ absorption compartment --> set the initial condition of y(4) to the bolus tablet amount D0 to model oral delivery
-dydt(4) = k23*y(1)*V1 + k43*y(6) - (k30*y(5) + k34*y(6)); % conversion of CQ to DCQ, central compartment NEED VOLUME CORRECTIONS??
-dydt(5) = k34*y(5) - (V2/V1)*k43*y(6); % DCQ peripheral comparmtent
+dydt(3) = -ka*y(3); % GUT CQ absorption compartment --> set the initial condition of y(4) to the bolus tablet amount D0 to model oral delivery
+dydt(4) = k23*y(1)*V1 + k43*y(5) - (k30*y(4) + k34*y(5)); % conversion of CQ to DCQ, central compartment NEED VOLUME CORRECTIONS??
+dydt(5) = k34*y(4) - (V2/V1)*k43*y(5); % DCQ peripheral comparmtent
 dydt(6) = k10*y(1)*V1; % virtual clearance of CQ from central compartment
-dydt(7) = k30*y(5)*V1; % virtual clearance of DCQ, is only cleared from central DCQ
+dydt(7) = k30*y(4)*V1; % virtual clearance of DCQ, is only cleared from central DCQ
 
 % 1 - concentration of CQ in central compartment (infusion included here, but typically set to zero in simulations of oral delivery)
 % 2 - conceentration of CQ in peripheral compartment (clearance included here, but typically set to zero in simulations)
