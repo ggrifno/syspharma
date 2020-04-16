@@ -59,7 +59,7 @@ DHF = 8.74; %units = days, half-life DCQ
 %Set innitial concentration of the gut to the dose
 %set time framre
 
-y0 = [0 0 0 Dose/V5 0 0 0 0 ]
+y0 = [0 0 0 Dose 0 0 0 0 0 0]
 % (1) Concentration of CQ in the central compartment
 % (2) Concentration of CQ in the peripheral compartment
 % (3) Amount of Drug in Virtual Clearance Compartment
@@ -103,10 +103,39 @@ y00 = [];
 
 figure; %
 
-plot(T1, Y1(:,1),'b-','linewidth',3)
-
-title('Concentration of Free Drug in Blood')
+plot(ax1, T1, Y1(:,1),'b-','linewidth',3)
+title('CQ, Central Compartment')
 ylabel('[D] (nM)')
 xlabel('time (hrs)')
 
+figure; 
+ax1=subplot(4,2,1);
+plot(ax1,T1,Y1(:,1))
+title(ax1,'CQ, Central Compartment')
+ylabel(ax1,'[D] (nM)')
+xlabel(ax1,'time (hrs)')
 
+plot(ax1,T1,Y1(:,1))
+title(ax1,'Concentration')
+ylabel(ax1,'[D] (nM)')
+xlabel(ax1,'time (hrs)')
+
+plot(ax1,T1,Y1(:,1))
+title(ax1,'Concentration of Free Drug in Blood')
+ylabel(ax1,'[D] (nM)')
+xlabel(ax1,'time (hrs)')
+
+plot(ax1,T1,Y1(:,1))
+title(ax1,'Concentration of Free Drug in Blood')
+ylabel(ax1,'[D] (nM)')
+xlabel(ax1,'time (hrs)')
+
+plot(ax1,T1,Y1(:,1))
+title(ax1,'Concentration of Free Drug in Blood')
+ylabel(ax1,'[D] (nM)')
+xlabel(ax1,'time (hrs)')
+
+plot(ax1,T1,Y1(:,1))
+title(ax1,'Concentration of Free Drug in Blood')
+ylabel(ax1,'[D] (nM)')
+xlabel(ax1,'time (hrs)')
