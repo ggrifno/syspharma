@@ -1,5 +1,5 @@
 function dydt = Chloroquine_eqns(t ,y, p)
-
+%ALANNA'S VERSION OF THE FILE
 %define parameters from input parameter vector
 %infusion vector
 q = p(1); %should always be zero because we are modeling a tablet dose
