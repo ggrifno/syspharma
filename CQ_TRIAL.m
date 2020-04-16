@@ -81,7 +81,7 @@ options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e
 %update initial conditions for next simulation
 y00 = Y(end,:);
 y00(3) = y00(3) + ODose;
- for i =  1:3
+ for i =  1:500
   [t,y] = ode45(@Chloroquine_eqns,[0 24],y00,options,p);
   
   %update time and concentration values for entire simulation
@@ -94,6 +94,9 @@ y00(3) = y00(3) + ODose;
   %dosing simulation
   y00 = y(end,:);
   y00(3) = y00(3) + ODose;
+  if i > 3
+        y00(3) = y00(3) - ODose;
+  end
 end
 
 %% Calculate Mass balance
