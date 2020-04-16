@@ -25,14 +25,14 @@ koff= p(15);
 %question: model drawing implies that drug is only cleared from blood, not
 %from peripheral tissues...
 dydt = zeros(7,1); %column vector contains all of the values for the 
-dydt(1) = q/V1 + ka*y(4)/V1 - k10*y(1) - k12*y(1) + (V2/V1)*k21*y(2) - k23*y(1) + koff*y(8) - kon*y(9); % CQ central compartment, q is only used in case of IV delivery, but chloroquine is always delivered orally
+dydt(1) = q/V1 + ka*y(4)/V1 - k10*y(1) - k12*y(1) + (V2/V1)*k21*y(2) - k23*y(1) + koff*y(7) - kon*y(1); % CQ central compartment, q is only used in case of IV delivery, but chloroquine is always delivered orally
 dydt(2) =                   (V1/V2)*k12*y(1) - k21*y(2);              % CQ peripheral compartment
 dydt(3) =                     kc1*y(1)*V1;                            % virtual clearance of CQ, only cleared from central compartment
 dydt(4) =      - ka*y(4);                                             %CQ absorption compartment (gut??) will be useful in modeling oral delivery in boluses
 dydt(5) = k23*y(1)*V1 + k43*y(6) - (k30*y(5) + k34*y(6)); % conversion of CQ to DCQ, central compartment NEED VOLUME CORRECTIONS??
 dydt(6) = k34*y(5) - (V2/V1)*k43*y(6); % DCQ peripheral comparmtent
-dydt(7) = koff*y(1); % 
-dydt(8) = kon*y(0);
+dydt(7) = kon*y(1); % amount of CQ that is bound to serum proteins
+dydt(8) = koff*y(7);% amount of CQ that is coming unbound from serum proteins
 dydt(7) = k10*y(1); % virtual clearance of CQ from central compartment
 dydt(8) = k30*y(5); % virtual clearance of DCQ, is only cleared from central DCQ
 
@@ -43,8 +43,4 @@ dydt(8) = k30*y(5); % virtual clearance of DCQ, is only cleared from central DCQ
 % amount, not a concentration.
 % 4 - amount of drug in virtual gut compartment. Again, the units here are in amount, not concentration. Note how y4 is divided by V in equation 1
 %...
- dydt(1) = q/V1 + ka*y(4)/V1 - kc1*y(1) - k12*y(1) + (V2/V1)*k21*y(2);
- dydt(2) =                   - kc2*y(2) + (V1/V2)*k12*y(1) - k21*y(2);
- dydt(3) =                     kc1*y(1)*V1 + kc2*y(2)*V2;
- dydt(4) =      - ka*y(4);
 
