@@ -59,7 +59,7 @@ DHF = 8.74; %units = days, half-life DCQ
 %Set innitial concentration of the gut to the dose
 %set time framre
 
-y0 = [0 0 0 Dose/V5 0 0 0 0 0 0]
+y0 = [0 0 0 Dose/V5 0 0 0 0 ]
 % (1) Concentration of CQ in the central compartment
 % (2) Concentration of CQ in the peripheral compartment
 % (3) Amount of Drug in Virtual Clearance Compartment
