@@ -50,8 +50,8 @@ k21 = 37.7/V2;   % units - L/h, chloroquine from peripheral to central
 k23 = 6.13/V1;   % units = L/H , CQ transforming to DCQ
 k34 = 31.46/V3;  % units = L/h, DCQ from central to peripheral
 k43 = 31.46/V4;  % units = L/h, DCQ from peripheral to central
-k10 = log(2)/(CHF*V1);      % units, clearance of CQ
-k30 = 2.04/V3;   % units = L/h, peripheral compartment of DCQ
+k10 = log(2)/(CHF*24);      % units, clearance of CQ
+k30 = log(2)/(DHF*24);      %2.04/V3;   % units = 1/h, peripheral compartment of DCQ
 kon = 0;
 koff = 0;
 
@@ -78,10 +78,23 @@ p = [q V1 V2 V3 V4 k10 k30 k12 k21 k23 k34 k43 ka koff kon];
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
 [T, Y] = ode45(@Chloroquine_eqns,[0 6],y0,options,p);
 
+MB(:,1) = Y(:,1)*V1; %CQ, CENTRAL
+MB(:,2) = Y(:,2)*V2; %CQ, PERIPHERAL
+MB(:,3) = Y(:,3);    %AMOUNT GUT
+MB(:,4) = Y(:,4)*V3; %DCQ, CENTRAL
+MB(:,5) = Y(:,5)*V4; %DCQ, PERIPHERAL
+MB(:,6) = Y(:,6)*V1;    %CQ CLEARED
+MB(:,7) = Y(:,7)*V3;    %DCQ CLEARED
+
+%mass Balance for first dose over first time interval
+MB = MB(:,1) + MB(:,2) + MB(:,3) + MB(:,4) + MB(:,6)+  MB(:,7) - 1250;
+
+TMB = T;
+
 %update initial conditions for next simulation
 y00 = Y(end,:);
 y00(3) = y00(3) + ODose;
- for i =  1:500
+ for i =  1:10
   [t,y] = ode45(@Chloroquine_eqns,[0 24],y00,options,p);
   
   %update time and concentration values for entire simulation
@@ -89,7 +102,8 @@ y00(3) = y00(3) + ODose;
   T  = [T;bsxfun(@plus,T(end,:),t)];
   
   %include mass balance
-  
+  %MB = [MB; mb];  %update mass balance
+
   %last concentration values become new initial conditions for next
   %dosing simulation
   y00 = y(end,:);
@@ -103,46 +117,56 @@ end
 
 
 %% Plot
+figure;
+plot (TMB, MB)
+
+figure; 
+plot(T,Y(:,1),'b',T,Y(:,2),'c',T,Y(:,4), 'r',T,Y(:,5), 'm','linewidth',3)
+% 'plot' draws lines - T1 as x-axis, Y1 as y-axis, 'k' refers to line color
+title('PK Profiles Across Compartments')
+ylabel('Concentration (mg/L)')
+xlabel('time (hrs)')
+legend('CQ Central','CQ Peripheral', 'DCQ, Central', 'DCQ, Peripheral')
 
 figure; 
 ax1=subplot(4,2,1);
 plot(ax1, T, Y(:,1))
-title('CQ, Central Compartment')
-ylabel('C (nM)')
+title('CQ, Central')
+ylabel('Concentration (mg/L)')
 xlabel('time (hrs)')
 
 ax1=subplot(4,2,2);
 plot(ax1,T,Y(:,2))
-title(ax1,'CQ, Peripheral Compartment')
-ylabel(ax1,'C (nM)')
-xlabel(ax1,'time (hrs)')
-
-ax1=subplot(4,2,3);
-plot(ax1,T,Y(:,3))
-title(ax1,'CQ, gut')
-ylabel(ax1,'Amount (nM)')
-xlabel(ax1,'time (hrs)')
-
-ax1=subplot(4,2,4);
-plot(ax1,T,Y(:,4))
-title(ax1,'DCQ, Central Compartment')
-ylabel(ax1,'C (nM)')
-xlabel(ax1,'time (hrs)')
-
-ax1=subplot(4,2,5);
-plot(ax1,T,Y(:,5))
-title(ax1,'DCQ, Peripheral Compartment')
-ylabel(ax1,'C (nM)')
-xlabel(ax1,'time (hrs)')
-
-ax1=subplot(4,2,6);
-plot(ax1,T,Y(:,6))
-title(ax1,'CQ Cleared')
-ylabel(ax1,'[D] (nM)')
+title(ax1,'CQ, Peripheral')
+ylabel(ax1,'Concentration (mg/L)')
 xlabel(ax1,'time (hrs)')
 
 ax1=subplot(4,2,7);
+plot(ax1,T,Y(:,3))
+title(ax1,'CQ, gut')
+ylabel(ax1,'Amount (mg)')
+xlabel(ax1,'time (hrs)')
+
+ax1=subplot(4,2,3);
+plot(ax1,T,Y(:,4))
+title(ax1,'DCQ, Central')
+ylabel(ax1,'Concentration (mg/L)')
+xlabel(ax1,'time (hrs)')
+
+ax1=subplot(4,2,4);
+plot(ax1,T,Y(:,5))
+title(ax1,'DCQ, Peripheral')
+ylabel(ax1,'Concentration (mg/L)')
+xlabel(ax1,'time (hrs)')
+
+ax1=subplot(4,2,5);
+plot(ax1,T,Y(:,6))
+title(ax1,'CQ Cleared')
+ylabel(ax1,'Amount (mg)')
+xlabel(ax1,'time (hrs)')
+
+ax1=subplot(4,2,6);
 plot(ax1,T,Y(:,7))
 title(ax1,'DCQ Cleared')
-ylabel(ax1,'[D] (nM)')
+ylabel(ax1,'Amount (mg)')
 xlabel(ax1,'time (hrs)')
