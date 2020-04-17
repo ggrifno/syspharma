@@ -1,3 +1,4 @@
+clear all;
 %This code is to generate preliminary results using the first draft of QN equations. 
 %This will be used as a proof of concept.
 
@@ -14,7 +15,7 @@ Weight = 50;  %units = kg
 
 % Dosing
 Tablet = 250; %units = mg
-FirstDose  = 25;  %units - mg/kg
+FirstDose  = 10;  %units - mg/kg
 OtherDose = 5;    %units - mg/kg
 FDose = FirstDose*Weight; %units = mg
 ODose = OtherDose*Weight;
@@ -83,17 +84,19 @@ MB(:,2) = Y(:,2)*V2; %CQ, PERIPHERAL
 MB(:,3) = Y(:,3);    %AMOUNT GUT
 MB(:,4) = Y(:,4)*V3; %DCQ, CENTRAL
 MB(:,5) = Y(:,5)*V4; %DCQ, PERIPHERAL
-MB(:,6) = Y(:,6)*V1;    %CQ CLEARED
-MB(:,7) = Y(:,7)*V3;    %DCQ CLEARED
+MB(:,6) = Y(:,6);    %CQ CLEARED
+MB(:,7) = Y(:,7);    %DCQ CLEARED
 
 %mass Balance for first dose over first time interval
-MB = MB(:,1) + MB(:,2) + MB(:,3) + MB(:,4) + MB(:,6)+  MB(:,7) - 1250;
-
+TotalDose = FDose;
+MassBalance = MB(:,1) + MB(:,2) + MB(:,3) + MB(:,5) + MB(:,4) + MB(:,6)+  MB(:,7) - TotalDose;
 TMB = T;
 
 %update initial conditions for next simulation
 y00 = Y(end,:);
+%add next dose
 y00(3) = y00(3) + ODose;
+TotalDose = TotalDose + ODose;
  for i =  1:10
   [t,y] = ode45(@Chloroquine_eqns,[0 24],y00,options,p);
   
@@ -102,24 +105,30 @@ y00(3) = y00(3) + ODose;
   T  = [T;bsxfun(@plus,T(end,:),t)];
   
   %include mass balance
-  %MB = [MB; mb];  %update mass balance
-
-  %last concentration values become new initial conditions for next
+    mb(:,1) = y(:,1)*V1; %CQ, CENTRAL
+    mb(:,2) = y(:,2)*V2; %CQ, PERIPHERAL
+    mb(:,3) = y(:,3);    %AMOUNT GUT
+    mb(:,4) = y(:,4)*V3; %DCQ, CENTRAL
+    mb(:,5) = y(:,5)*V4; %DCQ, PERIPHERAL
+    mb(:,6) = y(:,6);    %CQ CLEARED
+    mb(:,7) = y(:,7);    %DCQ CLEARED
+   
+  m = mb(:,1) + mb(:,2) + mb(:,3) + mb(:,5) + mb(:,4) + mb(:,6)+  mb(:,7) - TotalDose;
+  MassBalance = [MassBalance;m];
+   %last concentration values become new initial conditions for next
   %dosing simulation
+  
   y00 = y(end,:);
-  y00(3) = y00(3) + ODose;
-  if i > 3
-        y00(3) = y00(3) - ODose;
+  if i < 3
+        y00(3) = y00(3) + ODose;
+        TotalDose = TotalDose + ODose;
   end
+
 end
 
 %% Calculate Mass balance
 
-
 %% Plot
-figure;
-plot (TMB, MB)
-
 figure; 
 plot(T,Y(:,1),'b',T,Y(:,2),'c',T,Y(:,4), 'r',T,Y(:,5), 'm','linewidth',3)
 % 'plot' draws lines - T1 as x-axis, Y1 as y-axis, 'k' refers to line color
@@ -169,4 +178,10 @@ ax1=subplot(4,2,6);
 plot(ax1,T,Y(:,7))
 title(ax1,'DCQ Cleared')
 ylabel(ax1,'Amount (mg)')
+xlabel(ax1,'time (hrs)')
+
+ax1=subplot(4,2,8);
+plot (ax1, T, MassBalance)
+title(ax1,'Mass Balance')
+ylabel(ax1,'Total Dose - Drug in Model')
 xlabel(ax1,'time (hrs)')
