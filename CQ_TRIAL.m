@@ -145,7 +145,7 @@ ylabel('Concentration (mg/L)')
 xlabel('time (hrs)')
 
 ax1=subplot(4,2,2);
-plot(ax1,T,Y(:,2))
+plot(ax1,T/24,Y(:,2))
 title(ax1,'CQ, Peripheral')
 ylabel(ax1,'Concentration (mg/L)')
 xlabel(ax1,'time (hrs)')
