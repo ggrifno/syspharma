@@ -26,7 +26,7 @@ CHF = 10.7; %units = days, half-life CQ
 DHF = 8.74; %units = days, half-life DCQ
 
 q = 0;
-ka = 2;
+ka = 0.155;
 
 
 %25mg/kg body weight chloroquine phosphate over 3 days
@@ -95,7 +95,8 @@ TMB = T;
 %update initial conditions for next simulation
 y00 = Y(end,:);
 %add next dose
-y00(3) = y00(3) + ODose;
+y00(3) = y00(3) + ODose
+
 TotalDose = TotalDose + ODose;
  for i =  1:10
   [t,y] = ode45(@Chloroquine_eqns,[0 24],y00,options,p);
