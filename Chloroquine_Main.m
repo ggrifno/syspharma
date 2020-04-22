@@ -9,7 +9,7 @@ close all;
 
 %% Creating virtual patients: Distribution parameters 
 
-NumberOfSubjects = 1000;
+NumberOfSubjects = 50;
 % Size of the populations - by making this a parameter, we can easily test 
 % the code with small numbers that run quickly, and then run it with 
 % larger populations once we're satisfied that it's working.
@@ -108,4 +108,19 @@ boxplot (xdist','Labels',GroupName);
 patientID = (1:NumberOfSubjects)';
 Weights = xdist';
 save('WeightDistribs.mat','patientID','Weights');
+
+%% Population Pharmacokinetics
+
+%run the popPK sim function to obtain the following for ALL patients,
+%inputting only bodyweight
+% 1. volume of distribution in compartment 1 (V1)
+% 2. volume of distribution in compartment 2 (V2)
+% 3. clearance of chloroquine and desethylchloroquine
+% 4. absorption of chloroquine from the gut (oral delivery)
+
+%Malaria scenario, pass in CaseFlag = 1
+[V1, V2, CL_CQ, CL_DCQ, ka] = Chloroquine_popPK(Weights, 1);
+
+% %COVID-19, pass in CaseFlag = 2
+% [V1, V2, CL_DCQ, CL_DCQ, ka] = Chloroquine_popPK(Weights, 2);
 
