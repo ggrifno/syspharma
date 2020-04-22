@@ -119,7 +119,7 @@ save('WeightDistribs.mat','patientID','Weights');
 % 4. absorption of chloroquine from the gut (oral delivery)
 
 %Malaria scenario, pass in CaseFlag = 1
-[V1, V2, CL_DCQ, CL_DCQ, ka] = Chloroquine_popPK(Weights, 1);
+[V1, V2, CL_CQ, CL_DCQ, ka] = Chloroquine_popPK(Weights, 1);
 
 % %COVID-19, pass in CaseFlag = 2
 % [V1, V2, CL_DCQ, CL_DCQ, ka] = Chloroquine_popPK(Weights, 2);
