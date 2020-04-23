@@ -2,7 +2,7 @@ function [V1CQ, V2CQ, V1DCQ, V2DCQ, CL_CQ, CL_DCQ, KA] = Chloroquine_popPK(Weigh
 
 [row, col] = size(Weights); %takes in the size of the weights matrix, which should be the 
 %number of patients (listed by weight) for each sex (M versus F)
-med = median(Weights);
+med = median(Weights); %we will need this for the 
 
 %initialize matricies to hold calculated values
 V1CQ   = zeros(row, col);
@@ -43,14 +43,21 @@ nCL_DCQ = normrnd(0,0.1,[row,col]);
     for i = 1:2
         for j = 1:row %calculate each of the variables for each patient (patient number (j,i) in "Weights")
             %first conception of formulas (modeled after HW4 scenario 4)
+                %we are using an allometric rule for compartment volumes
                V1CQ(j,i) = v1_cq * ((Weights(j,i) / med(i))^theta1) * exp (nV1(j,i));
                V2CQ(j,i) = v2_cq * ((Weights(j,i) / med(i))^theta2) * exp (nV2(j,i));
                
                V1DCQ(j,i)= v1_dcq* ((Weights(j,i) / med(i))^theta1) * exp (nV1(j,i));
                V2DCQ(j,i)= v2_dcq* ((Weights(j,i) / med(i))^theta2) * exp (nV2(j,i));
                
-               CL_CQ(j,i) =  kcl_cq* exp (nCL_CQ(j,i)); 
-               CL_DCQ(j,i) = kcl_dcq* exp (nCL_DCQ(j,i));
+               %can we add noise to the clearance rates directly?
+%                CL_CQ(j,i) =  kcl_cq* exp (nCL_CQ(j,i)); 
+%                CL_DCQ(j,i) = kcl_dcq* exp (nCL_DCQ(j,i));
+
+                %probably a better idea to add variance to the halflife?
+                popCHF = 10.7* exp (nCL_CQ(j,i)); %units = days, half-life CQ
+                popDHF = 8.74* exp (nCL_DCQ(j,i)); %units = days, half-life DCQ
+
                KA(j,i) = ka; %NEED TO FIND CONNECTION BETWEEN KA AND VARIABILITY
 
         end

@@ -20,6 +20,7 @@ weightCutOff = 50;
 Male = 1;
 Female = 2; % indexing for matrices
 
+%NEED TO JUSTIFY WHY WE CHOSE THESE
 means(Male) = 191;
 means(Female) = 164.3;
 SD(Male) = 61.57;
