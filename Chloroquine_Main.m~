@@ -16,7 +16,7 @@ close all;
 %so total of four cases?
 %% Creating virtual patients: Distribution parameters 
 
-NumberOfSubjects = 2;
+NumberOfSubjects = 4;
 % Size of the populations - by making this a parameter, we can easily test 
 % the code with small numbers that run quickly, and then run it with 
 % larger populations once we're satisfied that it's working.
@@ -151,7 +151,7 @@ kabs = [KA(:,1); KA(:,2);];
 TitleP ='Chloroquine_PK';
 save(TitleP, 'WeightVal', 'SexLabels', 'v1cq', 'v2cq', 'v1dcq', 'v2dcq', 'K10','K30', 'kabs')
 %% Simulation
-YValues = []; Time = [];
+YValues = []; Time = []; TRY = [];
 for i = 1:NumberOfSubjects
     W = WeightVal(i);
     v1 = v1cq(i); v2 = v2cq(i);
@@ -161,11 +161,11 @@ for i = 1:NumberOfSubjects
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
     [ytemp, time] = Sim_CQ(W, ptemp);
     Time = time;
-%     size(time)
-%     size(ytemp)
+    TRY = [YValues, ytemp];
+    size(ytemp)
     YValues = [YValues, ytemp];
     ytemp = [];
 end
-% 
+
 figure; 
 plot(Time,YValues(:,1),'b',Time,YValues(:,2),'c','linewidth',3)

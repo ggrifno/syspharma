@@ -108,8 +108,10 @@ TotalDose = TotalDose + OtherDose;
         y00(3) = y00(3) + OtherDose;
         TotalDose = TotalDose + OtherDose;
   end
-   
-end
+    y = []; t = [];
+ end
+This = Y(:,1);;
+Y 
 out = Y(:,1);
 out2 = T;
 end
