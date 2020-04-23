@@ -53,8 +53,8 @@ for i = 1:2 %go through each of the 2 sexes in Weights matrix
            V2DCQ(j,i)= v2_dcq* ((Weights(j,i) / med(i))^theta2) * exp (nV2(j,i));
 
            %can we add noise to the clearance rates directly?
-%                CL_CQ(j,i) =  kcl_cq* exp (nCL_CQ(j,i)); 
-%                CL_DCQ(j,i) = kcl_dcq* exp (nCL_DCQ(j,i));
+                CL_CQ(j,i) =  kcl_cq* exp (nCL_CQ(j,i)); 
+                CL_DCQ(j,i) = kcl_dcq* exp (nCL_DCQ(j,i));
 
             %probably a better idea to add variance to the halflife?
             %Although idk if this method of adding variance is correct
