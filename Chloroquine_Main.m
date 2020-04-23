@@ -16,7 +16,7 @@ close all;
 %so total of four cases?
 %% Creating virtual patients: Distribution parameters 
 
-NumberOfSubjects = 2;
+NumberOfSubjects = 50;
 % Size of the populations - by making this a parameter, we can easily test 
 % the code with small numbers that run quickly, and then run it with 
 % larger populations once we're satisfied that it's working.
@@ -148,10 +148,10 @@ K30 = [CL_DCQ(:,1); CL_DCQ(:,2);];
 kabs = [KA(:,1); KA(:,2);];
 %% Save Data
 %Save datafiles for each parameters, with respective labels
-TitleP ='Chloroquine_PK';
+TitleP ='Chloroquine_PK_parameters';
 save(TitleP, 'WeightVal', 'SexLabels', 'v1cq', 'v2cq', 'v1dcq', 'v2dcq', 'K10','K30', 'kabs')
 %% Simulation
-YValues = []; Time = [];
+YCQCentral = []; YDQCentral= []; Time = [];
 for i = 1:NumberOfSubjects %this only iterates through the first HALF of subjects, if you're pulling from WeightVal
     %i.e. NumberOfSubjects = 50, but length of WeightVal= 2*50 = 100
     W = WeightVal(i); %only goes 1 to NumberOfSubjects
@@ -162,28 +162,21 @@ for i = 1:NumberOfSubjects %this only iterates through the first HALF of subject
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
     [ytemp, time] = Sim_CQ(W, ptemp);
     Time = time;
-%     size(time)
-%     size(ytemp)
-    YValues = [YValues, ytemp];
+    YCQCentral = [YCQCentral, ytemp(:,1)];
+    YDQCentral = [YDQCentral, ytemp(:,2)];
     ytemp = [];
 end
-% 
-figure; 
-plot(Time,YValues(:,1),'b',Time,YValues(:,2),'c','linewidth',3)
 
-    ytemp = ytemp(1:19735);
-    time = time(1:19735);
-    disp(i);
-    size(time)
-    size(ytemp)
-    YValues = [YValues, ytemp];
-    Time = [Time, time];
-%     ytemp = [];
-end
-%% plot statements to visualize popPK simulation 
-figure; 
-for i = 1:NumberOfSubjects
-plot(Time(:,1),YValues(:,i),'k')
-hold on
-end
-hold off
+%% Save PK Profile for patients
+TitleCQ ='Chloroquine_PK_CQCentral';
+save(TitleCQ, 'YCQCentral')
+TitleDQ ='Chloroquine_PK_DQCentral';
+save(TitleDQ, 'YDQCentral')
+
+%% plot statements to visualize popPK simulation
+% figure; 
+% for i = 1:NumberOfSubjects
+% plot(Time(:,1),YValues(:,i),'k')
+% hold on
+% end
+% hold off
