@@ -152,21 +152,28 @@ TitleP ='Chloroquine_PK';
 save(TitleP, 'WeightVal', 'SexLabels', 'v1cq', 'v2cq', 'v1dcq', 'v2dcq', 'K10','K30', 'kabs')
 %% Simulation
 YValues = []; Time = [];
-for i = 1:NumberOfSubjects
-    W = WeightVal(i);
+for i = 1:NumberOfSubjects %this only iterates through the first HALF of subjects, if you're pulling from WeightVal
+    %i.e. NumberOfSubjects = 50, but length of WeightVal= 2*50 = 100
+    W = WeightVal(i); %only goes 1 to NumberOfSubjects
     v1 = v1cq(i); v2 = v2cq(i);
     v3 = v1dcq(i); v4 = v2dcq(i);
     k10 = K10(i); k30 = K30(i);
     ka = kabs(i);
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
     [ytemp, time] = Sim_CQ(W, ptemp);
-    Time = time;
+    ytemp = ytemp(1:19735);
+    time = time(1:19735);
     disp(i);
     size(time)
     size(ytemp)
-%     YValues = [YValues, ytemp];
-    ytemp = [];
+    YValues = [YValues, ytemp];
+    Time = [Time, time];
+%     ytemp = [];
 end
-% 
-% figure; 
-% plot(Time,YValues(:,1),'b',Time,YValues(:,2),'c','linewidth',3)
+%% plot statements to visualize popPK simulation 
+figure; 
+for i = 1:NumberOfSubjects
+plot(Time(:,1),YValues(:,i),'k')
+hold on
+end
+hold off
