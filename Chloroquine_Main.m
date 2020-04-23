@@ -120,6 +120,6 @@ save('WeightDistribs.mat','patientID','Weights');
 % 4. absorption of chloroquine from the gut (oral delivery)
 
 %get parameters for patients
-[V1CQ, V2CQ, V1DCQ, V2DCQ, CL_CQ, CL_DCQ, KA] = Chloroquine_popPK(Weights);
+[V1, V2, CL_CQ, CL_DCQ, ka] = Chloroquine_popPK(Weights);
 
 
