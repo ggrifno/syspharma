@@ -16,7 +16,7 @@ close all;
 %so total of four cases?
 %% Creating virtual patients: Distribution parameters 
 
-NumberOfSubjects = 50;
+NumberOfSubjects = 5;
 % Size of the populations - by making this a parameter, we can easily test 
 % the code with small numbers that run quickly, and then run it with 
 % larger populations once we're satisfied that it's working.
@@ -129,7 +129,7 @@ save('WeightDistribs.mat','patientID','Weights');
 %get parameters for patients
 [V1CQ, V2CQ, V1DCQ, V2DCQ, CL_CQ, CL_DCQ, KA] = Chloroquine_popPK(Weights);
 
-%% add array for sex labels
+%%% add array for sex labels
 %Create Label Arrays for saving Data files and R Visualization
 SexM = []; SexF = [];
 %Fill up long arrays with a number of labels equal to the total number of
@@ -161,12 +161,11 @@ for i = 1:NumberOfSubjects
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
     [ytemp, time] = Sim_CQ(W, ptemp);
     Time = time;
-    disp(i);
     size(time)
     size(ytemp)
 %     YValues = [YValues, ytemp];
     ytemp = [];
 end
 % 
-% figure; 
-% plot(Time,YValues(:,1),'b',Time,YValues(:,2),'c','linewidth',3)
+figure; 
+plot(Time,YValues(:,1),'b',Time,YValues(:,2),'c','linewidth',3)
