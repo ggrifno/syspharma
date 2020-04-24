@@ -1,11 +1,12 @@
+function [PatientsData, YCQCentral, YDQCentral] = Chloroquine_Main(DosingRegimen, MissedDose); 
+
+
 % Systems Pharmacology Final Project Main Driver
 % Alanna Farrell, SJ Burris, Gabrielle Grifno
 % Spring 2020
 
 % This file creates simulated patients and includes all the parameters for
 % running Chlorquine simulations for treatment of Malaria and COVID-19
-clear all;
-close all;
 
 %%
 %This main file will probably become a function that inputs
@@ -148,8 +149,8 @@ K30 = [CL_DCQ(:,1); CL_DCQ(:,2);];
 kabs = [KA(:,1); KA(:,2);];
 %% Save Data
 %Save datafiles for each parameters, with respective labels
-TitleP ='Chloroquine_PK_parameters';
-save(TitleP, 'WeightVal', 'SexLabels', 'v1cq', 'v2cq', 'v1dcq', 'v2dcq', 'K10','K30', 'kabs')
+PatientsData = [WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs];
+
 %% Simulation
 YCQCentral = []; YDQCentral= []; Time = [];
 for i = 1:NumberOfSubjects %this only iterates through the first HALF of subjects, if you're pulling from WeightVal
@@ -160,23 +161,17 @@ for i = 1:NumberOfSubjects %this only iterates through the first HALF of subject
     k10 = K10(i); k30 = K30(i);
     ka = kabs(i);
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
-    [ytemp, time] = Sim_CQ(W, ptemp);
+    [ytemp, time] = Chloroquine_Sim(W, ptemp, DosingRegimen, MissedDose);
     Time = time;
     YCQCentral = [YCQCentral, ytemp(:,1)];
     YDQCentral = [YDQCentral, ytemp(:,2)];
     ytemp = [];
 end
 
-%% Save PK Profile for patients
-TitleCQ ='Chloroquine_PK_CQCentral';
-save(TitleCQ, 'YCQCentral')
-TitleDQ ='Chloroquine_PK_DQCentral';
-save(TitleDQ, 'YDQCentral')
-
 %% plot statements to visualize popPK simulation
-% figure; 
-% for i = 1:NumberOfSubjects
-% plot(Time(:,1),YValues(:,i),'k')
-% hold on
-% end
-% hold off
+figure; 
+for i = 1:NumberOfSubjects
+plot(Time(:,1),YCQCentral(:,i),'k')
+hold on
+end
+hold off

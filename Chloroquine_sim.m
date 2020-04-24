@@ -1,82 +1,142 @@
-function [T1, Y1 outAUC1,outAUC2] = Chloroquine_sim(kCL,VD1,VD2,D0,TimeFreq); 
+function [out, out2] = Chloroquine_Sim(weight, ptemp, DosingRegimen, MissedDose)
 
-% BELOW here is old code for assignment 4
-TimeLen = 24; % hours
-NumberOfDoses = floor(TimeLen/TimeFreq)-1 ; % don't count first dose
-InfusionTime = 1 ; % hour
+%Patient
+Weight = weight;
+
+%Dosing
+%Could make an if statement: like if dosing =1 malaria dosing
+%if dosing = 2 covid dosing or just make a whole different simulation
+%for covid
+%% Set Dosing Regimen
+% Dosing Malaria
+if DosingRegimen == 1
+    NumberOfDoses = 4;
+    FirstDosing  = 10;  %units - mg/kg
+    OtherDosing = 5;    %units - mg/kg
+    FirstDose = FirstDosing*Weight; %units = mg
+    OtherDose = OtherDosing*Weight;
+    TotalDrug = 0;
+    if MissedDose == 1
+        FirstDose = 0;
+    end
+    SecondDoseTime = 6;  %units: hr, time after first dose, between 6-12 hrs after first
+    TimeBetweenDoses = 24; %units: hr, time after second, and third dose,
  
-y0 = [0 0 0]'; % mg/L - Initial conditions vector, 1 = drug in central; 2 = drug in peripheral; 3 = drug cleared
-k12 = 0.7 ; 
-k21 = k12 ;
+else
+    %5 UPDATE TO COVID DOSING
+    NumberOfDoses = 4;
+    FirstDosing  = 10;  %units - mg/kg
+    OtherDosing = 5;    %units - mg/kg
+    FirstDose = FirstDosing*Weight; %units = mg
+    if MissedDose == 1
+        FirstDose = 0;
+    end
+    OtherDose = OtherDosing*Weight;
+    SecondDoseTime = 6;  %units: hr, time after first dose, between 6-12 hrs after first
+    TimeBetweenDoses = 24; %units: hr, time after second, and third dose,
+
+end
+
+%% Set Patient Parameters
+%Volume of Distributions
+
+v1 = ptemp(1);     % units = L, central compartment of chloroquine
+v2 = ptemp(2);    % units - L, peripheral compartment of chloroquine
+v3 = ptemp(3);    % units = L, central compartment of DCQ
+v4 = ptemp(4);  % units = L, peripheral compartment of DCQ
+
+%rates (intercompartmental, clearnce, half lives)
+CHF = 10.7; %units = days, half-life CQ
+DHF = 8.74; %units = days, half-life DCQ
+
+q = 0;
+ka = ptemp(7);
+k12 = 37.7/v1;   % units = L/h, Chloroquine from central to peripheral
+k21 = 37.7/v2;   % units - L/h, chloroquine from peripheral to central
+k23 = 6.13/v1;   % units = L/H , CQ transforming to DCQ
+k34 = 31.46/v3;  % units = L/h, DCQ from central to peripheral
+k43 = 31.46/v4;  % units = L/h, DCQ from peripheral to central
+%k10 = log(2)/(CHF*24);      % units, clearance of CQ
+k10 = ptemp(5);
+%k30 = log(2)/(DHF*24);      %2.04/V3;   % units = 1/h, peripheral compartment of DCQ
+k30 = ptemp(6);
+%%Set initial conditions
+%Set intial concentration in central compartment to 0
+%Set innitial concentration of the gut to the dose
+%set time framre
+
+%% Set Initial Conditions for the simulation, First dose
+y0 = [0 0 FirstDose 0 0 0 0];
+% (1) Concentration of CQ in the central compartment
+% (2) Concentration of CQ in the peripheral compartment
+% (3) Amount of Drug in Virtual Clearance Compartment
+% (4) Amount of Drug in Virtual Gut Compartment
+% (5) Concentration of DCQ in the central compartment (i.e converstion of
+% CQ to DCQ)
+% (6) Concentration of DCQ in the peripheral compartment
+% (7) Drug Cleared
+TotalDrug = TotalDrug + FirstDose;
+%%Create parameter array
+p = [q v1 v2 v3 v4 k10 k30 k12 k21 k23 k34 k43 ka];
+
+%%Run Smiulation
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
- 
-% infusion period
-qinf = D0/InfusionTime ; % divided by 1 hour
-p = [kCL VD1 VD2 k12 k21 qinf]'; % parameter array
-[T1,Y1] = ode45(@Vancomycin_Eqns_ggrifno,[0:.01:InfusionTime],y0,options,p);
-DrugIn = T1*qinf; % infusion increases drug in over time
-y0 = Y1(end,:);
- 
-% inter-infusion period
-qinf = 0 ; % no infusion
-p = [kCL VD1 VD2 k12 k21 qinf]; % parameter array
-[T2,Y2] = ode45(@Chloroquine_eqns,[InfusionTime:0.01:TimeFreq],y0,options,p);
-y0 = Y2(end,:); %find the concentrations in each compartment at the end of the simulation for the next sim
-T1 = [T1(1:length(T1)-1);T2]; %update time with inter-infusion period
-Y1 = [Y1(1:length(Y1)-1,:);Y2]; %update concentration values in each compartment
-temp1 = length(T1)-length(DrugIn)+1;
-DrugIn = [DrugIn(1:length(DrugIn)-1);ones(temp1,1)*(D0)] ; 
-% drug in stops increasing during this time period
-% note removing the last point of previous time period to avoid double-counting
-temp3 = DrugIn(end); %find the value of the incoming drug at the final point before the next dose
+tspan1 = 0:.06:SecondDoseTime;
+[T, Y] = ode45(@Chloroquine_eqns,tspan1,y0,options,p);
 
-for i=1:NumberOfDoses %this number is one less than the total doses
-    % infusion period
-    qinf = D0/InfusionTime ; % divided by 1 hour
-    p = [kCL VD1 VD2 k12 k21 qinf]'; % parameter array
-    %run simulation for another hour with the new starting concentrations in y0
-    [t,y] = ode45(@Vancomycin_Eqns_ggrifno,[0:.01:InfusionTime],y0,options,p); 
-    Temp_DrugIn = temp3 + t*qinf; %start the next simulation, where the amount of drug going in increases on top of the previous last value
-    y0 = y(end,:);%find the concentrations in each compartment at the end of the simulation for the next sim
-     
-    % inter-infusion period
-    qinf = 0 ; % no infusion
-    p = [kCL VD1 VD2 k12 k21 qinf]'; % parameter array    
-    [t2,y2] = ode45(@Vancomycin_Eqns_ggrifno,[InfusionTime-1:0.01:TimeFreq-1],y0,options,p); %Subtract 1 from infusion time and frequency to avoid hour gaps
-    y0 = y2(end,:);
-    
-    t = [t;bsxfun(@plus,t(end,:),t2)];
-    y = [y;y2];
-    
-    Temp_DrugIn = [Temp_DrugIn; temp3 + ones(temp1,1)*(D0)]; 
-    DrugIn = [DrugIn; Temp_DrugIn];
-    temp3 = DrugIn(end); %find the new end point to start over inputting the drug in the next hour
-    T1 = [T1;bsxfun(@plus,T1(end,:),t)]; %update time
-    Y1 = [Y1;y];
-    
+MB(:,1) = Y(:,1)*v1; %CQ, CENTRAL
+MB(:,2) = Y(:,2)*v2; %CQ, PERIPHERAL
+MB(:,3) = Y(:,3);    %AMOUNT GUT
+MB(:,4) = Y(:,4)*v3; %DCQ, CENTRAL
+MB(:,5) = Y(:,5)*v4; %DCQ, PERIPHERAL
+MB(:,6) = Y(:,6);    %CQ CLEARED
+MB(:,7) = Y(:,7);    %DCQ CLEARED
+
+%mass Balance for first dose over first time interval
+MassBalance = MB(:,1) + MB(:,2) + MB(:,3) + MB(:,5) + MB(:,4) + MB(:,6)+  MB(:,7) - TotalDrug;
+TMB = T;
+
+%update initial conditions for next simulation
+y00 = Y(end,:);
+%add next dose if its not missed
+if MissedDose ~= 2
+    y00(3) = y00(3) + OtherDose;
+    TotalDrug = TotalDrug + OtherDose;
 end
 
-TotalD(:,1) = Y1(:,1).*VD1; %amount of drug in the central compartment (Y1 is a concentration)
-TotalD(:,2) = Y1(:,2).*VD2; %amount of drug in peripheral compartment
-TotalD(:,3) = Y1(:,3);     %amount of drug in cleared "virtual" compartment
+ for i =  1:10
+  options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
+  tspan = 0:.06:TimeBetweenDoses;
+  [t,y] = ode45(@Chloroquine_eqns,tspan,y00,options,p);
+  
+  %update time and concentration values for entire simulation
+  Y  = [Y; y];
+  T  = [T;bsxfun(@plus,T(end,:),t)];
+  
+  %mb = [0 0 0 0 0 0 0];
+%   %include mass balance
+    mb(:,1) = y(:,1)*v1; %CQ, CENTRAL
+    mb(:,2) = y(:,2)*v2; %CQ, PERIPHERAL
+    mb(:,3) = y(:,3);    %AMOUNT GUT
+    mb(:,4) = y(:,4)*v3; %DCQ, CENTRAL
+    mb(:,5) = y(:,5)*v4; %DCQ, PERIPHERAL
+    mb(:,6) = y(:,6);    %CQ CLEARED
+    mb(:,7) = y(:,7);    %DCQ CLEARED
+   
+  m = mb(:,1) + mb(:,2) + mb(:,3) + mb(:,5) + mb(:,4) + mb(:,6)+  mb(:,7) - TotalDrug;
+  MassBalance = [MassBalance;m];
+  mb = [];
+   %last concentration values become new initial conditions for next
+  %dosing simulation
+  
+  y00 = y(end,:);
+  if (MissedDose ~= (i + 2)) && (i < (NumberOfDoses-1))
+        y00(3) = y00(3) + OtherDose;
+        TotalDrug = TotalDrug + OtherDose;
+  end
+  
+ end
 
-DrugOut = TotalD(:,1) + TotalD(:,2) + TotalD(:,3); % cumulative drug either in compartments or eliminated from system
-
-BalanceD = DrugIn - DrugOut; %find the difference between the input and output, call that "balance"
-
-%I was running into a lot of mass balance problems in this file 
-%and thought it might be because my equations file was wrong. I tried a new approach to 
-%the volume corrections for the equations, based off HW2. This fixed the
-%mass balance problem, BUT caused my violin plots to look wrong
-%(distributions look incorrect), so I went with the original equations (see Vancomyin_Eqns_grifno)
-%uncomment the display lines below to see the mass balance (currently
-%leaking a lot of mass)
-if mean(BalanceD)>1e-6
-%    disp('Mass imbalance possible ');
-%    disp(mean(BalanceD));
+out = [Y(:,1),Y(:,4)];
+out2 = T;
 end
-
- outAUC1  = trapz(T1,Y1(:,1));
- outAUC2 = trapz(T1,Y1(:,2));
-    
-
