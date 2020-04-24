@@ -129,7 +129,7 @@ save('WeightDistribs.mat','patientID','Weights');
 %get parameters for patients
 [V1CQ, V2CQ, V1DCQ, V2DCQ, CL_CQ, CL_DCQ, KA] = Chloroquine_popPK(Weights);
 
-%% add array for sex labels
+%%% add array for sex labels
 %Create Label Arrays for saving Data files and R Visualization
 SexM = []; SexF = [];
 %Fill up long arrays with a number of labels equal to the total number of
@@ -148,10 +148,10 @@ K30 = [CL_DCQ(:,1); CL_DCQ(:,2);];
 kabs = [KA(:,1); KA(:,2);];
 %% Save Data
 %Save datafiles for each parameters, with respective labels
-TitleP ='Chloroquine_PK';
+TitleP ='Chloroquine_PK_parameters';
 save(TitleP, 'WeightVal', 'SexLabels', 'v1cq', 'v2cq', 'v1dcq', 'v2dcq', 'K10','K30', 'kabs')
 %% Simulation
-YValues = []; Time = [];
+YCQCentral = []; YDQCentral= []; Time = [];
 for i = 1:NumberOfSubjects %this only iterates through the first HALF of subjects, if you're pulling from WeightVal
     %i.e. NumberOfSubjects = 50, but length of WeightVal= 2*50 = 100
     W = WeightVal(i); %only goes 1 to NumberOfSubjects
@@ -161,19 +161,22 @@ for i = 1:NumberOfSubjects %this only iterates through the first HALF of subject
     ka = kabs(i);
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
     [ytemp, time] = Sim_CQ(W, ptemp);
-    ytemp = ytemp(1:19735);
-    time = time(1:19735);
-    disp(i);
-    size(time)
-    size(ytemp)
-    YValues = [YValues, ytemp];
-    Time = [Time, time];
-%     ytemp = [];
+    Time = time;
+    YCQCentral = [YCQCentral, ytemp(:,1)];
+    YDQCentral = [YDQCentral, ytemp(:,2)];
+    ytemp = [];
 end
-%% plot statements to visualize popPK simulation 
-figure; 
-for i = 1:NumberOfSubjects
-plot(Time(:,1),YValues(:,i),'k')
-hold on
-end
-hold off
+
+%% Save PK Profile for patients
+TitleCQ ='Chloroquine_PK_CQCentral';
+save(TitleCQ, 'YCQCentral')
+TitleDQ ='Chloroquine_PK_DQCentral';
+save(TitleDQ, 'YDQCentral')
+
+%% plot statements to visualize popPK simulation
+% figure; 
+% for i = 1:NumberOfSubjects
+% plot(Time(:,1),YValues(:,i),'k')
+% hold on
+% end
+% hold off

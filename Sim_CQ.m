@@ -59,7 +59,8 @@ p = [q v1 v2 v3 v4 k10 k30 k12 k21 k23 k34 k43 ka];
 
 %%Run Smiulation
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-[T, Y] = ode45(@Chloroquine_eqns,[0 6],y0,options,p);
+tspan1 = 0:.06:6;
+[T, Y] = ode45(@Chloroquine_eqns,tspan1,y0,options,p);
 
 MB(:,1) = Y(:,1)*v1; %CQ, CENTRAL
 MB(:,2) = Y(:,2)*v2; %CQ, PERIPHERAL
@@ -81,7 +82,8 @@ y00(3) = y00(3) + OtherDose;
 TotalDose = TotalDose + OtherDose;
  for i =  1:10
   options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-  [t,y] = ode45(@Chloroquine_eqns,[0 24],y00,options,p);
+  tspan = 0:.06:24;
+  [t,y] = ode45(@Chloroquine_eqns,tspan,y00,options,p);
   
   %update time and concentration values for entire simulation
   Y  = [Y; y];
@@ -110,6 +112,6 @@ TotalDose = TotalDose + OtherDose;
   end
    
 end
-out = Y(:,1);
+out = [Y(:,1),Y(:,4)];
 out2 = T;
 end
