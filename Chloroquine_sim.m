@@ -69,12 +69,11 @@ k30 = ptemp(6);
 y0 = [0 0 FirstDose 0 0 0 0];
 % (1) Concentration of CQ in the central compartment
 % (2) Concentration of CQ in the peripheral compartment
-% (3) Amount of Drug in Virtual Clearance Compartment
-% (4) Amount of Drug in Virtual Gut Compartment
-% (5) Concentration of DCQ in the central compartment (i.e converstion of
-% CQ to DCQ)
-% (6) Concentration of DCQ in the peripheral compartment
-% (7) Drug Cleared
+% (3) Amount of Drug in Virtual Gut Compartment
+% (4) Concentration of DCQ in the central compartment
+% (5) Concentration of DCQ in the peripheral compartment
+% (6) Amount of CQ Drug in Virtual Clearance Compartment
+% (7) Amount of DCQ in Virtual Clearance Compartment
 TotalDrug = TotalDrug + FirstDose;
 %%Create parameter array
 p = [q v1 v2 v3 v4 k10 k30 k12 k21 k23 k34 k43 ka];

@@ -30,24 +30,21 @@ dydt(2) = (V1/V2)*k12*y(1) - k21*y(2); % CQ peripheral compartment
 
 dydt(3) = -ka*y(3); % GUT CQ absorption compartment --> set the initial condition of y(4) to the bolus tablet amount D0 to model oral delivery
 
-dydt(4) = k23*y(1)*(V1/V3) + (V4/V3)*k43*y(5) - (k30*y(4) + k34*y(4)); % conversion of CQ to DCQ, central compartment NEED VOLUME CORRECTIONS??
-
+dydt(4) = k23*y(1)*(V1/V3) + (V4/V3)*k43*y(5) - (k30*y(4) + k34*y(4)); % conversion of CQ to DCQ, central compartment
 dydt(5) = (V3/V4)*k34*y(4) - k43*y(5); % DCQ peripheral comparmtent
 
 dydt(6) = k10*y(1)*V1; % virtual clearance of CQ from central compartment
 dydt(7) = k30*y(4)*V3; % virtual clearance of DCQ, is only cleared from central DCQ
 
 % 1 - concentration of CQ in central compartment (infusion included here, but typically set to zero in simulations of oral delivery)
-% 2 - conceentration of CQ in peripheral compartment (clearance included here, but typically set to zero in simulations)
-% 3 - amount of CQ in virtual clearance compartment. Note unit change here, the terms in the equation have conc*vol form, which means amount 
+% 2 - concentration of CQ in peripheral compartment (clearance included here, but typically set to zero in simulations)
+% 3 - amount of drug in virtual GUT compartment --> set the initial condition of y(4) to the bolus tablet 
+% 4 - conversion of CQ to DCQ, central compartment
+% 5 - DCQ peripheral comparmtent
+% 6 - virtual clearance of CQ from central compartment. Note unit change here, the terms in the equation have conc*vol form, which means amount 
 % not concentration. This eliminates the need to set a volume for this compartment; just need to be careful in the main code to treat it like an
 % amount, not a concentration.
-% 4 - amount of drug in virtual GUT compartment --> set the initial condition of y(4) to the bolus tablet 
-%amount D0 to model oral delivery. Again, the units here are % in amount, not concentration.
-% 5 - amount of DCQ in central compartment (converted from CQ)
-% 6 - amount of DCQ in peripheral compartment
-% 7 - virtual clearance of CQ from central compartment
-% 8 - virtual clearance of DCQ from central compartment
+% 7 - virtual clearance of DCQ, is only cleared from central DCQ. 
 
 %CLEARANCE COMPARTMENTS: Note unit change
 % here, the terms in the equation have conc*vol form, which means amount 
