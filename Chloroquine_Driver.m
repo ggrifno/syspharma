@@ -87,30 +87,17 @@ end
 %numbers and mechanism specific to P. vivax
 %given information
 P0 = 1*10^12; %starting number of parasites
-t = linspace(1,100);
+t = linspace(1,200);
 low_density = 50; % parasites/uL in bloodstream
 med_density = 2*10^3; %parasites/uL in blood
 high_density = 2*10^6; % parasites/uL in bloodstream
-kP = linspace(1/25,1/110,100)'; %hr-1, clearance rate for parasites treated with chloroquine
+kP = linspace(1/25,1/110,50)'; %hr-1, clearance rate for parasites treated with chloroquine
 P_halflife = 0.693./kP ;
 P_double = 24; %hrs, doubling rate for parasites can be anywhere from 1-3 days
 P_detectlimit_microscope = 10^8; %detection limit for microscopy techniques, total # of parasites in body
 P_detectlimit_PCR = 10^5; %detection limit for PCR, total # of parasites in body
 
-%%Create parameter array for clearance rates based on concentration
-kP = zeros(1,NumberOfSubjects); %initialize a matrix to hold all the kPs for the simulation
-[timepoints, ~] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
-MIC = 67; %ug/L, minimum inhibitory concentration (MIC)
-for i = 1:timepoints %need to iterate through every concentration for each patient
-    while YCQ(i) > MIC
-    
-end
-%%Run Smiulation
-options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-tspan = 0:.06:24; %simulate first 24 hours
-[T, Y] = ode45(@Parasite_eqns,tspan,P0,options,a);
-
-%% Build PD model
+%% Show variable parasite clearance in response to variable kP
 %inputs: level of parasite to start, parasite clearance rate
 %output: PRR, parasite reduction ratio, which is the fractional reduction
 %in parasite numbers per axsexual cycle, or the reciprocal of ring-form kP
@@ -133,10 +120,37 @@ tspan = 0:.06:24; %simulate first 24 hours
 %EC50 is the plasma concentration resulting in 50% of the maximum effect
 % n is a parameter defining the steepness of the dose-response relationship
 figure;
-for i = 1:100
+for i = 1:50
     hold on
     Pt = P0.*exp(-kP(i).*t);
+    kP_median = median(kP);
+    Pt_median = P0.*exp(-kP_median.*t);
     plot(t, Pt, 'k')
-    legend('kP(i)')
+    
 end
+plot(t, Pt_median, 'r','LineWidth', 2)
+legend('enter legend here')
+xlabel('Time (hrs)')
+ylabel('Total Parasites')
 hold off
+
+%% Create parameter array for clearance rates based on concentration for ALL
+%%patients
+
+[timepoints, patients] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
+kP = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
+MIC = 67; %ug/L, minimum inhibitory concentration (MIC)
+
+for j = 1:patients
+for i = 1:timepoints %need to iterate through every concentration for each patient
+    if YCQCentral(i,j) > MIC
+        kP(i,j) = .01;
+    end
+end
+    
+end
+% Run Smiulation
+options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
+tspan = 0:.06:24; %simulate first 24 hours
+[T, Y] = ode45(@Parasite_eqns,tspan,P0,options,a);
+
