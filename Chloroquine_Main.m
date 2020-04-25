@@ -161,7 +161,7 @@ for i = 1:NumberOfSubjects %this only iterates through the first HALF of subject
     k10 = K10(i); k30 = K30(i);
     ka = kabs(i);
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
-    [ytemp, time] = Chloroquine_Sim(W, ptemp, DosingRegimen, MissedDose);
+    [ytemp, time] = Chloroquine_sim(W, ptemp, DosingRegimen, MissedDose);
     Time = time;
     YCQCentral = [YCQCentral, ytemp(:,1)];
     YDQCentral = [YDQCentral, ytemp(:,2)];
