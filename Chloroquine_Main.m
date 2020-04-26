@@ -1,4 +1,4 @@
-function [PatientsData, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+function [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
 
 
 % Systems Pharmacology Final Project Main Driver
@@ -168,8 +168,8 @@ for i = 1:NumberOfSubjects %this only iterates through the first HALF of subject
     ytemp = [];
 end
 
-AUCCQ = trapz(T,YCQCentral);
-AUCDCQ = trapz(T,YDQCentral);
+AUCCQ = trapz(Time,YCQCentral);
+AUCDCQ = trapz(Time,YDQCentral);
 AUC = [AUCCQ, AUCDCQ];
 %% plot statements to visualize popPK simulation
 figure; 

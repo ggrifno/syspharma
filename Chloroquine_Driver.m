@@ -7,7 +7,7 @@ RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 % 3. Malaria    Missed Dose
 % 4. COVID-19   Missed Dose
 
-MissedDose = 1; %only applies to cases 3 and 4
+MissedDose = 0; %only applies to cases 3 and 4
 %Dosing Schedule:
 %  1 = miss first dose   4 = miss fourth dose
 %  2 = miss second dose  3 = miss third dose
@@ -21,14 +21,14 @@ switch RunCase
 
         DosingRegimen = 1;
         MissedDose = 0;
-        [PatientsData, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
 
         TitleP ='NormalD_Malaria_PK_parameters';
         save(TitleP, 'PatientsData')
         TitleCQ ='NormalD_Malaria_PK_CQCentral';
-        save(TitleCQ, 'YCQCentral')
+        save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ ='NormalD_Malaria_PK_DQCentral';
-        save(TitleDQ, 'YDQCentral')
+        save(TitleDQ, 'YDQCentral', 'Time')
         TitleA ='NormalD_Malaria_PK_AUC';
         save(TitleA, 'AUC')
     case 2
@@ -38,14 +38,14 @@ switch RunCase
         DosingRegimen = 2;
         MissedDose = 0; 
         
-        [PatientsData, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
         
         TitleP ='NormalD_COVID_PK_parameters';
         save(TitleP, 'PatientsData')
         TitleCQ ='NormalD_COVID_PK_CQCentral';
-        save(TitleCQ, 'YCQCentral')
+        save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ ='NormalD_COVID_PK_DQCentral';
-        save(TitleDQ, 'YDQCentral')
+        save(TitleDQ, 'YDQCentral', 'Time')
         TitleA ='NormalD_COVID_PK_AUC';
         save(TitleA, 'AUC')
 
@@ -55,7 +55,7 @@ switch RunCase
      
         DosingRegimen = 1;
         
-        [PatientsData, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
         
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
@@ -63,9 +63,9 @@ switch RunCase
         TitleP = sprintf('MissedD%i_Malaria_PK_parameters',i);
         save(TitleP, 'PatientsData')
         TitleCQ = sprintf('MissedD%i_Malaria_PK_CQCentral',i);
-        save(TitleCQ, 'YCQCentral')
+        save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ =sprintf('MissedD%i_Malaria_PK_DQCentral',i);
-        save(TitleDQ, 'YDQCentral')
+        save(TitleDQ, 'YDQCentral', 'Time')
         TitleA =sprintf('MissedD%i_Malaria_PK_AUC',i);
         save(TitleA, 'AUC')
     
@@ -75,15 +75,15 @@ switch RunCase
      
         DosingRegimen = 2;
         
-        [PatientsData, YCQCentral, YDQCentral,AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, Time, YCQCentral, YDQCentral,AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
         TitleP = sprintf('MissedD%i_COVID_PK_parameters', i);
         save(TitleP, 'PatientsData')
         TitleCQ = sprintf('MissedD%i_COVID_PK_CQCentral', i);
-        save(TitleCQ, 'YCQCentral')
+        save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ = sprintf('MissedD%i_COVID_PK_DQCentral', i);
-        save(TitleDQ, 'YDQCentral')
+        save(TitleDQ, 'YDQCentral', 'Time')
         TitleA =sprintf('MissedD%i_COVID_PK_AUC',i);
         save(TitleA, 'AUC')
            
