@@ -126,12 +126,14 @@ for i = 1:50
     kP_median = median(kP);
     Pt_median = P0.*exp(-kP_median.*t);
     plot(t, Pt, 'k')
+    ax = gca;
+    ax.FontSize = 16; 
     
 end
-plot(t, Pt_median, 'r','LineWidth', 2)
-legend('enter legend here')
-xlabel('Time (hrs)')
-ylabel('Total Parasites')
+plot(t, Pt_median, 'b','LineWidth', 2)
+title('Clearance of P. vivax Across Different Clearance Rates','FontSize', 18)
+xlabel('Time (hrs)','FontSize', 16)
+ylabel('Total Parasites','FontSize', 16)
 hold off
 
 %% Create parameter array for clearance rates based on concentration for ALL
@@ -139,7 +141,7 @@ hold off
 
 [timepoints, patients] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
 kP = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
-MIC = 67; %ug/L, minimum inhibitory concentration (MIC)
+MIC = 0.067; %mg/L, minimum inhibitory concentration (MIC)
 
 for j = 1:patients
 for i = 1:timepoints %need to iterate through every concentration for each patient
@@ -151,6 +153,19 @@ end
 end
 % Run Smiulation
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-tspan = 0:.06:24; %simulate first 24 hours
-[T, Y] = ode45(@Parasite_eqns,tspan,P0,options,a);
+tspan = 0:.06:100; %simulate first 24 hours
+kP = kP_median;
+r = 0.009625;
+a = [kP_median r];
+initial_P0 = [P0 0 0];
+[T, Y] = ode45(@Parasite_eqns,tspan,initial_P0,options,a);
+% [Talt, Yalt] = ode45(@Parasite_eqns,tspan,P0,options,a);
+figure;
+hold on
+plot(T, Y(:,1))
+plot(T, Y(:,2))
+plot(T, Y(:,3))
+legend('balance', 'cleared', 'growth')
+
+
 
