@@ -52,39 +52,3 @@ dydt(7) = k30*y(4)*V3; % virtual clearance of DCQ, is only cleared from central 
 % compartment; just need to be careful in the main code to treat it like an
 % amount, not a concentration.
 
-%% COMPARISON TO ACET_EQNS
-% function dydt = Acet_eqns(t,y,p)
-% % equations describing the pharmacokinetics of acetaminophen, delivered
-% % orally, in a two-compartment model with absorption from the gut and
-% % clearance from the central compartment
-% 
-% q=p(1);
-% V1=p(2);
-% V2=p(3);
-% kc1=p(4);
-% kc2=p(5);
-% k12=p(6);
-% k21=p(7);
-% ka =p(8);
-% dydt = zeros(4,1);    % use a column vector 
-%  
-% %% EQUATIONS
-% % 1 - concentration of drug in central compartment (infusion included here, 
-% % but typically set to zero in simulations of oral delivery)
-% % 2 - conceentration of drug in peripheral compartment (clearance included 
-% % here, but typically set to zero in simulations)
-% % 3 - amount of drug in virtual clearance compartment. Note unit change
-% % here, the terms in the equation have conc*vol form, which means amount 
-% % not concentration. This eliminates the need to set a volume for this
-% % compartment; just need to be careful in the main code to treat it like an
-% % amount, not a concentration.
-% % 4 - amount of drug in virtual gut compartment. Again, the units here are
-% % in amount, not concentration. Note how y4 is divided by V in equation 1
-% 
-%  dydt(1) = q/V1 + ka*y(4)/V1 - kc1*y(1) - k12*y(1) + (V2/V1)*k21*y(2);
-%  dydt(2) =                   - kc2*y(2) + (V1/V2)*k12*y(1) - k21*y(2);
-%  dydt(3) =                     kc1*y(1)*V1 + kc2*y(2)*V2;
-%  dydt(4) =      - ka*y(4);
-%  
-%  
-% 
