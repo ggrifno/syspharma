@@ -73,24 +73,12 @@ x <- c("SexLabels", "WeightVal", "v1cq","v2cq","v1dcq",'v2dcq','K10','K30','kabs
 colnames(df) <- x
 df$SexLabels<- as.factor(df$SexLabels)
 
-# reactive({
-
-# })
-reactive({
-    mn<-input$Weight[1]
-    mx<-input$Weight[2]
-    for (val in 1:nrow(dat)) {
-        if (dat[val,]$WeightVal > mn && dat[val,]$WeightVal < mx) {
-            df<-rbind(df,dat[val,])
-        }
-    }
-})
 
 server <- function(input, output) {
     output$selected_var <- renderText({ 
         paste("You have selected", input$Weight[1])
     })
-    reactive{(
+    reactive({
         mn<-input$Weight[1]
         mx<-input$Weight[2]
         for (val in 1:nrow(dat)) {
