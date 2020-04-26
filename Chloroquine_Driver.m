@@ -136,16 +136,15 @@ xlabel('Time (hrs)','FontSize', 16)
 ylabel('Total Parasites','FontSize', 16)
 hold off
 
-%% Create parameter array for clearance rates based on concentration for ALL
-%%patients
-
+%% Demonstration of diffeq model for quantifying number of parasites
 [timepoints, patients] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
 kP = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
-MIC = 0.067; %mg/L, minimum inhibitory concentration (MIC)
+MIC1 = 0.067; %mg/L, minimum inhibitory concentration (MIC)
+MIC2 = 2*MIC1; %mg/L, twice the minimum inhibitory concentration for testing another MIC condition
 
 for j = 1:patients
 for i = 1:timepoints %need to iterate through every concentration for each patient
-    if YCQCentral(i,j) > MIC
+    if YCQCentral(i,j) > MIC1
         kP(i,j) = .01;
     end
 end
@@ -153,13 +152,14 @@ end
 end
 % Run Smiulation
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-tspan = 0:.06:100; %simulate first 24 hours
-kP = kP_median;
-r = 0.009625;
-a = [kP_median r];
-initial_P0 = [P0 0 0];
-[T, Y] = ode45(@Parasite_eqns,tspan,initial_P0,options,a);
-% [Talt, Yalt] = ode45(@Parasite_eqns,tspan,P0,options,a);
+tspan = 0:.06:100; %simulate first 100 hours
+kP = kP_median; %demonstrate model using median kP
+r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
+a = [kP_median r]; %input vector for ODE solver
+initial_P0 = [P0 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+[T, Y] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
+
+%plot the resulting demonstration 
 figure;
 hold on
 plot(T, Y(:,1))
