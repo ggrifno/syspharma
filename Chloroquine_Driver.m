@@ -152,20 +152,26 @@ end
 end
 % Run Smiulation
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-tspan = 0:.06:100; %simulate first 100 hours
+tspan = 0:.06:200; %simulate first 100 hours
 kP = kP_median; %demonstrate model using median kP
 r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
 a = [kP_median r]; %input vector for ODE solver
 initial_P0 = [P0 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
 [T, Y] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
 
-%plot the resulting demonstration 
+%plot the resulting demonstration (need to manually save)
 figure;
 hold on
-plot(T, Y(:,1))
-plot(T, Y(:,2))
-plot(T, Y(:,3))
-legend('balance', 'cleared', 'growth')
+plot(T, Y(:,1),'LineWidth', 2)
+plot(T, Y(:,2),'LineWidth', 2)
+plot(T, Y(:,3),'LineWidth', 2)
+ylim([-2*10^12 2*10^12])
+ax = gca;
+ax.FontSize = 16;
+xlabel('Time (hrs)','FontSize', 16)
+ylabel('Number of Parasites','FontSize', 16)
+title('Demonstration of First-Order Model of Parasite Dynamics')
+legend('total parasites', 'parasites cleared', 'parasite growth')
 
 
 

@@ -1,4 +1,4 @@
-function [out, out2] = Chloroquine_Sim(weight, ptemp, DosingRegimen, MissedDose)
+function [out, out2] = Chloroquine_sim(weight, ptemp, DosingRegimen, MissedDose)
 
 %Patient
 Weight = weight;
