@@ -21,7 +21,7 @@ switch RunCase
 
         DosingRegimen = 1;
         MissedDose = 0;
-        [PatientsData, YCQCentral, YDQCentral] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
 
         TitleP ='NormalD_Malaria_PK_parameters';
         save(TitleP, 'PatientsData')
@@ -29,6 +29,8 @@ switch RunCase
         save(TitleCQ, 'YCQCentral')
         TitleDQ ='NormalD_Malaria_PK_DQCentral';
         save(TitleDQ, 'YDQCentral')
+        TitleA ='NormalD_Malaria_PK_AUC';
+        save(TitleA, 'AUC')
     case 2
 % 2. COVID-19   Normal Dosing
 %========================
@@ -36,7 +38,7 @@ switch RunCase
         DosingRegimen = 2;
         MissedDose = 0; 
         
-        [PatientsData, YCQCentral, YDQCentral] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
         
         TitleP ='NormalD_COVID_PK_parameters';
         save(TitleP, 'PatientsData')
@@ -44,6 +46,8 @@ switch RunCase
         save(TitleCQ, 'YCQCentral')
         TitleDQ ='NormalD_COVID_PK_DQCentral';
         save(TitleDQ, 'YDQCentral')
+        TitleA ='NormalD_COVID_PK_AUC';
+        save(TitleA, 'AUC')
 
     case 3
 % 3. Malaria    Missed Dose
@@ -51,7 +55,7 @@ switch RunCase
      
         DosingRegimen = 1;
         
-        [PatientsData, YCQCentral, YDQCentral] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
         
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
@@ -62,6 +66,8 @@ switch RunCase
         save(TitleCQ, 'YCQCentral')
         TitleDQ =sprintf('MissedD%i_Malaria_PK_DQCentral',i);
         save(TitleDQ, 'YDQCentral')
+        TitleA =sprintf('MissedD%i_Malaria_PK_AUC',i);
+        save(TitleA, 'AUC')
     
 	case 4
 % 4. optimization with bounds 
@@ -69,7 +75,7 @@ switch RunCase
      
         DosingRegimen = 2;
         
-        [PatientsData, YCQCentral, YDQCentral] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, YCQCentral, YDQCentral,AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
         TitleP = sprintf('MissedD%i_COVID_PK_parameters', i);
@@ -78,6 +84,8 @@ switch RunCase
         save(TitleCQ, 'YCQCentral')
         TitleDQ = sprintf('MissedD%i_COVID_PK_DQCentral', i);
         save(TitleDQ, 'YDQCentral')
+        TitleA =sprintf('MissedD%i_COVID_PK_AUC',i);
+        save(TitleA, 'AUC')
            
 
 end
