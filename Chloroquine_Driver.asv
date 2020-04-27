@@ -31,8 +31,10 @@ switch RunCase
         save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ ='NormalD_Malaria_PK_DQCentral';
         save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA ='NormalD_Malaria_PK_AUC';
-        save(TitleA, 'AUC')
+        TitleA ='NormalD_Malaria_PK_AUCCQ';
+        save(TitleA, 'AUCCQ')
+        TitleA ='NormalD_Malaria_PK_AUCDCQ';
+        save(TitleA, 'AUCDCQ')
     case 2
 % 2. COVID-19   Normal Dosing
 %========================
@@ -48,8 +50,10 @@ switch RunCase
         save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ ='NormalD_COVID_PK_DQCentral';
         save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA ='NormalD_COVID_PK_AUC';
-        save(TitleA, 'AUC')
+        TitleA ='NormalD_COVID_PK_AUCCQ';
+        save(TitleA, 'AUCCQ')
+        TitleA ='NormalD_COVID_PK_AUCCQ';
+        save(TitleA, 'AUCDCQ')
 
     case 3
 % 3. Malaria    Missed Dose
@@ -68,8 +72,10 @@ switch RunCase
         save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ =sprintf('MissedD%i_Malaria_PK_DQCentral',i);
         save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA =sprintf('MissedD%i_Malaria_PK_AUC',i);
-        save(TitleA, 'AUC')
+        TitleA =sprintf('MissedD%i_Malaria_PK_AUCCQ',i);
+        save(TitleA, 'AUCCQ')
+        TitleA =sprintf('MissedD%i_Malaria_PK_AUCDCQ',i);
+        save(TitleA, 'AUCDCQ')
     
 	case 4
 % 4. optimization with bounds 
@@ -86,8 +92,10 @@ switch RunCase
         save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ = sprintf('MissedD%i_COVID_PK_DQCentral', i);
         save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA =sprintf('MissedD%i_COVID_PK_AUC',i);
-        save(TitleA, 'AUC')
+        TitleA =sprintf('MissedD%i_COVID_PK_AUCCQ',i);
+        save(TitleA, 'AUCCQ')
+        TitleA =sprintf('MissedD%i_COVID_PK_AUCDCQ',i);
+        save(TitleA, 'AUCDCQ')
            
 
 end
@@ -135,20 +143,20 @@ hold off
 
 %% Demonstration of diffeq model for quantifying number of parasites
 [timepoints, patients] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
-kP_vector = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
-MIC1 = 0.1; %mg/L, minimum inhibitory concentration (MIC), NEED TO FIND LITERATURE SUPPORT
+MIC1 = 0.067; %mg/L, minimum inhibitory concentration (MIC), NEED TO FIND LITERATURE SUPPORT
 MIC2 = 2*MIC1; %mg/L, twice the minimum inhibitory concentration for testing another MIC condition
 
-for j = 1:patients
-    for i = 1:timepoints %need to iterate through every concentration for each patient
-        if YCQCentral(i,j) > MIC1
-            kP_vector(i,j) = .01;
-        end
-    end
-end
+% kP_vector = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
+% for j = 1:patients
+%     for i = 1:timepoints %need to iterate through every concentration for each patient
+%         if YCQCentral(i,j) > MIC1
+%             kP_vector(i,j) = .01;
+%         end
+%     end
+% end
 % Run Smiulation
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-tspan = 0:.06:200; %simulate first 100 hours
+tspan = 0:.06:500; %simulate 500 hours
 kP = kP_median; %demonstrate model using median kP
 r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
 a = [kP_median r]; %input vector for ODE solver
@@ -182,36 +190,90 @@ DCQconc = zeros(length(Time),patients,doseRange);
 AUCCQ_doses = zeros(patients, doseRange);
 AUCDCQ_doses = zeros(patients, doseRange);
 
-for z = 1:doseRange %run simulations for ALL the doses 
-    [~, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDoseRange(i),SecondDoseRange(i), MissedDose); 
+for z = 1:doseRange %run simulations for ALL the doses (currently we have 10 dose conditions) 
+    [~, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDoseRange(z),SecondDoseRange(z), MissedDose); 
     CQconc(:,:,z) = YCQCentral; %extract the central compartment concentration 
     DCQconc(:,:,z) = YDQCentral; %extract the peripheral compartment concentration
     AUCCQ_doses(:, z) = AUCCQ;
     AUCDCQ_doses(:,z) = AUCDCQ;
 end
 
-%part 2: get parasite values from parasite eqn using CQ concentration
+%% part 2: get parasite values from parasite eqn using CQ concentration
 %information
 
 %approach: 
 %1. get timestamps for when concentration of CQ falls below the MIC
-%(original or increased MIC)
-CQconcBelow = zeros(patients, doseRange); %contains the indicies in each timecourse, for each patient, for each dosage, where [CQ] drops below MIC  
+%(original MIC)
+CQconcBelow = zeros(doseRange, patients); %contains the indicies in each timecourse, for each patient, for each dosage, where [CQ] drops below MIC  
+Hour_100 = 1672; %the index of the time vector that is approximately 100 hours into the 500 total hour simulation
 for dose = 1:doseRange
     for patient = 1: patients
-        sample = CQconc(:,patient,dose)
-        CQconcBelow() = find
+        sample = CQconc(Hour_100:end,patient,dose); %select the patient's concentration timecourse for each dosage, after about the first 100 hours (after time index is 1672)
+        if size(find(sample < MIC1, 1)) == [0,1] %"find" will return an empty vector sometimes which cannot be added to CQconcBelow
+        CQconcBelow(dose,patient) = 0; %add a zero here as a placeholder, this will mean that the patient never dropped below MIC1
+        else
+        CQconcBelow(dose,patient) = Hour_100 + find(sample < MIC1, 1); 
+        %collect the index of the FIRST location in the patient's total timecourse where conentration drops below MIC, AFTER the first 50 hours when dose fluxates wildly
+        end
     end
 end
-    
-CQconcBelow = [];
-%2. break the parasite dynamics simulation into two parts, above MIC and
-%below MIC
+
+%% 2. break the parasite dynamics simulation into two parts, above MIC and %below MIC. 
 %for below MIC, set the kP to one order of manitude lower than the
 %patient's original kP, which we pick from a range for each of the patients
 %(not dependent on popPK information or bodyweight)
+
+% Part 1 of Simulation, regular kP
+options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
+
+%decide what the kP testing range is:
+kP = linspace(1/25,1/110,patients)'; %hr-1, create a parasite clearance rate for each patient
+
+%decide what the tspan is for the first half of the simulation and simulate
+%parasite counts
+%ONLY FIRST DOSE FOR NOW
+Parasites_at_end = ones(doseRange,patients); %hold the final parasite number for each patient, for each dosing condition
+for i =1:patients
+    if CQconcBelow(1,i) ==0 %just looking at all 100 patients for the first dose condition (dose conditions 1/10)
+    tspan = 0:.06:500; %if the patient never drops below MIC, simulate ALL observation time (500 hours)
+    kP = kP_median; %demonstrate model using median kP AT FIRST, will need to switch this to variable kP later
+    r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
+    a = [kP_median r]; %input vector for ODE solver
+    initial_P0 = [P0 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    [T, P] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
+    
+    else %this means that the patient DOES drop below MIC
+    droppoint = CQconcBelow(1,i); %time point at which the patient's [CQ] drops below MIC
+    tspan1 = 0:0.06:Time(droppoint,1); %index the Time vector get the TIME (in hrs) where the conc falls below 0 
+    kP = kP_median; %demonstrate model using median kP AT FIRST
+    r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
+    a = [kP_median r]; %input vector for ODE solver
+    initial_P0 = [P0 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    [T1, P1] = ode45(@Parasite_eqns,tspan1,initial_P0,options,a); %parasite diffeq model
+    
+    %new tspan1 with new initial conditions and new (lower) kP
+    tspan2 = tspan1(end):.06:Time(end); %new tspan goes from end of first tspan to end of simulation (500 hrs)
+    p00 = P1(end,:);%get initial conditions vector from first half of simulation
+    kP = kP/10;     %kP drops by 1 order of magnitude as CQ is no longer effective in reducing parasites
+    r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
+    a = [kP r];     %input vector for ODE solver
+    [T2, P2] = ode45(@Parasite_eqns,tspan2,p00,options,a); %parasite diffeq model
+    
+    %sum up total simualation
+    T_tot = [T1; T2];
+    P_tot = [P1; P2];    
+    
+    end
+end
+
 %3. finally output the number of parasites in the body at the end of the
 %observation period (currently simulating around 200 hrs, will eventually
 %simulate approx 500 hours
+
+endP = P_tot(end);
+
+%4. calculate the number of patients cured 
+
+%5. export data to a .mat file for visualization as a heatmap in R
 
 
