@@ -24,17 +24,17 @@ if DosingRegimen == 1
  
 else
     %5 UPDATE TO COVID DOSING
-    NumberOfDoses = 4;
+    NumberOfDoses = 10;
     FirstDosing  = 10;  %units - mg/kg
     OtherDosing = 5;    %units - mg/kg
-    FirstDose = FirstDosing*Weight; %units = mg
+    FirstDose = 500; %units = mg
     if MissedDose == 1
         FirstDose = 0;
     end
-    OtherDose = OtherDosing*Weight;
-    SecondDoseTime = 6;  %units: hr, time after first dose, between 6-12 hrs after first
-    TimeBetweenDoses = 24; %units: hr, time after second, and third dose,
-
+    OtherDose = 500;
+    TotalDrug=0;
+    SecondDoseTime = 12;  %units: hr, time after first dose, between 6-12 hrs after first
+    TimeBetweenDoses = 12; %units: hr, time after second, and third dose,
 end
 
 %% Set Patient Parameters
@@ -135,7 +135,7 @@ end
   end
   
  end
-
 out = [Y(:,1),Y(:,4)];
 out2 = T;
+
 end
