@@ -169,5 +169,5 @@ ylabel('Number of Parasites','FontSize', 16)
 title('Demonstration of First-Order Model of Parasite Dynamics')
 legend('total parasites', 'parasites cleared', 'parasite growth')
 
-%% PD: therapeutic effect of (1)dosing variance, (2) 
+%% Demonstrate 
 

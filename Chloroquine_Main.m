@@ -1,4 +1,4 @@
-function [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+function [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose); 
 
 
 % Systems Pharmacology Final Project Main Driver
@@ -115,7 +115,7 @@ ylabel('Weight (lb)')
 boxplot (xdist','Labels',GroupName);
 
 patientID = (1:NumberOfSubjects)';
-Weights = xdist';
+Weights = xdist'./2.205; %CONVERT WEIGHTS FROM LBS TO KG. SAVE WEIGHTS AS KG AND USE WEIGHTS IN KG FOR SIMULATIONS
 save('WeightDistribs.mat','patientID','Weights');
 
 %% Population Pharmacokinetics
@@ -153,15 +153,14 @@ PatientsData = [WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs];
 
 %% Simulation
 YCQCentral = []; YDQCentral= []; Time = [];
-for i = 1:NumberOfSubjects %this only iterates through the first HALF of subjects, if you're pulling from WeightVal
-    %i.e. NumberOfSubjects = 50, but length of WeightVal= 2*50 = 100
-    W = WeightVal(i); %only goes 1 to NumberOfSubjects
+for i = 1:length(WeightVal) %iterate through both male and female, since WeightVal melts them into one
+    W = WeightVal(i); %current patient you're looking at
     v1 = v1cq(i); v2 = v2cq(i);
     v3 = v1dcq(i); v4 = v2dcq(i);
     k10 = K10(i); k30 = K30(i);
     ka = kabs(i);
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
-    [ytemp, time] = Chloroquine_sim(W, ptemp, DosingRegimen, MissedDose);
+    [ytemp, time] = Chloroquine_sim(W, ptemp, DosingRegimen, FirstDosing, OtherDosing, MissedDose);
     Time = time;
     YCQCentral = [YCQCentral, ytemp(:,1)];
     YDQCentral = [YDQCentral, ytemp(:,2)];
