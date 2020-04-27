@@ -227,24 +227,29 @@ end
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
 
 %decide what the kP testing range is:
-kP = linspace(1/25,1/110,patients)'; %hr-1, create a parasite clearance rate for each patient
+% kP = linspace(1/25,1/110,10)'; %hr-1, test across 10 possible kPs
 
 %decide what the tspan is for the first half of the simulation and simulate
 %parasite counts
 %ONLY FIRST DOSE FOR NOW
 Parasites_at_end = ones(doseRange,patients); %hold the final parasite number for each patient, for each dosing condition
-for i =1:patients
-    if CQconcBelow(1,i) ==0 %just looking at all 100 patients for the first dose condition (dose conditions 1/10)
-    tspan = 0:.06:500; %if the patient never drops below MIC, simulate ALL observation time (500 hours)
+for dose = 1:doseRange %iterate through all the CQ dose settings (ten total)
+for patient =1:patients %iterate through all 100 patients
+    if CQconcBelow(dose,patient) ==0 %just looking at all 100 patients for the first dose condition (dose conditions 1/10)
+    tspan = 0:.5:500; %if the patient never drops below MIC, simulate ALL observation time (500 hours)
     kP = kP_median; %demonstrate model using median kP AT FIRST, will need to switch this to variable kP later
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_median r]; %input vector for ODE solver
+    %let the parasite burden for all 
     initial_P0 = [P0 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T, P] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
     
+    %collect information from this simulation into matrix for storage
+    Parasites_at_end(dose,patient) = P(end,1); %only grab the value from the first column
+    
     else %this means that the patient DOES drop below MIC
-    droppoint = CQconcBelow(1,i); %time point at which the patient's [CQ] drops below MIC
-    tspan1 = 0:0.06:Time(droppoint,1); %index the Time vector get the TIME (in hrs) where the conc falls below 0 
+    droppoint = CQconcBelow(dose,patient); %time point at which the patient's [CQ] drops below MIC
+    tspan1 = 0:0.5:Time(droppoint,1); %index the Time vector get the TIME (in hrs) where the conc falls below 0 
     kP = kP_median; %demonstrate model using median kP AT FIRST
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_median r]; %input vector for ODE solver
@@ -252,20 +257,26 @@ for i =1:patients
     [T1, P1] = ode45(@Parasite_eqns,tspan1,initial_P0,options,a); %parasite diffeq model
     
     %new tspan1 with new initial conditions and new (lower) kP
-    tspan2 = tspan1(end):.06:Time(end); %new tspan goes from end of first tspan to end of simulation (500 hrs)
+    tspan2 = tspan1(end):.06:Time(end)+10; %new tspan goes from end of first tspan to end of simulation PLUS an additional 10 hours (520 total hours, 10 hours longer than CQ simulation, which goes to 510 hours)
     p00 = P1(end,:);%get initial conditions vector from first half of simulation
     kP = kP/10;     %kP drops by 1 order of magnitude as CQ is no longer effective in reducing parasites
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP r];     %input vector for ODE solver
     [T2, P2] = ode45(@Parasite_eqns,tspan2,p00,options,a); %parasite diffeq model
     
-    %sum up total simualation
+    %sum up total simualation values (both Ttot and Ptot should have same dimensions
     T_tot = [T1; T2];
-    P_tot = [P1; P2];    
+    P_tot = [P1(:,1); P2(:,1)]; %only grab the TOTAL parasites, which are stored in first colume of ODE parasite output
+    
+    %collect information into matrix for storage
+    Parasites_at_end(dose,patient) = P_tot(end);
     
     end
 end
-
+disp('done with dose number:')
+disp(dose)
+end
+disp('done with all 10 doses')
 %3. finally output the number of parasites in the body at the end of the
 %observation period (currently simulating around 200 hrs, will eventually
 %simulate approx 500 hours
