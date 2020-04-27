@@ -1,4 +1,4 @@
-function [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose); 
+function [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose); 
 
 
 % Systems Pharmacology Final Project Main Driver
@@ -22,13 +22,13 @@ NumberOfSubjects = 50;
 % the code with small numbers that run quickly, and then run it with 
 % larger populations once we're satisfied that it's working.
 
-weightCutOff = 50;
+weightCutOff = 50;  %lbs
 % Minumum weight; set to 0 to only remove nonpositives
 
 Male = 1;
 Female = 2; % indexing for matrices
 
-%NEED TO JUSTIFY WHY WE CHOSE THESE
+%NEED TO JUSTIFY WHY WE CHOSE THESE, these should all be in lbs
 means(Male) = 191;
 means(Female) = 164.3;
 SD(Male) = 61.57;
@@ -153,7 +153,7 @@ PatientsData = [WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs];
 
 %% Simulation
 YCQCentral = []; YDQCentral= []; Time = [];
-for i = 1:length(WeightVal) %iterate through both male and female, since WeightVal melts them into one
+for i = 1:length(WeightVal) %iterate through both male and female, since WeightVal melts them into one vector
     W = WeightVal(i); %current patient you're looking at
     v1 = v1cq(i); v2 = v2cq(i);
     v3 = v1dcq(i); v4 = v2dcq(i);
@@ -169,7 +169,6 @@ end
 
 AUCCQ = trapz(Time,YCQCentral);
 AUCDCQ = trapz(Time,YDQCentral);
-AUC = [AUCCQ, AUCDCQ];
 %% plot statements to visualize popPK simulation
 figure; 
 for i = 1:NumberOfSubjects

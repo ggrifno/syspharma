@@ -23,7 +23,7 @@ switch RunCase
         MissedDose = 0;
         FirstDosing  = 10;  %units - mg/kg, now listed in function inputs
         OtherDosing = 5;    %units - mg/kg, now listed in function inputs
-        [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
+        [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
 
         TitleP ='NormalD_Malaria_PK_parameters';
         save(TitleP, 'PatientsData')
@@ -40,7 +40,7 @@ switch RunCase
         DosingRegimen = 2;
         MissedDose = 0; 
         
-        [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         
         TitleP ='NormalD_COVID_PK_parameters';
         save(TitleP, 'PatientsData')
@@ -57,7 +57,7 @@ switch RunCase
      
         DosingRegimen = 1;
         
-        [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
@@ -77,7 +77,7 @@ switch RunCase
      
         DosingRegimen = 2;
         
-        [PatientsData, Time, YCQCentral, YDQCentral,AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+        [PatientsData, Time, YCQCentral, YDQCentral,AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
         TitleP = sprintf('MissedD%i_COVID_PK_parameters', i);
@@ -135,14 +135,14 @@ hold off
 
 %% Demonstration of diffeq model for quantifying number of parasites
 [timepoints, patients] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
-kP = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
-MIC1 = 0.067; %mg/L, minimum inhibitory concentration (MIC)
+kP_vector = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
+MIC1 = 0.1; %mg/L, minimum inhibitory concentration (MIC), NEED TO FIND LITERATURE SUPPORT
 MIC2 = 2*MIC1; %mg/L, twice the minimum inhibitory concentration for testing another MIC condition
 
 for j = 1:patients
     for i = 1:timepoints %need to iterate through every concentration for each patient
         if YCQCentral(i,j) > MIC1
-            kP(i,j) = .01;
+            kP_vector(i,j) = .01;
         end
     end
 end
@@ -169,5 +169,42 @@ ylabel('Number of Parasites','FontSize', 16)
 title('Demonstration of First-Order Model of Parasite Dynamics')
 legend('total parasites', 'parasites cleared', 'parasite growth')
 
-%% Demonstrate 
+%% PD: therapeutic effect of (1)dosing variance, (2) varying parasite clearance
+
+%part 1: PK simulation to get drug concentrations for the time course
+doseRange = 10; %number of doses to try within the dose limits (defined below)
+FirstDoseRange = linspace(15,30, doseRange); %choose a range of first doses to explore
+SecondDoseRange = linspace(5,10, doseRange);%choose a range of second doses to explore
+
+%initialize matrices for storing simulation outputs across different doses
+CQconc = zeros(length(Time),patients,doseRange);% define zeros that will hold all time points (row), for all patients (column), for each dose choice (depth)
+DCQconc = zeros(length(Time),patients,doseRange);
+AUCCQ_doses = zeros(patients, doseRange);
+AUCDCQ_doses = zeros(patients, doseRange);
+
+for z = 1:doseRange %run simulations for ALL the doses 
+    [~, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDoseRange(i),SecondDoseRange(i), MissedDose); 
+    CQconc(:,:,z) = YCQCentral; %extract the central compartment concentration 
+    DCQconc(:,:,i) = YDQCentral; %extract the peripheral compartment concentration
+    AUCCQ_doses(:, i) = AUCCQ;
+    AUCDCQ_doses(:,i) = AUCDCQ;
+end
+
+%part 2: get parasite values from parasite eqn using CQ concentration
+%information
+
+%approach: 
+%1. get timestamps for when concentration of CQ falls below the MIC
+%(original or increased MIC)
+for times 
+CQconcBelow = 
+%2. break the parasite dynamics simulation into two parts, above MIC and
+%below MIC
+%for below MIC, set the kP to one order of manitude lower than the
+%patient's original kP, which we pick from a range for each of the patients
+%(not dependent on popPK information or bodyweight)
+%3. finally output the number of parasites in the body at the end of the
+%observation period (currently simulating around 200 hrs, will eventually
+%simulate approx 500 hours
+
 
