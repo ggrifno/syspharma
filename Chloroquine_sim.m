@@ -1,4 +1,4 @@
-function [out, out2] = Chloroquine_sim(weight, ptemp, DosingRegimen, MissedDose)
+function [out, out2] = Chloroquine_sim(weight, ptemp, DosingRegimen, FirstDosing, OtherDosing, MissedDose)
 
 %Patient
 Weight = weight;
@@ -11,8 +11,8 @@ Weight = weight;
 % Dosing Malaria
 if DosingRegimen == 1
     NumberOfDoses = 4;
-    FirstDosing  = 10;  %units - mg/kg
-    OtherDosing = 5;    %units - mg/kg
+%     FirstDosing  = 10;  %units - mg/kg, now listed in function inputs
+%     OtherDosing = 5;    %units - mg/kg, now listed in function inputs
     FirstDose = FirstDosing*Weight; %units = mg
     OtherDose = OtherDosing*Weight;
     TotalDrug = 0;

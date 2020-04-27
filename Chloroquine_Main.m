@@ -1,4 +1,4 @@
-function [PatientsData, Time, YCQCentral, YDQCentral, AUC] = Chloroquine_Main(DosingRegimen, MissedDose); 
+function [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose); 
 
 
 % Systems Pharmacology Final Project Main Driver
@@ -22,13 +22,13 @@ NumberOfSubjects = 50;
 % the code with small numbers that run quickly, and then run it with 
 % larger populations once we're satisfied that it's working.
 
-weightCutOff = 50;
+weightCutOff = 50;  %lbs
 % Minumum weight; set to 0 to only remove nonpositives
 
 Male = 1;
 Female = 2; % indexing for matrices
 
-%NEED TO JUSTIFY WHY WE CHOSE THESE
+%NEED TO JUSTIFY WHY WE CHOSE THESE, these should all be in lbs
 means(Male) = 191;
 means(Female) = 164.3;
 SD(Male) = 61.57;
@@ -115,7 +115,7 @@ ylabel('Weight (lb)')
 boxplot (xdist','Labels',GroupName);
 
 patientID = (1:NumberOfSubjects)';
-Weights = xdist';
+Weights = xdist'./2.205; %CONVERT WEIGHTS FROM LBS TO KG. SAVE WEIGHTS AS KG AND USE WEIGHTS IN KG FOR SIMULATIONS
 save('WeightDistribs.mat','patientID','Weights');
 Weights = Weights/2.205;
 
@@ -154,15 +154,14 @@ PatientsData = [WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs];
 
 %% Simulation
 YCQCentral = []; YDQCentral= []; Time = [];
-for i = 1:NumberOfSubjects %this only iterates through the first HALF of subjects, if you're pulling from WeightVal
-    %i.e. NumberOfSubjects = 50, but length of WeightVal= 2*50 = 100
-    W = WeightVal(i); %only goes 1 to NumberOfSubjects
+for i = 1:length(WeightVal) %iterate through both male and female, since WeightVal melts them into one vector
+    W = WeightVal(i); %current patient you're looking at
     v1 = v1cq(i); v2 = v2cq(i);
     v3 = v1dcq(i); v4 = v2dcq(i);
     k10 = K10(i); k30 = K30(i);
     ka = kabs(i);
     ptemp = [v1 v2 v3 v4 k10 k30 ka];
-    [ytemp, time] = Chloroquine_sim(W, ptemp, DosingRegimen, MissedDose);
+    [ytemp, time] = Chloroquine_sim(W, ptemp, DosingRegimen, FirstDosing, OtherDosing, MissedDose);
     Time = time;
     YCQCentral = [YCQCentral, ytemp(:,1)];
     YDQCentral = [YDQCentral, ytemp(:,2)];
@@ -171,7 +170,6 @@ end
 
 AUCCQ = trapz(Time,YCQCentral);
 AUCDCQ = trapz(Time,YDQCentral);
-AUC = [AUCCQ, AUCDCQ];
 %% plot statements to visualize popPK simulation
 figure; 
 for i = 1:NumberOfSubjects
