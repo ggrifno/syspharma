@@ -227,41 +227,45 @@ end
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
 
 %decide what the kP testing range is:
-% kP = linspace(1/25,1/110,10)'; %hr-1, test across 10 possible kPs
+rangekP = 10; %test across 10 possible kPs
+kP = linspace(1/25,1/110,rangekP)'; %hr-1, test across 10 possible kPs in the range reported in the literature
 
 %decide what the tspan is for the first half of the simulation and simulate
 %parasite counts
-%ONLY FIRST DOSE FOR NOW
-Parasites_at_end = ones(doseRange,patients); %hold the final parasite number for each patient, for each dosing condition
+Parasites_at_end = ones(rangekP, doseRange,patients); %hold the final parasite number for each patient, for each dosing condition
+
+for clearanceCounter = 1:rangekP
 for dose = 1:doseRange %iterate through all the CQ dose settings (ten total)
 for patient =1:patients %iterate through all 100 patients
     if CQconcBelow(dose,patient) ==0 %just looking at all 100 patients for the first dose condition (dose conditions 1/10)
     tspan = 0:.5:500; %if the patient never drops below MIC, simulate ALL observation time (500 hours)
-    kP = kP_median; %demonstrate model using median kP AT FIRST, will need to switch this to variable kP later
+    kP_val = kP(clearanceCounter); %run model using one of the kPs to indicate parasite sensitivity to CQ
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
-    a = [kP_median r]; %input vector for ODE solver
+    a = [kP_val r]; %input vector for ODE solver
     %let the parasite burden for all be the same (10^12 starting parasites)
     initial_P0 = [P0 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T, P] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
     
     %collect information from this simulation into matrix for storage
-    Parasites_at_end(dose,patient) = P(end,1); %only grab the value from the first column
+    Parasites_at_end(clearanceCounter,dose,patient) = P(end,1); %only grab the value from the first column
     
     else %this means that the patient DOES drop below MIC
+    %first half of simulation
     droppoint = CQconcBelow(dose,patient); %time point at which the patient's [CQ] drops below MIC
     tspan1 = 0:0.5:Time(droppoint,1); %index the Time vector get the TIME (in hrs) where the conc falls below 0 
-    kP = kP_median; %demonstrate model using median kP AT FIRST
+    kP_val = kP(clearanceCounter); %demonstrate model using median kP AT FIRST
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
-    a = [kP_median r]; %input vector for ODE solver
+    a = [kP_val r]; %input vector for ODE solver
     initial_P0 = [P0 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T1, P1] = ode45(@Parasite_eqns,tspan1,initial_P0,options,a); %parasite diffeq model
     
+    %second half of simulation
     %new tspan1 with new initial conditions and new (lower) kP
     tspan2 = tspan1(end):.06:Time(end)+10; %new tspan goes from end of first tspan to end of simulation PLUS an additional 10 hours (520 total hours, 10 hours longer than CQ simulation, which goes to 510 hours)
-    p00 = P1(end,:);%get initial conditions vector from first half of simulation
-    kP = kP/10;     %kP drops by 1 order of magnitude as CQ is no longer effective in reducing parasites
-    r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
-    a = [kP r];     %input vector for ODE solver
+    p00 = P1(end,:);   %get initial conditions vector from first half of simulation
+    kP_val = kP_val/10;%kP for the simulation will drops by 1 order of magnitude as CQ is no longer effective in reducing parasites
+    r = 0.009625;      %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
+    a = [kP_val r];    %input vector for ODE solver
     [T2, P2] = ode45(@Parasite_eqns,tspan2,p00,options,a); %parasite diffeq model
     
     %sum up total simualation values (both Ttot and Ptot should have same dimensions
@@ -269,21 +273,29 @@ for patient =1:patients %iterate through all 100 patients
     P_tot = [P1(:,1); P2(:,1)]; %only grab the TOTAL parasites, which are stored in first colume of ODE parasite output
     
     %collect information into matrix for storage
-    Parasites_at_end(dose,patient) = P_tot(end);
+    Parasites_at_end(clearanceCounter,dose,patient) = P_tot(end);
     
     end
 end
 disp('done with dose number:')
 disp(dose)
 end
-disp('done with all 10 doses')
-%3. finally output the number of parasites in the body at the end of the
-%observation period (currently simulating around 200 hrs, will eventually
-%simulate approx 500 hours
+disp('done with kP testing number:')
+disp(clearanceCounter)
+end
 
-endP = P_tot(end);
-
-%4. calculate the number of patients cured 
+%% 4. calculate the number of patients cured using parasite counts at end of simulation
+detect_limit = 10^9; %set the detection limit high at first for proof-of-concept
+%try for just the first dose (dose 1)
+kP_Range = 10; %number of kP's we will try
+percentCured = zeros(doseRange, kP_Range); %index position 2 will eventually be filled in by kP value
+for clearanceCounter = 1:rangekP
+    for dose = 1:doseRange
+    below_limit_indexes = find(Parasites_at_end(clearanceCounter,dose,:) < detect_limit);
+    [row,col] = size(below_limit_indexes);
+    percentCured(dose,clearanceCounter) = 100*row/patients; %find the percentage of total patients that were cured
+    end
+end
 
 %5. export data to a .mat file for visualization as a heatmap in R
 
