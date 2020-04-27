@@ -142,17 +142,6 @@ server <- function(input, output) {
             scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
         p1 <- ggplotly(g1) 
     })
-    output$v2cq <- renderPlotly({
-        g1<-ggplot(NULL) + 
-            geom_point(data = df_m, aes(x = WeightVal, y = v2cq, col = "Male"))+
-            geom_point(data = df_f, aes(x = WeightVal, y = v2cq, col = "Female"))+
-            ggtitle('Chloroquine Peripheral Compartment Volume (V2) vs. Weight') +
-            xlab('Weight (lb)')+
-            ylab('Peripheral Compartment Volume: V2 (L)')+
-            scale_x_continuous('Weight (lb)',limits = input$Weight)+
-            scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
-        p1 <- ggplotly(g1) 
-    })
     output$K10 <- renderPlotly({
         g1<-ggplot(NULL) + 
             geom_point(data = df_m, aes(x = WeightVal, y = K10, col = "Male"))+
