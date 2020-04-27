@@ -1,13 +1,13 @@
 clear all;
 
-RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
+RunCase = 3; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
 % 3. Malaria    Missed Dose
 % 4. COVID-19   Missed Dose
 
-MissedDose = 0; %only applies to cases 3 and 4
+MissedDose = 4; %only applies to cases 3 and 4
 %Dosing Schedule:
 %  1 = miss first dose   4 = miss fourth dose
 %  2 = miss second dose  3 = miss third dose

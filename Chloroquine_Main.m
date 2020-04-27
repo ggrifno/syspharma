@@ -117,6 +117,7 @@ boxplot (xdist','Labels',GroupName);
 patientID = (1:NumberOfSubjects)';
 Weights = xdist';
 save('WeightDistribs.mat','patientID','Weights');
+Weights = Weights/2.205;
 
 %% Population Pharmacokinetics
 
