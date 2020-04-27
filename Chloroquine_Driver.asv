@@ -185,9 +185,9 @@ AUCDCQ_doses = zeros(patients, doseRange);
 for z = 1:doseRange %run simulations for ALL the doses 
     [~, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDoseRange(i),SecondDoseRange(i), MissedDose); 
     CQconc(:,:,z) = YCQCentral; %extract the central compartment concentration 
-    DCQconc(:,:,i) = YDQCentral; %extract the peripheral compartment concentration
-    AUCCQ_doses(:, i) = AUCCQ;
-    AUCDCQ_doses(:,i) = AUCDCQ;
+    DCQconc(:,:,z) = YDQCentral; %extract the peripheral compartment concentration
+    AUCCQ_doses(:, z) = AUCCQ;
+    AUCDCQ_doses(:,z) = AUCDCQ;
 end
 
 %part 2: get parasite values from parasite eqn using CQ concentration
@@ -196,8 +196,15 @@ end
 %approach: 
 %1. get timestamps for when concentration of CQ falls below the MIC
 %(original or increased MIC)
-for times 
-CQconcBelow = 
+CQconcBelow = zeros(patients, doseRange); %contains the indicies in each timecourse, for each patient, for each dosage, where [CQ] drops below MIC  
+for dose = 1:doseRange
+    for patient = 1: patients
+        sample = CQconc(:,patient,dose)
+        CQconcBelow() = find
+    end
+end
+    
+CQconcBelow = [];
 %2. break the parasite dynamics simulation into two parts, above MIC and
 %below MIC
 %for below MIC, set the kP to one order of manitude lower than the

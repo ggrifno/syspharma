@@ -136,7 +136,7 @@ hold off
 %% Demonstration of diffeq model for quantifying number of parasites
 [timepoints, patients] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
 kP_vector = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
-MIC1 = 0.1; %mg/L, minimum inhibitory concentration (MIC), NEED TO FIND LITERATURE SUPPORT
+MIC1 = 0.6; %mg/L, minimum inhibitory concentration (MIC), NEED TO FIND LITERATURE SUPPORT
 MIC2 = 2*MIC1; %mg/L, twice the minimum inhibitory concentration for testing another MIC condition
 
 for j = 1:patients
@@ -183,24 +183,27 @@ AUCCQ_doses = zeros(patients, doseRange);
 AUCDCQ_doses = zeros(patients, doseRange);
 
 for z = 1:doseRange %run simulations for ALL the doses 
-    [~, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDoseRange(i),SecondDoseRange(i), MissedDose); 
+    [~, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDoseRange(z),SecondDoseRange(z), MissedDose); 
     CQconc(:,:,z) = YCQCentral; %extract the central compartment concentration 
     DCQconc(:,:,z) = YDQCentral; %extract the peripheral compartment concentration
     AUCCQ_doses(:, z) = AUCCQ;
     AUCDCQ_doses(:,z) = AUCDCQ;
 end
 
-%part 2: get parasite values from parasite eqn using CQ concentration
+%% part 2: get parasite values from parasite eqn using CQ concentration
 %information
 
 %approach: 
 %1. get timestamps for when concentration of CQ falls below the MIC
 %(original or increased MIC)
-CQconcBelow = []; %contains the indicies in each timecourse, for each patient, for each dosage, where 
-for times = 1: length(Time)
-    CQ
-    
-CQconcBelow = [];
+CQconcBelow = zeros(doseRange, patients); %contains the indicies in each timecourse, for each patient, for each dosage, where [CQ] drops below MIC  
+for dose = 1:doseRange
+    for patient = 1: patients
+        sample = CQconc(850:end,patient,dose); %select the patient's concentration timecourse for one dosage, after about the first 50 hours (after time index is 850)
+        CQconcBelow(dose,patient) = find(sample < MIC1, 1); %collect the index of the FIRST location in the patient's timecourse where conentration drops below MIC, AFTER the first 50 hours when dose fluxates wildly
+    end
+end
+
 %2. break the parasite dynamics simulation into two parts, above MIC and
 %below MIC
 %for below MIC, set the kP to one order of manitude lower than the
