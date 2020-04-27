@@ -103,7 +103,7 @@ if MissedDose ~= 2
     TotalDrug = TotalDrug + OtherDose;
 end
 
- for i =  1:10
+ for i =  1:21
   options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
   tspan = 0:.06:TimeBetweenDoses;
   [t,y] = ode45(@Chloroquine_eqns,tspan,y00,options,p);

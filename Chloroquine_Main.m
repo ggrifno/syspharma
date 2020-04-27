@@ -170,6 +170,7 @@ end
 
 AUCCQ = trapz(Time,YCQCentral);
 AUCDCQ = trapz(Time,YDQCentral);
+AUC = [AUCCQ, AUCDCQ];
 %% plot statements to visualize popPK simulation
 figure; 
 for i = 1:NumberOfSubjects

@@ -1,13 +1,13 @@
 clear all;
 
-RunCase = 3; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
+RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
 % 3. Malaria    Missed Dose
 % 4. COVID-19   Missed Dose
 
-MissedDose = 4; %only applies to cases 3 and 4
+MissedDose = 0; %only applies to cases 3 and 4
 %Dosing Schedule:
 %  1 = miss first dose   4 = miss fourth dose
 %  2 = miss second dose  3 = miss third dose
@@ -31,8 +31,10 @@ switch RunCase
         save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ ='NormalD_Malaria_PK_DQCentral';
         save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA ='NormalD_Malaria_PK_AUC';
-        save(TitleA, 'AUC')
+        TitleA ='NormalD_Malaria_PK_AUCCQ';
+        save(TitleA, 'AUCCQ')
+        TitleA ='NormalD_Malaria_PK_AUCDCQ';
+        save(TitleA, 'AUCDCQ')
     case 2
 % 2. COVID-19   Normal Dosing
 %========================
@@ -48,8 +50,10 @@ switch RunCase
         save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ ='NormalD_COVID_PK_DQCentral';
         save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA ='NormalD_COVID_PK_AUC';
-        save(TitleA, 'AUC')
+        TitleA ='NormalD_COVID_PK_AUCCQ';
+        save(TitleA, 'AUCCQ')
+        TitleA ='NormalD_COVID_PK_AUCCQ';
+        save(TitleA, 'AUCDCQ')
 
     case 3
 % 3. Malaria    Missed Dose
@@ -68,8 +72,10 @@ switch RunCase
         save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ =sprintf('MissedD%i_Malaria_PK_DQCentral',i);
         save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA =sprintf('MissedD%i_Malaria_PK_AUC',i);
-        save(TitleA, 'AUC')
+        TitleA =sprintf('MissedD%i_Malaria_PK_AUCCQ',i);
+        save(TitleA, 'AUCCQ')
+        TitleA =sprintf('MissedD%i_Malaria_PK_AUCDCQ',i);
+        save(TitleA, 'AUCDCQ')
     
 	case 4
 % 4. optimization with bounds 
@@ -86,8 +92,10 @@ switch RunCase
         save(TitleCQ, 'YCQCentral', 'Time')
         TitleDQ = sprintf('MissedD%i_COVID_PK_DQCentral', i);
         save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA =sprintf('MissedD%i_COVID_PK_AUC',i);
-        save(TitleA, 'AUC')
+        TitleA =sprintf('MissedD%i_COVID_PK_AUCCQ',i);
+        save(TitleA, 'AUCCQ')
+        TitleA =sprintf('MissedD%i_COVID_PK_AUCDCQ',i);
+        save(TitleA, 'AUCDCQ')
            
 
 end
