@@ -297,6 +297,9 @@ for clearanceCounter = 1:rangekP
     end
 end
 
-%5. export data to a .mat file for visualization as a heatmap in R
-
+%% 5. export data to a .mat file for visualization as a heatmap in R
+% FirstDoseRange = linspace(15,30, doseRange); %choose a range of first doses to explore
+% SecondDoseRange = linspace(5,10, doseRange);%choose a range of second doses to explore
+totalDose = FirstDoseRange' + 3.*SecondDoseRange'; %mg/kg 
+save figA1.mat percentCured kP totalDose;
 
