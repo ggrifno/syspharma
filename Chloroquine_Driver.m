@@ -1,6 +1,6 @@
 clear all;
 
-RunCase = 4; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
+RunCase =4; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -56,7 +56,7 @@ switch RunCase
         save(TitleDQ, 'YDQCentral', 'Time')
         TitleA ='NormalD_COVID_PK_AUCCQ';
         save(TitleA, 'AUCCQ')
-        TitleA ='NormalD_COVID_PK_AUCCQ';
+        TitleA ='NormalD_COVID_PK_AUCDCQ';
         save(TitleA, 'AUCDCQ')
 
     case 3
