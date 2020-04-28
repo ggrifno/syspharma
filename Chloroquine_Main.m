@@ -29,8 +29,8 @@ Male = 1;
 Female = 2; % indexing for matrices
 
 %NEED TO JUSTIFY WHY WE CHOSE THESE, these should all be in lbs
-means(Male) = 191;
-means(Female) = 164.3;
+means(Male) = 148;
+means(Female) = 134;
 SD(Male) = 61.57;
 SD(Female) = 67.32;
 
