@@ -173,8 +173,25 @@ AUCDCQ = trapz(Time,YDQCentral);
 AUC = [AUCCQ, AUCDCQ];
 %% plot statements to visualize popPK simulation
 figure; 
+
+
+ax1=subplot(1,2,1);
 for i = 1:NumberOfSubjects
-plot(Time(:,1),YCQCentral(:,i),'k')
+plot(ax1, Time(:,1),YCQCentral(:,i))
 hold on
 end
+xlabel(ax1,'Time (hrs)','FontSize',14)
+ylabel(ax1,'Chloroquine Concentration (mg/mL)', 'FontSize',14)
+title(ax1,'Central Compartment of Chloroquine, All Patients','FontSize',16)
+
+hold off
+ 
+ax1=subplot(1,2,2);
+for i = 1:NumberOfSubjects
+plot(Time(:,1),YDQCentral(:,i))
+hold on
+end
+xlabel(ax1,'Time (hrs)','FontSize',14)
+ylabel(ax1,'Desethylchloroquine Concentration (mg/mL)','FontSize',14)
+title(ax1,'Central Compartment of Desethylchloroquine, All Patients','FontSize',16)
 hold off
