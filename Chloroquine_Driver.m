@@ -1,13 +1,13 @@
 clear all;
 
-RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
+RunCase = 4; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
 % 3. Malaria    Missed Dose
 % 4. COVID-19   Missed Dose
 
-MissedDose = 0; %only applies to cases 3 and 4
+MissedDose = 1; %only applies to cases 3 and 4
 %Dosing Schedule:
 %  1 = miss first dose   4 = miss fourth dose
 %  2 = miss second dose  3 = miss third dose
@@ -41,8 +41,12 @@ switch RunCase
      
         DosingRegimen = 2;
         MissedDose = 0; 
+        FirstDosing  = 0;  %units - mg/kg, now listed in function inputs
+        OtherDosing = 0;    %units - mg/kg, now listed in function inputs
         
         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
+        
+        
         
         TitleP ='NormalD_COVID_PK_parameters';
         save(TitleP, 'PatientsData')
@@ -60,11 +64,14 @@ switch RunCase
 %========================
      
         DosingRegimen = 1;
+        FirstDosing  = 10;  %units - mg/kg, now listed in function inputs
+        OtherDosing = 5;    %units - mg/kg, now listed in function inputs
         
         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
+        
    
         TitleP = sprintf('MissedD%i_Malaria_PK_parameters',i);
         save(TitleP, 'PatientsData')
@@ -82,6 +89,8 @@ switch RunCase
 %========================
      
         DosingRegimen = 2;
+        FirstDosing  = 0;  %units - mg/kg, now listed in function inputs
+        OtherDosing = 0;    %units - mg/kg, now listed in function inputs
         
         [PatientsData, Time, YCQCentral, YDQCentral,AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         %UpdateToShowWhichDoseMissed
