@@ -166,7 +166,7 @@ for i = 1:length(WeightVal) %iterates through both male and female, since Weight
     %set patient's infusion and intercompartmental conversion rates (CONSTANT FOR ALL PATIENTS, apart from volume correction)
     q = 0;           % infusion rate is always 0 because CQ is administered orally
     k12 = 37.7/v1;   % units = L/h, Chloroquine from central to peripheral
-    k21 = 37.7/v2;   % units = L/h, chloroquine from peripheral to central
+    k21 = 37.7/v2;   % units - L/h, chloroquine from peripheral to central
     k23 = 6.13/v1;   % units = L/H , CQ transforming to DCQ
     k34 = 31.46/v3;  % units = L/h, DCQ from central to peripheral
     k43 = 31.46/v4;  % units = L/h, DCQ from peripheral to central
@@ -179,7 +179,7 @@ for i = 1:length(WeightVal) %iterates through both male and female, since Weight
     Time = time;
     YCQCentral = [YCQCentral, ytemp(:,1)];
     YDQCentral = [YDQCentral, ytemp(:,2)];
-    ytemp = []; %keeping this but you shouldn't need to "clear" ytemp each time. It'll get redefined in the next cycle when you call the simulation
+    ytemp = []; %keeping this but you shouldn't need to "clear" ytemp each time. It'll get redefined in the next cycle
 end
 
 AUCCQ = trapz(Time,YCQCentral);

@@ -53,7 +53,7 @@ end
 % k34= p(11);
 % k43= p(12);
 % ka = p(13);
-% %rates (intercompartmental, clearnce, half lives)
+%rates (intercompartmental, clearnce, half lives)
 % CHF = 10.7; %units = days, half-life CQ
 % DHF = 8.74; %units = days, half-life DCQ
 % 

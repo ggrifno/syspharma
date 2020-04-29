@@ -1,5 +1,22 @@
-%% Run simulations for different disease and dosing cases
+%% Establish parameters for simulations before running simulation
 clear all;
+% %"Typical" values of parameters sourced from the literature 
+% q = 0;           % infusion rate is always 0 because CQ is administered orally
+% ka = ptemp(7);
+% k12 = 37.7/v1;   % units = L/h, Chloroquine from central to peripheral
+% k21 = 37.7/v2;   % units - L/h, chloroquine from peripheral to central
+% k23 = 6.13/v1;   % units = L/H , CQ transforming to DCQ
+% k34 = 31.46/v3;  % units = L/h, DCQ from central to peripheral
+% k43 = 31.46/v4;  % units = L/h, DCQ from peripheral to central
+% k10 = log(2)/(CHF*24);      % units = 1/h, clearance of CQ from central compartment
+% k30 = log(2)/(DHF*24);      % units = 1/h, clearance of DCQ from central compartment
+% 
+% %DECIDE WHETHER TO DISPLAY PATIENT WEIGHT DISTRIBUTION PLOTS FROM POPPK SIMULATION
+% % DisplayPlots = 1; %on, plots of patient weight distributions will display whenever you run Chloroquine_Main.m
+% DisplayPlots = 2; %off, no plots of population weight distributions will display
+
+%% Run simulations for different disease and dosing cases
+
 RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 
 % 1. Malaria    Normal Dosing
@@ -23,9 +40,7 @@ switch RunCase
         MissedDose = 0;
         FirstDosing  = 10;  %units - mg/kg, now listed in function inputs
         OtherDosing = 5;    %units - mg/kg, now listed in function inputs
-%         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
-        DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
-        [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
+        [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,ptemp, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
 
 %         TitleP ='NormalD_Malaria_PK_parameters';
 %         save(TitleP, 'PatientsData')
@@ -110,10 +125,6 @@ switch RunCase
            
 
 end
-
-%% Generate Global Sensitivity Plots
-
-
 
 %% Pharmacodynamics: P. vivax infection response to CQ administration
 
