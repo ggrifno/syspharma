@@ -45,26 +45,21 @@ nka = normrnd(0,0.1,[row,col]);
 for i = 1:2 %go through each of the 2 sexes in Weights matrix
     for j = 1:row %calculate each of the variables for each patient (patient number (j,i) in "Weights")
         %ADDING VARIABILITY TO WEIGHTS
-       %we are using an allometric rule for compartment volumes
-       V1CQ(j,i) = v1_cq * ((Weights(j,i) / med(i))^theta1) * exp (nV1(j,i));
-       V2CQ(j,i) = v2_cq * ((Weights(j,i) / med(i))^theta2) * exp (nV2(j,i));
+        %we are using an allometric rule for compartment volumes
+        V1CQ(j,i) = v1_cq * ((Weights(j,i) / med(i))^theta1) * exp (nV1(j,i));
+        V2CQ(j,i) = v2_cq * ((Weights(j,i) / med(i))^theta2) * exp (nV2(j,i));
 
-       V1DCQ(j,i)= v1_dcq* ((Weights(j,i) / med(i))^theta1) * exp (nV1(j,i));
-       V2DCQ(j,i)= v2_dcq* ((Weights(j,i) / med(i))^theta2) * exp (nV2(j,i));
+        V1DCQ(j,i)= v1_dcq* ((Weights(j,i) / med(i))^theta1) * exp (nV1(j,i));
+        V2DCQ(j,i)= v2_dcq* ((Weights(j,i) / med(i))^theta2) * exp (nV2(j,i));
 
-       %can we add noise to the clearance rates directly? (original values
-       %for clearance)
-%             CL_CQ(j,i) =  kcl_cq* exp (nCL_CQ(j,i)); 
-%             CL_DCQ(j,i) = kcl_dcq* exp (nCL_DCQ(j,i));
-
-        %probably a better idea to add variance to the halflife? (new
-        %clearance values)
+        %ADD VARIABILITY TO CQ AND DCQ HALFLIVES
         %Although uncertain if this method of adding variance is correct
         popCHF = CHF* exp (nCL_CQ(j,i)); %units = days, half-life CQ
         popDHF = DHF* exp (nCL_DCQ(j,i)); %units = days, half-life DCQ
         CL_CQ(j,i) =  log(2)/(popCHF*24); 
         CL_DCQ(j,i) = log(2)/(popDHF*24);
         
+        %ADD VARIABILITY TO CQ ABOSORPTION RATE FROM THE GUT
         %add variance to absorption rate, we're using gaussian noise
         KA(j,i) = ka*exp(nka(j,i));
 
