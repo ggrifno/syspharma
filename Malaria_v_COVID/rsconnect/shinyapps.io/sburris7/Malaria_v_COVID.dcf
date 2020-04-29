@@ -1,0 +1,12 @@
+name: Malaria_v_COVID
+title: Malaria_v_COVID
+username:
+account: sburris7
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2198859
+bundleId: 3074848
+url: https://sburris7.shinyapps.io/Malaria_v_COVID/
+when: 1588039336.86036
+asMultiple: FALSE
+asStatic: FALSE
