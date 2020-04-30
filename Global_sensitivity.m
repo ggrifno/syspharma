@@ -1,4 +1,4 @@
-function [peakCQ_mean, timePeak_mean] = Global_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector)
+function [peakCQ, peakCQ_mean, timePeak, timePeak_mean] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector, CQclear_vector)
 %function for outputting data needed for global sensitivity analysis for both Malaria and COVID-19
 
 %timeframe = look at the time when you would expect the peak concentration to occur
@@ -22,16 +22,18 @@ function [peakCQ_mean, timePeak_mean] = Global_sensitivity(PatientsData, DosingR
 
 %% Simulation COPIED FROM MAIN FUNCTION
 % get information for the population (100 patients: 50 males, 50 females)
+
+%Patient-specific inputs are now in the inputs for the function
 % PatientsData = [WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs];
-WeightVal = PatientsData(:,1);
-SexLabels = PatientsData(:,2); %this will likely go unused
-v1cq      = PatientsData(:,3);
-v2cq      = PatientsData(:,4);
-v1dcq     = PatientsData(:,5);
-v2dcq     = PatientsData(:,6);
-% K10       = PatientsData(:,7); %clearance of cholorquine will be REWRITTEN for the global sensitivity analysis
-K30       = PatientsData(:,8);
-kabs      = PatientsData(:,9);
+% WeightVal = PatientsData(:,1);
+% SexLabels = PatientsData(:,2); %this will likely go unused
+% v1cq      = PatientsData(:,3);
+% v2cq      = PatientsData(:,4);
+% v1dcq     = PatientsData(:,5);
+% v2dcq     = PatientsData(:,6);
+% % K10       = PatientsData(:,7); %clearance of cholorquine will be REWRITTEN for the global sensitivity analysis
+% K30       = PatientsData(:,8);
+% kabs      = PatientsData(:,9);
 FirstDosing = dose_vector(:,1); %should have size 10
 OtherDosing = dose_vector(:,2);%should have size 10
 MissedDose = 0; %we are not concerned with missing doses for global sensitivity
@@ -40,6 +42,8 @@ MissedDose = 0; %we are not concerned with missing doses for global sensitivity
 numPatients = length(WeightVal);     %should be 100 patients
 numDoses = length(dose_vector(:,1)); %should be 10
 numCL = length(CQclear_vector);      %should be 10
+numDoses = 10; %should be 10
+numCL = 10;      %should be 10
 
 %initialize simulations
 YCQCentral = [];
@@ -75,12 +79,14 @@ for dose = 1: numDoses %input the dose condition into the simulation
             YDQCentral = [YDQCentral, ytemp(:,2)];
             
             %2. find the maximum (peak) concentration for EACH patient over each ondition. save that concentrationin peakCQ matrix
-            [peakCQ(dose,clearance,patient), indT] = max(abs(ytemp)); %find the max in the timecourse for the CURRENT patient
+            [peakCQ(dose,clearance,patient), indT] = max(abs(ytemp(:,1))); %find the max in the timecourse for the CURRENT patient
             timePeak(dose,clearance,patient)= time(indT); %find the TIME at which the [CQ] peaks
             % ytemp = []; %keeping this but you shouldn't need to "clear" ytemp each time. It'll get redefined in the next cycle when you call the simulation
         end
         
     end
+    disp('done with dose number')
+    disp(dose)
 end
 
 %3. find and report the MEAN peak [CQ] and the MEAN time to peak

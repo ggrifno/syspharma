@@ -25,13 +25,11 @@ if DosingRegimen == 1
 else
     % UPDATE TO COVID DOSING
     NumberOfDoses = 10;
-%     FirstDosing  = 10;  %units - mg/kg
-%     OtherDosing = 5;    %units - mg/kg
-    FirstDose = 500; %units = mg
+    FirstDose = FirstDosing; %units = mg fIXED DOSE
     if MissedDose == 1
         FirstDose = 0;
     end
-    OtherDose = 500;
+    OtherDose = OtherDosing; %units = mg fIXED DOSE
     TotalDrug=0;
     SecondDoseTime = 12;  %units: hr, time after first dose, between 6-12 hrs after first
     TimeBetweenDoses = 12; %units: hr, time after second, and third dose,
@@ -84,13 +82,26 @@ y0 = [0 0 FirstDose 0 0 0 0];
 % (6) Amount of CQ Drug in Virtual Clearance Compartment
 % (7) Amount of DCQ in Virtual Clearance Compartment
 TotalDrug = TotalDrug + FirstDose;
-%%Create parameter array
-% p = [q v1 v2 v3 v4 k10 k30 k12 k21 k23 k34 k43 ka]; %this was already
-% done in lines above
+%%Extract values from parameter vector that is inputted
+% p = [q v1 v2 v3 v4 k10 k30 k12 k21 k23 k34 k43 ka];
+q = p(1);
+v1 = p(2);
+v2 = p(3);
+v3 = p(4);
+v4 = p(5);
+k10 = p(6);
+k30 = p(7);
+k12 = p(8);
+k21 = p(9);
+k23 = p(10);
+k34 = p(11);
+k43 = p(12);
+ka = p(13);
 
 %%Run Smiulation
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-tspan1 = 0:.3:SecondDoseTime; %set time frame
+% tspan1 = 0:.3:SecondDoseTime; %set time frame
+tspan1 = 0:.9:SecondDoseTime; %set time frame
 [T, Y] = ode45(@Chloroquine_eqns,tspan1,y0,options,p);
 
 MB(:,1) = Y(:,1)*v1; %CQ, CENTRAL
@@ -113,9 +124,11 @@ if MissedDose ~= 2
     TotalDrug = TotalDrug + OtherDose;
 end
 
- for i =  1:21
+%  for i =  1:21 %observe over 21 days for full timecourse
+for i =  1:7 %observe over only 7 days for global sensitivity
   options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-  tspan = 0:.2:TimeBetweenDoses; %set time frame
+%   tspan = 0:.2:TimeBetweenDoses; %set time frame
+  tspan = 0:.9:TimeBetweenDoses; %set time frame
   [t,y] = ode45(@Chloroquine_eqns,tspan,y00,options,p);
   
   %update time and concentration values for entire simulation

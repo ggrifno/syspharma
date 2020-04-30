@@ -1,6 +1,6 @@
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
+RunCase = 2; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -25,7 +25,7 @@ switch RunCase
         OtherDosing = 5;    %units - mg/kg, now listed in function inputs
 %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
         DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
-        [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
+        [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
 
 %         TitleP ='NormalD_Malaria_PK_parameters';
 %         save(TitleP, 'PatientsData')
@@ -45,8 +45,11 @@ switch RunCase
         MissedDose = 0; 
         FirstDosing  = 0;  %units - mg/kg, now listed in function inputs
         OtherDosing = 0;    %units - mg/kg, now listed in function inputs
-        
-        [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
+        %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
+        DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
+        [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
+
+%         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         
         
         
@@ -68,8 +71,11 @@ switch RunCase
         DosingRegimen = 1;
         FirstDosing  = 10;  %units - mg/kg, now listed in function inputs
         OtherDosing = 5;    %units - mg/kg, now listed in function inputs
-        
-        [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
+        %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
+        DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
+        [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
+
+%         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
@@ -93,8 +99,11 @@ switch RunCase
         DosingRegimen = 2;
         FirstDosing  = 0;  %units - mg/kg, now listed in function inputs
         OtherDosing = 0;    %units - mg/kg, now listed in function inputs
+        %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
+        DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
+        [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
         
-        [PatientsData, Time, YCQCentral, YDQCentral,AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
+%         [PatientsData, Time, YCQCentral, YDQCentral,AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         %UpdateToShowWhichDoseMissed
         i = MissedDose;
         TitleP = sprintf('MissedD%i_COVID_PK_parameters', i);
@@ -111,13 +120,35 @@ switch RunCase
 
 end
 
-%% Generate Global Sensitivity Plots
+%% Generate Global Sensitivity Plots - MALARIA
 
 dose_vector = [linspace(10,20,10)', linspace(5,10,10)'];
 HL_vector = linspace(20, 60,10)';
 CQclear_vector = log(2)./(HL_vector.*24);
 
 % [peakCQ_mean, timePeak_mean] = Global_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector);
+[peakCQ, peakCQ_mean, timePeak, timePeak_mean] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector, CQclear_vector);
+
+%% save global sensitivity data - MALARIA
+dose_total = dose_vector(:,1) + 3.*dose_vector(:,2); %sum the columns of the dose vector
+save global_sensi_Malaria.mat peakCQ_mean dose_total CQclear_vector;
+
+%% Generate Global Sensitivity Plots - COVID-19
+
+% dose_vector = [linspace(10,20,10)', linspace(5,10,10)'];
+% HL_vector = linspace(20, 60,10)';
+% CQclear_vector = log(2)./(HL_vector.*24);
+
+dose_vector_C19 = [linspace(500,1000,10)', linspace(500,1000,10)'];
+HL_vector_C19 = linspace(20, 60,10)';
+CQclear_vector_C19 = log(2)./(HL_vector_C19.*24);
+
+% [peakCQ_mean, timePeak_mean] = Global_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector);
+[peakCQ_C19, peakCQ_mean_C19, timePeak_C19, timePeak_mean_C19] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector_C19, CQclear_vector_C19);
+
+%%save global sensitivity data - COVID-19
+% dose_total = dose_vector(:,1) + 3.*dose_vector(:,2); %sum the columns of the dose vector
+% save global_sensi_COVID19.mat peakCQ_mean dose_total CQclear_vector;
 
 %% Pharmacodynamics: P. vivax infection response to CQ administration
 
