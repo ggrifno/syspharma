@@ -31,7 +31,7 @@ else
     end
     OtherDose = OtherDosing; %units = mg fIXED DOSE
     TotalDrug=0;
-    SecondDoseTime = 12;  %units: hr, time after first dose, between 6-12 hrs after first
+    SecondDoseTime = 12;  %units: hr, time after first dose
     TimeBetweenDoses = 12; %units: hr, time after second, and third dose,
 end
 

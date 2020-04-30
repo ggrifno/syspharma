@@ -146,9 +146,9 @@ CQclear_vector_C19 = log(2)./(HL_vector_C19.*24);
 % [peakCQ_mean, timePeak_mean] = Global_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector);
 [peakCQ_C19, peakCQ_mean_C19, timePeak_C19, timePeak_mean_C19] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector_C19, CQclear_vector_C19);
 
-%%save global sensitivity data - COVID-19
+%% save global sensitivity data - COVID-19
 % dose_total = dose_vector(:,1) + 3.*dose_vector(:,2); %sum the columns of the dose vector
-% save global_sensi_COVID19.mat peakCQ_mean dose_total CQclear_vector;
+save global_sensi_COVID19.mat peakCQ_mean_C19 dose_vector_C19 CQclear_vector_C19;
 
 %% Pharmacodynamics: P. vivax infection response to CQ administration
 
