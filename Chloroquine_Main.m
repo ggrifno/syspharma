@@ -1,4 +1,4 @@
-function [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
+function [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose); 
 % Systems Pharmacology Final Project Main Driver
 % Alanna Farrell, SJ Burris, Gabrielle Grifno
 % Spring 2020
@@ -191,26 +191,26 @@ AUC = [AUCCQ, AUCDCQ];
 
 if DisplayPlots == 1 
     
-figure; 
-ax1=subplot(1,2,1);
-for i = 1:NumberOfSubjects
-plot(ax1, Time(:,1),YCQCentral(:,i))
-hold on
-end
-xlabel(ax1,'Time (hrs)','FontSize',14)
-ylabel(ax1,'Chloroquine Concentration (mg/mL)', 'FontSize',14)
-title(ax1,'Central Compartment of Chloroquine, All Patients','FontSize',16)
+    figure; 
+    ax1=subplot(1,2,1);
+    for i = 1:NumberOfSubjects
+    plot(ax1, Time(:,1),YCQCentral(:,i))
+    hold on
+    end
+    xlabel(ax1,'Time (hrs)','FontSize',14)
+    ylabel(ax1,'Chloroquine Concentration (mg/mL)', 'FontSize',14)
+    title(ax1,'Central Compartment of Chloroquine, All Patients','FontSize',16)
 
-hold off
- 
-ax1=subplot(1,2,2);
-for i = 1:NumberOfSubjects
-plot(Time(:,1),YDQCentral(:,i))
-hold on
-end
-xlabel(ax1,'Time (hrs)','FontSize',14)
-ylabel(ax1,'Desethylchloroquine Concentration (mg/mL)','FontSize',14)
-title(ax1,'Central Compartment of Desethylchloroquine, All Patients','FontSize',16)
-hold off
+    hold off
+
+    ax1=subplot(1,2,2);
+    for i = 1:NumberOfSubjects
+    plot(Time(:,1),YDQCentral(:,i))
+    hold on
+    end
+    xlabel(ax1,'Time (hrs)','FontSize',14)
+    ylabel(ax1,'Desethylchloroquine Concentration (mg/mL)','FontSize',14)
+    title(ax1,'Central Compartment of Desethylchloroquine, All Patients','FontSize',16)
+    hold off
 end
 end

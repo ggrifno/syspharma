@@ -1,7 +1,9 @@
-function [Parasites_at_end, percentCured, kP, FirstDoseRange, SecondDoseRange] = Chloroquine_Malaria(DosingRegimen, doseRange,rangekP, FirstDosing,OtherDosing,timepoints, patients, MIC,MissedDose)
-%File for determining PD response of Malaria plasmodium infection to CQ %administration
+function [Parasites_at_end, percentCured] = Chloroquine_Malaria(doseRange,rangekP, FirstDosing,OtherDosing,YCQCentral, MIC)
+%File for determining PD response of Malaria plasmodium infection to CQ
+%administration
 
 %Parameters
+[timepoints, patients] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
 MIC1 = MIC; %mg/L, minimum inhibitory concentration (MIC), NEED TO FIND LITERATURE SUPPORT
 MIC2 = 2*MIC1; %mg/L, twice the minimum inhibitory concentration for testing another MIC condition
 
@@ -14,19 +16,22 @@ SecondDoseRange = linspace(OtherDosing,2*OtherDosing, doseRange);%choose a range
 
 %initialize matrices for storing simulation outputs across different doses
 CQconc = zeros(length(timepoints),patients,doseRange);% define zeros that will hold all time points (row), for all patients (column), for each dose choice (depth)
-% DCQconc = zeros(length(timepoitns),patients,doseRange);
+DCQconc = zeros(length(timepoitns),patients,doseRange);
 AUCCQ_doses = zeros(patients, doseRange);
-% AUCDCQ_doses = zeros(patients, doseRange);
+AUCDCQ_doses = zeros(patients, doseRange);
 
 for z = 1:doseRange %run simulations for ALL the doses (currently we have 10 dose conditions) 
-    [~,~,~,~,~,~,~,~,~,~,Time,YCQCentral,~,AUCCQ,~] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose);
+    [~, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDoseRange(z),SecondDoseRange(z), MissedDose); 
     CQconc(:,:,z) = YCQCentral; %extract the central compartment concentration 
+    DCQconc(:,:,z) = YDQCentral; %extract the peripheral compartment concentration
     AUCCQ_doses(:, z) = AUCCQ;
+    AUCDCQ_doses(:,z) = AUCDCQ;
 end
 
-%% PART 2: get parasite values from parasite eqn using CQ concentration
-%approach: get timestamps for when concentration of CQ falls below the MIC 
-%1. Original MIC
+%% FIGURE 1 Part 2: get parasite values from parasite eqn using CQ concentration
+%approach: 
+%1 get timestamps for when concentration of CQ falls below the MIC
+%(original MIC)
 CQconcBelow_MIC1 = zeros(doseRange, patients); %contains the indicies in each timecourse, for each patient, for each dosage, where [CQ] drops below MIC  
 Hour_100 = 1672; %the index of the time vector that is approximately 100 hours into the 500 total hour simulation
 for dose = 1:doseRange
@@ -136,4 +141,9 @@ for clearanceCounter = 1:rangekP
     end
 end
 
+%% 5.1 export data to a .mat file for visualization as a heatmap in R
+% FirstDoseRange = linspace(15,30, doseRange); %choose a range of first doses to explore
+% SecondDoseRange = linspace(5,10, doseRange);%choose a range of second doses to explore
+totalDose = FirstDoseRange' + 3.*SecondDoseRange'; %mg/kg 
+save figA1.mat percentCured kP totalDose;
 end

@@ -1,6 +1,6 @@
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 2; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
+RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -45,6 +45,8 @@ switch RunCase
         MissedDose = 0; 
         FirstDosing  = 0;  %units - mg/kg, now listed in function inputs
         OtherDosing = 0;    %units - mg/kg, now listed in function inputs
+        %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
+        DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
         [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
 
 %         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
@@ -69,6 +71,8 @@ switch RunCase
         DosingRegimen = 1;
         FirstDosing  = 10;  %units - mg/kg, now listed in function inputs
         OtherDosing = 5;    %units - mg/kg, now listed in function inputs
+        %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
+        DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
         [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
 
 %         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
@@ -95,6 +99,8 @@ switch RunCase
         DosingRegimen = 2;
         FirstDosing  = 0;  %units - mg/kg, now listed in function inputs
         OtherDosing = 0;    %units - mg/kg, now listed in function inputs
+        %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
+        DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
         [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
         
 %         [PatientsData, Time, YCQCentral, YDQCentral,AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
@@ -116,31 +122,30 @@ end
 
 %% Generate Global Sensitivity Plots - MALARIA
 
-dose_vector = [linspace(10,20,10)', linspace(5,10,10)'];
-HL_vector = linspace(20, 60,10)';
-CQclear_vector = log(2)./(HL_vector.*24);
+dose_vector_Malaria = [linspace(10,20,10)', linspace(5,10,10)'];
+HL_vector_Malaria = linspace(20, 60,10)';
+CQclear_vector_Malaria = log(2)./(HL_vector_Malaria.*24);
 
-% [peakCQ_mean, timePeak_mean] = Global_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector);
-[peakCQ, peakCQ_mean, timePeak, timePeak_mean] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector, CQclear_vector);
+% lobal_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector);
+[peakCQ_Malaria, peakCQ_mean_Malaria, timePeak_Malaria, timePeak_mean_Malaria] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector_Malaria, CQclear_vector_Malaria);
 
-%% save global sensitivity data
-dose_total = dose_vector(:,1) + 3.*dose_vector(:,2); %sum the columns of the dose vector
-save global_sensi_Malaria.mat peakCQ_mean dose_total CQclear_vector;
+%%save global sensitivity data - MALARIA
+dose_total = dose_vector_Malaria(:,1) + 3.*dose_vector_Malaria(:,2); %sum the columns of the dose vector
+save global_sensi_Malaria.mat peakCQ_mean_Malaria dose_total_Malaria CQclear_vector_Malaria;
 
 %% Generate Global Sensitivity Plots - COVID-19
 
-dose_vector = [linspace(10,20,10)', linspace(5,10,10)'];
-HL_vector = linspace(20, 60,10)';
-CQclear_vector = log(2)./(HL_vector.*24);
+dose_vector_C19 = [linspace(500,1000,10)', linspace(500,1000,10)'];
+HL_vector_C19 = linspace(20, 60,10)';
+CQclear_vector_C19 = log(2)./(HL_vector_C19.*24);
 
-% [peakCQ_mean, timePeak_mean] = Global_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector);
-[peakCQ, peakCQ_mean, timePeak, timePeak_mean] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector, CQclear_vector);
+[peakCQ_C19, peakCQ_mean_C19, timePeak_C19, timePeak_mean_C19] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector_C19, CQclear_vector_C19);
 
-%% save global sensitivity data
-dose_total = dose_vector(:,1) + 3.*dose_vector(:,2); %sum the columns of the dose vector
-save global_sensi_Malaria.mat peakCQ_mean dose_total CQclear_vector;
+% save global sensitivity data - COVID-19
+% dose_total = dose_vector(:,1) + 3.*dose_vector(:,2); %sum the columns of the dose vector
+save global_sensi_COVID19.mat peakCQ_mean_C19 dose_vector_C19 CQclear_vector_C19;
 
-%% Pharmacodynamics: P. vivax infection response to CQ administration
+%% PHARMACODYNAMICS: P. vivax infection response to CQ administration (DEFINE PARAMETERS)
 
 %numbers and mechanism specific to P. vivax
 %given information
@@ -155,7 +160,7 @@ P_double = 24; %hrs, doubling rate for parasites can be anywhere from 1-3 days
 P_detectlimit_microscope = 10^8; %detection limit for microscopy techniques, total # of parasites in body
 P_detectlimit_PCR = 10^5; %detection limit for PCR, total # of parasites in body
 
-%% Demonstrate variable parasite clearance in response to variable kP
+%% Variable parasite clearance in response to variable kP (DEMO)
 
 %FUNCTIONS
 % Pt = P0*exp(-kP*t); 
@@ -181,20 +186,11 @@ xlabel('Time (hrs)','FontSize', 16)
 ylabel('Total Parasites','FontSize', 16)
 hold off
 
-%% Demonstration of diffeq model for quantifying number of parasites
+%% Diffeq model for quantifying number of parasites at any time t based on [CQ] (DEMO)
 [timepoints, patients] = size(YCQCentral); %get the number of timepoints the simulation runs for the patient
 MIC1 = 0.067; %mg/L, minimum inhibitory concentration (MIC), NEED TO FIND LITERATURE SUPPORT
 MIC2 = 2*MIC1; %mg/L, twice the minimum inhibitory concentration for testing another MIC condition
 
-% kP_vector = zeros(timepoints, patients); %initialize a matrix to hold all the kPs for the simulation
-% for j = 1:patients
-%     for i = 1:timepoints %need to iterate through every concentration for each patient
-%         if YCQCentral(i,j) > MIC1
-%             kP_vector(i,j) = .01;
-%         end
-%     end
-% end
-% Run Smiulation
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
 tspan = 0:.06:500; %simulate 500 hours
 kP = kP_median; %demonstrate model using median kP
@@ -217,12 +213,28 @@ ylabel('Number of Parasites','FontSize', 16)
 title('Demonstration of First-Order Model of Parasite Dynamics')
 legend('total parasites', 'parasites cleared', 'parasite growth')
 
+%% Pharmacodynamics: determining PD response of Malaria plasmodium infection to CQ administration with variable dose, kP and inital parasite burden
+
+[timepoints, patients] = size(YCQCentral);
+doseRange = 10; %test 10 timepoints in the dose range
+MIC = 0.0067;   %literature reported value for MIC is 0.0067
+
+[Parasites_at_end, percentCured, kP, FirstDoseRange, SecondDoseRange] = Chloroquine_Malaria(doseRange,rangekP, FirstDosing,OtherDosing,timepoints, patients, MIC)
+
+% 5.1 export data to a .mat file for visualization as a heatmap in R
+% FirstDoseRange = linspace(15,30, doseRange); %choose a range of first doses to explore
+% SecondDoseRange = linspace(5,10, doseRange);%choose a range of second doses to explore
+totalDose = FirstDoseRange' + 3.*SecondDoseRange'; %mg/kg 
+save figMalaria.mat percentCured kP totalDose;
+save figParasiteBurden.mat 
+
 %% FIGURE 1 - PD: therapeutic effect of (1)dosing variance, (2) varying parasite clearance
 
 %part 1: PK simulation to get drug concentrations for the time course
 doseRange = 10; %number of doses to try within the dose limits (defined below)
 FirstDoseRange = linspace(15,30, doseRange); %choose a range of first doses to explore
 SecondDoseRange = linspace(5,10, doseRange);%choose a range of second doses to explore
+
 
 %initialize matrices for storing simulation outputs across different doses
 CQconc = zeros(length(Time),patients,doseRange);% define zeros that will hold all time points (row), for all patients (column), for each dose choice (depth)
