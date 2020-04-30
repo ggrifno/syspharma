@@ -113,7 +113,11 @@ end
 
 %% Generate Global Sensitivity Plots
 
+dose_vector = [linspace(10,20,10)', linspace(5,10,10)'];
+HL_vector = linspace(20, 60,10)';
+CQclear_vector = log(2)./(HL_vector.*24);
 
+% [peakCQ_mean, timePeak_mean] = Global_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector);
 
 %% Pharmacodynamics: P. vivax infection response to CQ administration
 
