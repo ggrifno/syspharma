@@ -56,8 +56,8 @@ for i = 1:2 %go through each of the 2 sexes in Weights matrix
         %Although uncertain if this method of adding variance is correct
         popCHF = CHF* exp (nCL_CQ(j,i)); %units = days, half-life CQ
         popDHF = DHF* exp (nCL_DCQ(j,i)); %units = days, half-life DCQ
-        CL_CQ(j,i) =  log(2)/(popCHF*24); 
-        CL_DCQ(j,i) = log(2)/(popDHF*24);
+        CL_CQ(j,i) =  log(2)/(popCHF*24); %converted units to h-1 by multiplying halflife in days by 24hr/day
+        CL_DCQ(j,i) = log(2)/(popDHF*24); %converted units to h-1 by multiplying halflife in days by 24hr/day
         
         %ADD VARIABILITY TO CQ ABOSORPTION RATE FROM THE GUT
         %add variance to absorption rate, we're using gaussian noise
