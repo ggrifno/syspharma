@@ -1,3 +1,16 @@
+%% Systems Pharmacology Final Project DRAFT
+% Authors: Alanna Farrell, Gabrielle Grifno, Sarah Jane Burris
+
+%NOTES:
+%SIZE OF VECTORS INDICATE NUMBER OF CONDITIONS TO TEST FOR GLOBAL
+%SENSITIVITY AND MALARIA PHARMACODYNAMICS.THIS IS GREATLY REDUCED FOR THE PROJECT DRAFT FOR CODE SPEED (WOULD TAKE ~25 MINUTES OTHERWISE)
+
+%ALSO, WE REDUCED THE TIME OVER WHICH THE PK SIMULATION RUNS (to get chloroquine and desethylcholoroquine concentrations in all compartments
+%over time) FROM 21 DAYS (normal observation time reported in our paper) TO 7 DAYS, TO REDUCE TIME NEEDED FOR THE CODE TO RUN
+
+% --> as a result, THIS CODE WILL NOT OUTPUT THE EXACT SAME FIGURES AND
+% DATA IN OUR WRITTEN REPORT, because replicating all
+% figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
 RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
