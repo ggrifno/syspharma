@@ -79,7 +79,7 @@ p1b <- ggplot(df1b_melt, aes(x=kCQ,y=Dose,fill=ConcentrationCQ)) + geom_tile(col
   theme(axis.text.x =element_text(angle=90,vjust=1,hjust=1), text=element_text(size=18))+
   # coord_fixed()+
   xlab('CQ Clearance Rate (hr-1)')+
-  ylab('Dose (mg/kg)')+
+  ylab('Dose (mg/day)')+
   # ggtitle('Standard MIC: Chloroquine Efficacy for Variable Dose and Parasite Drug Sensitivity') # for the main title
   ggtitle('COVID-19 Global Sensitivity') # for the main title
 print(p1b)

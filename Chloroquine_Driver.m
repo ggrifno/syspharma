@@ -128,8 +128,8 @@ CQclear_vector_Malaria = log(2)./(HL_vector_Malaria.*24);
 % lobal_sensitivity(PatientsData, DosingRegimen, dose_vector, CQclear_vector);
 [peakCQ_Malaria, peakCQ_mean_Malaria, timePeak_Malaria, timePeak_mean_Malaria] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector_Malaria, CQclear_vector_Malaria);
 
-%%save global sensitivity data - MALARIA
-dose_total = dose_vector_Malaria(:,1) + 3.*dose_vector_Malaria(:,2); %sum the columns of the dose vector
+%% save global sensitivity data - MALARIA
+dose_total_Malaria = dose_vector_Malaria(:,1) + 3.*dose_vector_Malaria(:,2); %sum the columns of the dose vector
 save global_sensi_Malaria.mat peakCQ_mean_Malaria dose_total_Malaria CQclear_vector_Malaria;
 
 %% Generate Global Sensitivity Plots - COVID-19
