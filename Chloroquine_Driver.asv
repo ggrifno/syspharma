@@ -213,28 +213,42 @@ title('Demonstration of First-Order Model of Parasite Dynamics')
 legend('total parasites', 'parasites cleared', 'parasite growth')
 
 %% Pharmacodynamics: determining PD response of Malaria plasmodium infection to CQ administration with variable dose, kP and inital parasite burden
-
-[timepoints, patients] = size(YCQCentral);
+[timepoints, patients] = size(YCQCentral); %get the size to determine sizes of matrices inside Malaria simulation
 doseRange = 10; %test 10 timepoints in the dose range
 rangekP = 10;
 rangeBurden = 10; %test across 10 possible initial burdens
+MIC = 0.0067;   %literature reported value for MIC is 0.0067
 
-kP_vector = linspace(1/25,1/110,rangekP)'; %hr-1, test across 10 possible kPs in the range reported in the literature
-% P0_vector = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
-P0_vector = (10^12).*ones(rangeBurden,1); %set the intial burden to be the same for all patients
+%% Figure 1: vary dose and parasite clearance
+kP_vector1 = linspace(1/25,1/110,rangekP)'; %hr-1, test across 10 possible kPs in the range reported in the literature
+P0_vector1 = (10^12).*ones(rangeBurden,1); %set the intial burden to be the same for all patients
+FirstDoseRange = linspace(FirstDosing,2*FirstDosing, doseRange); %choose a range of first doses to explore, where upper bound is DOUBLE the lower bound
+SecondDoseRange = linspace(OtherDosing,2*OtherDosing, doseRange);%choose a range of second doses to explore
+totalDose = FirstDoseRange + 3.*SecondDoseRange;
+
+[Parasites_at_end1, percentCured1] = Chloroquine_Malaria(DosingRegimen, doseRange,rangekP,rangeBurden, FirstDosing,OtherDosing,timepoints,kP_vector1, P0_vector1,FirstDoseRange, SecondDoseRange, patients, MIC, MissedDose,DisplayPlots);
+
+save fig1Malaria.mat percentCured1 kP_vector1 totalDose;
+save fig1ParasiteBurden.mat Parasites_at_end1 kP_vector1 totalDose;
+
+%% Figure 2: vary dose and starting parasite burden
+kP_vector2 = linspace(1/25,1/110,rangekP)'; %hr-1, use the median kP for all patients
+P0_vector2 = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
 FirstDoseRange = linspace(FirstDosing,2*FirstDosing, doseRange); %choose a range of first doses to explore, where upper bound is DOUBLE the lower bound
 SecondDoseRange = linspace(OtherDosing,2*OtherDosing, doseRange);%choose a range of second doses to explore
 
-MIC = 0.0067;   %literature reported value for MIC is 0.0067
+[Parasites_at_end2, percentCured2] = Chloroquine_Malaria(DosingRegimen, doseRange,rangekP,rangeBurden, FirstDosing,OtherDosing,timepoints,kP_vector2, P0_vector2,FirstDoseRange, SecondDoseRange, patients, MIC, MissedDose,DisplayPlots);
 
-[Parasites_at_end, percentCured, kP, FirstDoseRange, SecondDoseRange] = Chloroquine_Malaria(DosingRegimen, doseRange,rangekP,rangeBurden, FirstDosing,OtherDosing,timepoints,kP_vector, P0_vector,FirstDoseRange, SecondDoseRange, patients, MIC, MissedDose)
+save fig2Malaria.mat percentCured2 P0_vector2 totalDose;
+save fig2ParasiteBurden.mat Parasites_at_end2 P0_vector2 totalDose
 
-% 5.1 export data to a .mat file for visualization as a heatmap in R
-% FirstDoseRange = linspace(15,30, doseRange); %choose a range of first doses to explore
-% SecondDoseRange = linspace(5,10, doseRange);%choose a range of second doses to explore
-% totalDose = FirstDoseRange' + 3.*SecondDoseRange'; %mg/kg 
-% save figMalaria.mat percentCured kP totalDose;
-% save figParasiteBurden.mat Parasites_at_end kP totalDose
+% Figure 3: vary dose and starting parasite burden, where kP decreases for  increasing starting parasite burden
+kP_vector3 = median(linspace(1/25,1/110,rangekP)).*ones(rangekP,1); %hr-1, decrease the kP while
+P0_vector3= logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
+FirstDoseRange = linspace(FirstDosing,2*FirstDosing, doseRange); %choose a range of first doses to explore, where upper bound is DOUBLE the lower bound
+SecondDoseRange = linspace(OtherDosing,2*OtherDosing, doseRange);%choose a range of second doses to explore
+
+
 
 %% FIGURE 1 - PD: therapeutic effect of (1)dosing variance, (2) varying parasite clearance
 
@@ -477,7 +491,7 @@ kP = linspace(1/25,1/110,rangekP)'; %hr-1, test across 10 possible kPs in the ra
 kP_median = median(kP); %we will use the median for all the parasite burden simulations
 %decide what the parasite burden testing range is:
 rangeBurden = 10; %test across 10 possible initial burdens
-P0_vector = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
+P0_vector1 = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
 
 %parasite counts
 Parasites_at_endfig2a = ones(rangeBurden, doseRange, patients); %hold the final parasite number for each patient, for each dosing condition
@@ -491,7 +505,7 @@ for patient =1:patients %iterate through all 100 patients
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver
     %let the parasite burden for all be the same (10^12 starting parasites)
-    initial_P0 = [P0_vector(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    initial_P0 = [P0_vector1(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T, P] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
     
     %collect information from this simulation into matrix for storage
@@ -504,7 +518,7 @@ for patient =1:patients %iterate through all 100 patients
     kP_val = kP_median; %demonstrate model using median kP AT FIRST
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver
-    initial_P0 = [P0_vector(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    initial_P0 = [P0_vector1(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T1, P1] = ode45(@Parasite_eqns,tspan1,initial_P0,options,a); %parasite diffeq model
     
     %second half of simulation
@@ -560,7 +574,7 @@ kP = linspace(1/25,1/110,rangekP)'; %hr-1, test across 10 possible kPs in the ra
 kP_median = median(kP); %we will use the median for all the parasite burden simulations
 %decide what the parasite burden testing range is:
 rangeBurden = 10; %test across 10 possible initial burdens
-P0_vector = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
+P0_vector1 = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
 
 %parasite counts
 Parasites_at_endfig2B = ones(rangeBurden, doseRange, patients); %hold the final parasite number for each patient, for each dosing condition
@@ -574,7 +588,7 @@ for patient =1:patients %iterate through all 100 patients
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver
     %let the parasite burden for all be the same (10^12 starting parasites)
-    initial_P0 = [P0_vector(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    initial_P0 = [P0_vector1(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T, P] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
     
     %collect information from this simulation into matrix for storage
@@ -587,7 +601,7 @@ for patient =1:patients %iterate through all 100 patients
     kP_val = kP_median; %demonstrate model using median kP AT FIRST
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver
-    initial_P0 = [P0_vector(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    initial_P0 = [P0_vector1(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T1, P1] = ode45(@Parasite_eqns,tspan1,initial_P0,options,a); %parasite diffeq model
     
     %second half of simulation
@@ -648,7 +662,7 @@ kP = linspace(1/25,1/110,rangekP)'; %hr-1, test across 10 possible kPs in the ra
 kP_median = median(kP); %we will use the median for all the parasite burden simulations
 %decide what the parasite burden testing range is:
 rangeBurden = 10; %test across 10 possible initial burdens
-P0_vector = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
+P0_vector1 = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
 
 %parasite counts
 Parasites_at_endfig2a = ones(rangeBurden, doseRange, patients); %hold the final parasite number for each patient, for each dosing condition
@@ -662,7 +676,7 @@ for patient =1:patients %iterate through all 100 patients
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver
     %let the parasite burden for all be the same (10^12 starting parasites)
-    initial_P0 = [P0_vector(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    initial_P0 = [P0_vector1(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T, P] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
     
     %collect information from this simulation into matrix for storage
@@ -675,7 +689,7 @@ for patient =1:patients %iterate through all 100 patients
     kP_val = kP(burden); %demonstrate model using median kP AT FIRST
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver
-    initial_P0 = [P0_vector(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    initial_P0 = [P0_vector1(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T1, P1] = ode45(@Parasite_eqns,tspan1,initial_P0,options,a); %parasite diffeq model
     
     %second half of simulation
@@ -736,7 +750,7 @@ kP = linspace(1/25,1/110,rangekP)'; %hr-1, test across 10 possible kPs in the ra
 kP_median = median(kP); %we will use the median for all the parasite burden simulations
 %decide what the parasite burden testing range is:
 rangeBurden = 10; %test across 10 possible initial burdens
-P0_vector = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
+P0_vector1 = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
 
 %parasite counts
 Parasites_at_endfig3b = ones(rangeBurden, doseRange, patients); %hold the final parasite number for each patient, for each dosing condition
@@ -750,7 +764,7 @@ for patient =1:patients %iterate through all 100 patients
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver
     %let the parasite burden for all be the same (10^12 starting parasites)
-    initial_P0 = [P0_vector(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    initial_P0 = [P0_vector1(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T, P] = ode45(@Parasite_eqns,tspan,initial_P0,options,a); %parasite diffeq model
     
     %collect information from this simulation into matrix for storage
@@ -763,7 +777,7 @@ for patient =1:patients %iterate through all 100 patients
     kP_val = kP(burden); %demonstrate model using median kP AT FIRST
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver
-    initial_P0 = [P0_vector(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
+    initial_P0 = [P0_vector1(burden) 0 0]; %take in the starting # of parasites, and let number in cleared and growth "compartments" be zero
     [T1, P1] = ode45(@Parasite_eqns,tspan1,initial_P0,options,a); %parasite diffeq model
     
     %second half of simulation
