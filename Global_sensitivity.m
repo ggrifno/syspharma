@@ -42,8 +42,8 @@ MissedDose = 0; %we are not concerned with missing doses for global sensitivity
 numPatients = length(WeightVal);     %should be 100 patients
 numDoses = length(dose_vector(:,1)); %should be 10
 numCL = length(CQclear_vector);      %should be 10
-numDoses = 10; %should be 10
-numCL = 10;      %should be 10
+% numDoses = 10; %should be 10
+% numCL = 10;      %should be 10
 
 %initialize simulations
 YCQCentral = [];

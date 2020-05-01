@@ -65,7 +65,7 @@ for i=Male:Female % 2 subpops
     a=length(xtemp(xtemp<=weightCutOff)); % count people below x lb
     cycle = 1;
     while a>0 % if there are any nonpositives, replace them
-        fprintf ('series %i, cycle %i, negs %i\n',i,1,a);
+%         fprintf ('series %i, cycle %i, negs %i\n',i,1,a);
         xtemp(xtemp<=50)=SD(i).*randn(a,1)+means(i);        
         a=length(xtemp(xtemp<=weightCutOff)); 
         cycle = cycle + 1;
