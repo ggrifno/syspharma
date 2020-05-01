@@ -132,6 +132,17 @@ switch RunCase
 
 end
 
+%% Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
+dose_vector = [linspace(10,20,10)', linspace(5,10,10)'];
+
+%matrix for collecting outputs
+
+varDose_outputs = zeros(10, 3)
+
+
+
+[PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose, DisplayPlots); 
+
 %% Generate Global Sensitivity Plots - MALARIA
 
 %SIZE OF VECTORS INDICATE NUMBER OF CONDITIONS TO TEST. THIS IS GREATLY
