@@ -1,4 +1,4 @@
-function [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose); 
+function [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose, DisplayPlots); 
 % Systems Pharmacology Final Project Main Driver
 % Alanna Farrell, SJ Burris, Gabrielle Grifno
 % Spring 2020
@@ -39,6 +39,7 @@ for i=Male:Female
     y(i,:) = 1/(SD(i)*sqrt(2*pi()))*exp((-(x(:)-means(i)).^2)/(2*SD(i)^2));
 end
 
+if DisplayPlots == 1
 % Plotting the normal distributions by themselves
 figure;
 title('Distribution of weights');    
@@ -47,6 +48,7 @@ ylabel('density');
 hold on;
 for i=Male:Female
 	plot (x,y(i,:),ls{i},'LineWidth',3); 
+end
 end
 
 
@@ -74,9 +76,10 @@ end
 % Output the means, SDs of the simulated populations
 simmeans = mean(xdist,2);
 simSDs = std(xdist,0,2);
+if DisplayPlots ==1
 fprintf('Male population, input mean %4.1f, simulated mean %4.1f; input SD %4.1f, simulated SD %4.1f \n',means(Male),simmeans(Male),SD(Male),simSDs(Male))
 fprintf('Female population, input mean %4.1f, simulated mean %4.1f; input SD %4.1f, simulated SD %4.1f \n',means(Female),simmeans(Female),SD(Female),simSDs(Female))
-
+end
 for i = Male:Female
 	xtemp = round(xdist(i,:)); % xdist here is the list of patient weights for subpopulation i
     for j = 1:length(x)
@@ -84,6 +87,7 @@ for i = Male:Female
     end
 end
 
+if DisplayPlots ==1
 % Overlaying normal distributions and the sample distributions
 % three panels
 figure;
@@ -107,7 +111,7 @@ hold on;
 title('Weight distribution - sample subpopulations')
 ylabel('Weight (lb)')
 boxplot (xdist','Labels',GroupName);
-
+end
 patientID = (1:NumberOfSubjects)';
 Weights = xdist'./2.205; %CONVERT WEIGHTS FROM LBS TO KG. SAVE WEIGHTS AS KG AND USE WEIGHTS IN KG FOR SIMULATIONS
 save('WeightDistribs.mat','patientID','Weights');

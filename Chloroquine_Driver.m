@@ -217,11 +217,19 @@ legend('total parasites', 'parasites cleared', 'parasite growth')
 [timepoints, patients] = size(YCQCentral);
 doseRange = 10; %test 10 timepoints in the dose range
 rangekP = 10;
+rangeBurden = 10; %test across 10 possible initial burdens
+
+kP_vector = linspace(1/25,1/110,rangekP)'; %hr-1, test across 10 possible kPs in the range reported in the literature
+% P0_vector = logspace(8,17,rangeBurden)'; %test 10 different initial parasite that increase by orders of magnitude
+P0_vector = (10^12).*ones(rangeBurden,1); %set the intial burden to be the same for all patients
+FirstDoseRange = linspace(FirstDosing,2*FirstDosing, doseRange); %choose a range of first doses to explore, where upper bound is DOUBLE the lower bound
+SecondDoseRange = linspace(OtherDosing,2*OtherDosing, doseRange);%choose a range of second doses to explore
+
 MIC = 0.0067;   %literature reported value for MIC is 0.0067
 
-[Parasites_at_end, percentCured, kP, FirstDoseRange, SecondDoseRange] = Chloroquine_Malaria(DosingRegimen, doseRange,rangekP, FirstDosing,OtherDosing,timepoints, patients, MIC, MissedDose)
+[Parasites_at_end, percentCured] = Chloroquine_Malaria(DosingRegimen, doseRange,rangekP,rangeBurden, FirstDosing,OtherDosing,timepoints,kP_vector, P0_vector,FirstDoseRange, SecondDoseRange, patients, MIC, MissedDose,DisplayPlots)
 
-% 5.1 export data to a .mat file for visualization as a heatmap in R
+% Export data to a .mat file for visualization as a heatmap in R
 % FirstDoseRange = linspace(15,30, doseRange); %choose a range of first doses to explore
 % SecondDoseRange = linspace(5,10, doseRange);%choose a range of second doses to explore
 % totalDose = FirstDoseRange' + 3.*SecondDoseRange'; %mg/kg 

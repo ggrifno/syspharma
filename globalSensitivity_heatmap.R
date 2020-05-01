@@ -86,4 +86,4 @@ print(p1b)
 
 outfig<- ggarrange(p1a, p1b, nrow=1, ncol=2, common.legend = TRUE, legend = 'right')
 print(outfig)
-# ggsave(file="Fig3Results.png",plot=outfig3,width=12,height=6)
+ggsave(file="globalSensResults.png",plot=outfig,width=12,height=6)
