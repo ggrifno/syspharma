@@ -19,8 +19,7 @@ RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 % 2. COVID-19   Normal Dosing
 % 3. Malaria    Missed Dose
 % 4. COVID-19   Missed Dose
-
-MissedDose = 3; %only applies to cases 3 and 4
+MissedDose = 1; %only applies to cases 3 and 4
 %Dosing Schedule:
 %  1 = miss first dose   4 = miss fourth dose
 %  2 = miss second dose  3 = miss third dose
@@ -84,8 +83,9 @@ switch RunCase
         DosingRegimen = 1;
         FirstDosing  = 10;  %units - mg/kg, now listed in function inputs
         OtherDosing = 5;    %units - mg/kg, now listed in function inputs
+        DisplayPlots = 1; %turns plot display of weight distributions OFF for Chloroquine_Main
 
-        [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose); 
+        [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose, DisplayPlots); 
 
 %         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         
@@ -105,14 +105,14 @@ switch RunCase
         save(TitleA, 'AUCDCQ')
     
 	case 4
-% 4. optimization with bounds 
+% 4. oCOVID Missed Dosing
 %========================
      
         DosingRegimen = 2;
-        FirstDosing  = 0;  %units - mg/kg, now listed in function inputs
-        OtherDosing = 0;    %units - mg/kg, now listed in function inputs
+        FirstDosing  = 500;  %units - mg/kg, now listed in function inputs
+        OtherDosing = 500;    %units - mg/kg, now listed in function inputs
         %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
-        DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
+        DisplayPlots =1; %turns plot display of weight distributions OFF for Chloroquine_Main
         [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
         
 %         [PatientsData, Time, YCQCentral, YDQCentral,AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
@@ -132,16 +132,54 @@ switch RunCase
 
 end
 
-%% Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
-dose_vector = [linspace(10,20,2)', linspace(5,10,2)'];
+%% MALARIA: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
+Firstdose_vector_malaria = linspace(10,20,10)';
+Seconddose_vector_malaria = linspace(5,10,10)';
+dose_total_malaria = Firstdose_vector_malaria + 3.*Seconddose_vector_malaria;
+[timepoints, patients] = size(YCQCentral);
+%get all the traces for all the patients
+varDose_CQ_M = zeros(timepoints, patients, 10); %output AVERAGE YCQcentral, YDQcentral, AUC
+varDose_DCQ_M = zeros(timepoints, patients, 10); %output AVERAGE YCQcentral, YDQcentral, AUC
+varDose_AUCCQ_M = zeros(1, patients, 10); %output AVERAGE YCQcentral, YDQcentral, AUC
 
-%matrix for collecting outputs
+for i = 1:10 %iterate througha all the doses
+[PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, Firstdose_vector_malaria(i),Seconddose_vector_malaria(i), MissedDose, DisplayPlots); 
+    varDose_CQ_M(:,:,i) = YCQCentral;
+    varDose_DCQ_M(:,:,i) = YDQCentral;
+    varDose_AUCCQ_M(:,:,i) = AUCCQ;
 
-dose
+end
 
+%% find the mean value ACROSS PATIENTS of the output for each dose condition, for each time point
+varDose_CQ_mean_M = zeros(timepoints, 10, 1);
+varDose_DCQ_mean_M = zeros(timepoints, 10, 1);
+varDose_AUCCQ_mean_M = zeros(10, 1);
 
+for dose = 1:10
+    for t = 1:timepoints
+%         meanvar = mean(varDose_CQ_M(t,:,dose));
+        varDose_CQ_mean_M(t,dose,1) = mean(varDose_CQ_M(t,:,dose));
+        varDose_DCQ_mean_M(t,dose,1) = mean(varDose_DCQ_M(t,:,dose));
+        varDose_AUCCQ_mean_M(dose,1) = mean(varDose_AUCCQ_M(1,:,dose));
+    end
+end
 
-[PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose, DisplayPlots); 
+%plot data
+
+figure; %CQ figure
+for dose = 1:10
+    hold on
+plot(Time, varDose_CQ_mean_M(:,dose));
+
+lgd = legend('25','27.8', 30.5,'33.33', '36.11', '38.89);
+title(lgd,'My Legend Title')
+
+end
+hold off
+%save data for later visualization in R
+save varDose_CQ.mat dose_total_malaria varDose_CQ_mean_M;
+save varDose_DQ.mat dose_total_malaria varDose_DCQ_mean_M;
+save varDose_AUCCQ.mat dose_total_malaria varDose_AUCCQ_mean_M;
 
 %% Generate Global Sensitivity Plots - MALARIA
 
