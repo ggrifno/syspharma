@@ -3,8 +3,7 @@
 
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 3;
-
+RunCase = 1;
 % 1. Malaria    Missed Dosing
 % 2. Malaria    Late Dose, 2
 % 3. Malaria    Late Dose, 3
@@ -22,16 +21,16 @@ switch RunCase
         DisplayPlots = 2; %turns plot display of weight distributions OFF for Chloroquine_Main
         LateDose = 0;
         DeltaTime = 0;
-
-        [PatientsData0, T, YCQCentralM0, YDQCentralM0, AUCCQM0, AUCDCQM0] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, DeltaTime, LateDose, DisplayPlots); 
+        MissedDose = 0;
+        [PatientsData0, T, YCQCentralM0, YDQCentralM0, AUCCQM0, AUCDCQM0] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, MissedDose, DeltaTime, LateDose); 
         MissedDose = 1;
-        [PatientsData1, T, YCQCentralM1, YDQCentralM1, AUCCQM1, AUCDCQM1] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, DeltaTime, LateDose, DisplayPlots); 
+        [PatientsData1, T, YCQCentralM1, YDQCentralM1, AUCCQM1, AUCDCQM1] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DeltaTime, LateDose); 
        MissedDose = 2;
-        [PatientsData2, T, YCQCentralM2, YDQCentralM2, AUCCQM2, AUCDCQM2] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, DeltaTime, LateDose, DisplayPlots); 
+        [PatientsData2, T, YCQCentralM2, YDQCentralM2, AUCCQM2, AUCDCQM2] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DeltaTime, LateDose); 
         MissedDose = 3;
-        [PatientsData3, T, YCQCentralM3, YDQCentralM3, AUCCQM3, AUCDCQM3] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, DeltaTime, LateDose, DisplayPlots); 
+        [PatientsData3, T, YCQCentralM3, YDQCentralM3, AUCCQM3, AUCDCQM3] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DeltaTime, LateDose); 
         MissedDose = 4;
-        [PatientsData4, T, YCQCentralM4, YDQCentralM4, AUCCQM4, AUCDCQM4] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, DeltaTime, LateDose, DisplayPlots); 
+        [PatientsData4, T, YCQCentralM4, YDQCentralM4, AUCCQM4, AUCDCQM4] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DeltaTime, LateDose); 
         figure; 
          
         ax1=subplot(1,2,1);
@@ -95,12 +94,12 @@ switch RunCase
         xlabel('time (hrs)')
         legend('Normal','Taking Second Dose 6*1/5 hrs after', 'Taking Second Dose 6*2/5 hrs after', 'Taking Second Dose 6*3/5 hrs after', 'Taking Second Dose 6*4/5 hrs after', 'Taking Second Dose 6 hrs after' )
         ax1=subplot(1,2,2);
-        plot(T,YDQCentralM0,'g',T,YCQCentralM1,'c',T,YCQCentralM2, 'r',T,YCQCentralM3, 'm', T, YCQCentralM4, 'b',T, YCQCentralM5, 'k', 'linewidth',2)
+        plot(T,YDQCentralM0,'g',T,YDQCentralM1,'c',T,YDQCentralM2, 'r',T,YDQCentralM3, 'm', T, YDQCentralM4, 'b',T, YDQCentralM5, 'k', 'linewidth',2)
         % 'plot' draws lines - T1 as x-axis, Y1 as yYCQCentralM3-axis, 'k' refers to line color
         title('Desethylchloroquine Concentration (Central) Over Time')
         ylabel('Concentration (mg/L)')
         xlabel('time (hrs)')
-        legend('Normal','Taking Third Dose 6*1/5 hrs after', 'Taking Third Dose 6*2/5 hrs after', 'Taking Third Dose 6*3/5 hrs after', 'Taking Third Dose 6*4/5 hrs after', 'Taking Third Dose 6 hrs after' )
+        legend('Normal','Taking Second Dose 6*1/5 hrs after', 'Taking Second Dose 6*2/5 hrs after', 'Taking Second Dose 6*3/5 hrs after', 'Taking Second Dose 6*4/5 hrs after', 'Taking Second Dose 6 hrs after' )
     
     case 3
         DosingRegimen = 1;

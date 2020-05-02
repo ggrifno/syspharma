@@ -142,6 +142,7 @@ for i =  1:7 %observe over only 7 days for global sensitivity
   %dosing simulation
   
   y00 = y(end,:);
+
   if (MissedDose ~= (i + 2)) && (i < (NumberOfDoses-1) && LateDoseAdded == 0)
         y00(3) = y00(3) + OtherDose;
         TotalDrug = TotalDrug + OtherDose;

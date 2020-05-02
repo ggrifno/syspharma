@@ -85,35 +85,9 @@ for i = Male:Female
     	ysamp(i,j) = length(xtemp(xtemp==x(j)))/NumberOfSubjects;
     end
 end
-% 
-% if DisplayPlots ==1
-% % Overlaying normal distributions and the sample distributions
-% % three panels
-% figure;
-% title('Distribution of weights');    
-% ylabel('density');
-% xlabel('weight (lb)'); % note how we only need one x-axis label
-% hold on;
-% % Note how we generate different linestyles using conditional statements
-% for i=Male:Female
-%     plot (x,ysamp(i,:),ls{i},'LineWidth',2);
-% end
-% for i=Male:Female
-%     plot (x,y(i,:),ls{i},'LineWidth',1.5); 
-% 	% did this separately so that these lines come to the front
-% end
 
-% Boxplots
-% Another way of visualizing the sample populations on one panel.
-% figure;
-% hold on;
-% title('Weight distribution - sample subpopulations')
-% ylabel('Weight (lb)')
-% boxplot (xdist','Labels',GroupName);
-% end
 patientID = (1:NumberOfSubjects)';
 Weights = xdist'./2.205; %CONVERT WEIGHTS FROM LBS TO KG. SAVE WEIGHTS AS KG AND USE WEIGHTS IN KG FOR SIMULATIONS
-save('WeightDistribs.mat','patientID','Weights');
 
 %% Population Pharmacokinetics
 
