@@ -13,7 +13,7 @@
 % figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 2; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
+RunCase = 1; % DO NOT RUN CASES 2 AND 4 (missing covid dosing)
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -133,6 +133,7 @@ switch RunCase
 end
 
 %% MALARIA: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
+%NEED TO SWITCH 'RUNCASE' TO VALUE '1' TO GET THE COVID-19 PATIENTS INFORMATION
 Firstdose_vector_malaria = linspace(10,20,10)';
 Seconddose_vector_malaria = linspace(5,10,10)';
 dose_total_malaria = Firstdose_vector_malaria + 3.*Seconddose_vector_malaria;
@@ -205,6 +206,8 @@ save varDose_DQ.mat dose_total_malaria varDose_DCQ_mean_M;
 save varDose_AUCCQ.mat dose_total_malaria varDose_AUCCQ_mean_M;
 
 %% COVID-19: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
+
+%NEED TO SWITCH 'RUNCASE' TO VALUE '2' TO GET THE COVID-19 PATIENTS INFORMATION
 Firstdose_vector_C19 = linspace(500,1000,10)';
 Seconddose_vector_C19 = linspace(500,1000,10)';
 dose_total_C19 = Firstdose_vector_C19 + 9.*Seconddose_vector_C19; %ten total doses
