@@ -100,16 +100,8 @@ for i =  1:7 %observe over only 7 days for global sensitivity
   LateDoseAdded = 0;
   if i == 1 && LateDose == 2
   tspan = 0:.2:(TimeBetweenDoses-SecondDoseTime); %set time frame
-  end
-
-%   if i == 1 && LateDose == 3
-  if (LateDose - i) == 2
-     Change = TimeBetweenDoses*DeltaTime;
-     tspan = 0:.2:(TimeBetweenDoses+Change);
-  end
-  
-  if i == 2 && LateDose == 3
-    Change = TimeBetweenDoses*DeltaTime;
+  else if L
+          Change = TimeBetweenDoses*DeltaTime;
     tspan = 0:.2:(TimeBetweenDoses-Change);
     if (TimeBetweenDoses-Change) == 0
         LateDoseAdded = 1;
@@ -117,19 +109,25 @@ for i =  1:7 %observe over only 7 days for global sensitivity
         tspan = 0:.2:(TimeBetweenDoses*2);
         i = i+1;
     end
-  end
+      end
+      
 
-  if i == 3 && LateDose == 4
-    Change = TimeBetweenDoses*DeltaTime;
-    tspan = 0:.2:(TimeBetweenDoses-Change);
-     if (TimeBetweenDoses-Change) == 0
-         LateDoseAdded = 1
-         %y00(3) = y00(3) + OtherDose;
-         tspan = 0:.2:(TimeBetweenDoses*2);
-         i = i+1;
-   end
+  if i == 1 && LateDose == 3
+     Change = TimeBetweenDoses*DeltaTime;
+     tspan = 0:.2:(TimeBetweenDoses+Change);
   end
-  
+%   
+%   if i == 2 && LateDose == 3
+%     Change = TimeBetweenDoses*DeltaTime;
+%     tspan = 0:.2:(TimeBetweenDoses-Change);
+%     if (TimeBetweenDoses-Change) == 0
+%         LateDoseAdded = 1;
+%         y00(3) = y00(3) + OtherDose;
+%         tspan = 0:.2:(TimeBetweenDoses*2);
+%         i = i+1;
+%     end
+%   end
+
 
   [t,y] = ode45(@Chloroquine_eqns,tspan,y00,options,p);
   
