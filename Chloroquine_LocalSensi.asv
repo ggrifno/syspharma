@@ -1,0 +1,75 @@
+function [Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, p, K10, K30);
+%function for running chloroquine simulation
+
+% p is the vector holding all the inputted values for parameters except for
+% volumes and clearances
+% p = [q v1 v2 v3 v4 k10 k30 k12 k21 k23 k34 k43 ka];
+p(1) = q;
+p(1) = v1;
+p(2) = v2;
+p(3) = v3;
+p(4) = v4;
+p(5) = k10;
+p(6) = v1;
+p(7) = v2;
+p(8) = v3;
+p(9) = v4;
+
+%% Simulation
+YCQCentral = []; YDQCentral= []; Time = [];
+for i = 1:length(WeightVal) %iterates through both male and female, since WeightVal melts them into one vector
+    W = WeightVal(i); %current patient you're looking at
+    %patient's volumes of distribution
+%     v1 = v1cq(i); v2 = v2cq(i);
+%     v3 = v1dcq(i); v4 = v2dcq(i);
+    %set patient's infusion and intercompartmental conversion rates (CONSTANT FOR ALL PATIENTS, apart from volume correction)
+%     q = 0;           % infusion rate is always 0 because CQ is administered orally
+    k12 = 37.7/v1;   % units = L/h, Chloroquine from central to peripheral
+    k21 = 37.7/v2;   % units = L/h, chloroquine from peripheral to central
+    k23 = 6.13/v1;   % units = L/H , CQ transforming to DCQ
+    k34 = 31.46/v3;  % units = L/h, DCQ from central to peripheral
+    k43 = 31.46/v4;  % units = L/h, DCQ from peripheral to central
+    %patient's clearance rates
+    k10 = K10(i); k30 = K30(i);
+    %patient's absorption
+    ka = kabs(i);
+    ptemp = [q v1 v2 v3 v4 k10 k30 k12 k21 k23 k34 k43 ka];
+    [ytemp, time] = Chloroquine_sim(W, ptemp, DosingRegimen, FirstDosing, OtherDosing, MissedDose);
+    Time = time;
+    YCQCentral = [YCQCentral, ytemp(:,1)];
+    YDQCentral = [YDQCentral, ytemp(:,2)];
+    ytemp = []; %keeping this but you shouldn't need to "clear" ytemp each time. It'll get redefined in the next cycle when you call the simulation
+end
+
+AUCCQ = trapz(Time,YCQCentral);
+AUCDCQ = trapz(Time,YDQCentral);
+AUC = [AUCCQ, AUCDCQ];
+%% plot statements to visualize popPK simulation
+
+%only displaly popPK plots IF the plots are "turned on"
+
+if DisplayPlots == 1 
+    
+    figure; 
+    ax1=subplot(1,2,1);
+    for i = 1:1
+    plot(ax1, Time(:,1),YCQCentral(:,i))
+    hold on
+    end
+    xlabel(ax1,'Time (hrs)','FontSize',14)
+    ylabel(ax1,'Chloroquine Concentration (mg/L)', 'FontSize',14)
+    title(ax1,'Central Compartment of Chloroquine','FontSize',16)
+
+    hold off
+
+    ax1=subplot(1,2,2);
+    for i = 1:1
+    plot(Time(:,1),YDQCentral(:,i))
+    hold on
+    end
+    xlabel(ax1,'Time (hrs)','FontSize',14)
+    ylabel(ax1,'Desethylchloroquine Concentration (mg/L)','FontSize',14)
+    title(ax1,'Central Compartment of Desethylchloroquine','FontSize',16)
+    hold off
+end
+end
