@@ -13,7 +13,7 @@
 % figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 2;
+RunCase = 1;
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -133,19 +133,22 @@ switch RunCase
 end
 
 %% MALARIA: Local sensitivity analysis 
-%MAKE SURE TO SET THE TIME DISTANCE IN "CHLOROQUINE_SIM" TO CALCUATE OVER
-%ONLY THE FIRST 3 DAYS FOR MALARIA SIMULATION
+%MAKE SURE TO SET THE TIME DISTANCE IN "CHLOROQUINE_SIM" TO CALCUATE OVER ONLY THE FIRST 3 DAYS FOR MALARIA SIMULATION
 % run baseline case using the DRIVER section defined above, which creates patients and runs the simulation
-%% now perturb only ONE of the variables in the parameter vector at a time and return the AUC for both CQ and DCQ
+% now perturb only ONE of the variables in the parameter vector at a time and return the AUC for both CQ and DCQ
 numSensi = 13;%number of variables in need of local sensitivity testing
 %initialize matrix of sensitivity values
-[patients, col] = size(WeightVal);
+[patients, ~] = size(WeightVal);
+[timepoints, col] = size(Time);
 sensiAUCCQall = ones(patients, numSensi); %hold the sensitivity values for each of the patients  
 sensiAUCDCQall= ones(patients, numSensi); %hold the sensitivity values for each of the patients
+sensiCQall = ones(timepoints, patients, numSensi); %hold the concentration of CQ in the central compartment for each timepoint over 3 days
+sensiDCQall= ones(timepoints, patients, numSensi); %hold the concentration of DCQ in the central compartment for each timepoint over 3 days
+
 PercentChange = 1.05; %model a 5% increase
 
 for sensiVar = 1: numSensi
-    [Time, sensiAUCCQall(:, sensiVar),sensiAUCDCQall(:, sensiVar)] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, FirstDosing, OtherDosing, MissedDose, sensiVar, PercentChange);
+    [Time,sensiCQall(:,:,sensiVar), sensiDCQall(:,:,sensiVar), sensiAUCCQall(:, sensiVar),sensiAUCDCQall(:, sensiVar)] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, FirstDosing, OtherDosing, MissedDose, sensiVar, PercentChange);
 end
 %% output the MEAN of the NORMALIZED AUC sensitivity with standard dev for visualization in Rstudio
 
@@ -162,7 +165,7 @@ sensiAUCDCQstdev= zeros(numSensi,1);
 for j = 1: numSensi
     for i = 1:patients
         sensiAUCCQnorm(i,j) = ((sensiAUCCQall(i,j) - AUCCQ(i))/AUCCQ(i))/(1-PercentChange);
-        sensiAUCDCQnorm(i,j) = ((sensiAUCDCQall(i,j) - AUCDCQ(i))/AUCCQ(i))/(1-PercentChange);
+        sensiAUCDCQnorm(i,j) = ((sensiAUCDCQall(i,j) - AUCDCQ(i))/AUCDCQ(i))/(1-PercentChange);
     end
     %take the MEAN across all 100 patients for each variable
     sensiAUCCQmean(j,1) = mean(sensiAUCCQnorm(:,j));
@@ -175,8 +178,66 @@ end
 
 local_var = ["q" "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka"]';
 
-save LocalSensiCQ.mat local_var sensiAUCCQmean sensiAUCCQstdev;
-save LocalSensiDCQ.mat local_var sensiAUCDCQmean sensiAUCDCQstdev;
+save LocalSensiAUCCQ.mat local_var sensiAUCCQmean sensiAUCCQstdev;
+save LocalSensiAUCDCQ.mat local_var sensiAUCDCQmean sensiAUCDCQstdev;
+
+%% MALARIA: Time-dependent local sensitivity
+sensiCQnorm = ones(timepoints, patients, numSensi);
+sensiDCQnorm= ones(timepoints, patients, numSensi);
+
+sensiCQmean = zeros(timepoints, numSensi);
+sensiDCQmean= zeros(timepoints, numSensi);
+
+sensiCQstdev = zeros(timepoints, numSensi);
+sensiDCQstdev= zeros(timepoints, numSensi);
+
+% SensT = ((y1-y0)./y0)/((p(i)-p0(i))/p0(i));
+%calcuate the sensitivity of concentration for each timepoint
+for k = 1:numSensi
+    for j = 1:patients
+        for i = 1:timepoints
+            sensiCQnorm(i,j,k) = ((sensiCQall(i,j,k) - YCQCentral(i,j))/YCQCentral(i,j))/(1-PercentChange);
+            sensiDCQnorm(i,j,k) = ((sensiDCQall(i,j,k) - YDQCentral(i,j))/YDQCentral(i,j))/(1-PercentChange);
+        end
+    end
+end
+
+%calcuate the mean sensitivity for each timepoint, and the stdev, across all 100 patients
+for j = 1: numSensi
+    for i = 1: timepoints
+        %take the MEAN across all 100 patients for each timepoint
+        sensiCQmean(i,j) = mean(sensiCQnorm(i,:,j));
+        sensiDCQmean(i,j)= mean(sensiDCQnorm(i,:,j));
+
+        %find the standard deviation across all patients
+        sensiCQstdev(i,j)= std(sensiCQnorm(i,:,j));
+        sensiDCQstdev(i,j)= std(sensiDCQnorm(i,:,j));
+    end
+end
+
+save LocalSensiCQ.mat local_var sensiCQmean sensiCQstdev;
+save LocalSensiDCQ.mat local_var sensiDCQmean sensiDCQstdev;
+
+%% MALARIA: Calculate how sensitivity to concentration changes with changing dose
+
+%set the doses to be used
+numDose = 10; %ten dose conditions
+Firstdose_vector_malaria = linspace(10,20,numDose)';
+Seconddose_vector_malaria = linspace(5,10,numDose)';
+dose_total_malaria = Firstdose_vector_malaria + 3.*Seconddose_vector_malaria;
+
+%initialize matrices to hold data
+sensiCQall_dose = ones(timepoints, patients, numSensi, numDose); %hold the concentration of CQ in the central compartment for each timepoint over 3 days
+sensiDCQall_dose= ones(timepoints, patients, numSensi, numDose); %hold the concentration of DCQ in the central compartment for each timepoint over 3 days
+
+for dose = 1:numDose %iterate through 10 doses
+% for dose = 1 %iterate through 10 doses
+    for sensiVar = 1: numSensi
+    [Time,sensiCQall_dose(:,:,sensiVar,numDose), sensiDCQall_dose(:,:,sensiVar,numDose), ~,~] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, Firstdose_vector_malaria(dose),Seconddose_vector_malaria(dose), MissedDose, sensiVar, PercentChange);
+    end
+end
+
+
 
 %% MALARIA: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
 %NEED TO SWITCH 'RUNCASE' TO VALUE '1' TO GET THE COVID-19 PATIENTS INFORMATION

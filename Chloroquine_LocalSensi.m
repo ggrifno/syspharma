@@ -1,4 +1,4 @@
-function [Time, AUCCQ, AUCDCQ] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, FirstDosing, OtherDosing, MissedDose, sensiVar, PercentChange)
+function [Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, FirstDosing, OtherDosing, MissedDose, sensiVar, PercentChange)
 %function for running chloroquine simulation
 
 % p is the vector holding all the inputted values for parameters except for
