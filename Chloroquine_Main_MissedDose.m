@@ -1,4 +1,4 @@
-function [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose, LateDose, DeltaTime); 
+function [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main_MissedDose(DosingRegimen, FirstDosing,OtherDosing, MissedDose, LateDose, DeltaTime); 
 % Systems Pharmacology Final Project Main File for Missed Dose Simulations 
 % Alanna Farrell, SJ Burris, Gabrielle Grifno
 % Spring 2020

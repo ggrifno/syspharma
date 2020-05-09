@@ -123,8 +123,7 @@ for i =  1:7 %observe over only 7 days for global sensitivity
     Change = TimeBetweenDoses*DeltaTime;
     tspan = 0:.2:(TimeBetweenDoses-Change);
      if (TimeBetweenDoses-Change) == 0
-         LateDoseAdded = 1
-         %y00(3) = y00(3) + OtherDose;
+         LateDoseAdded = 1;
          tspan = 0:.2:(TimeBetweenDoses*2);
          i = i+1;
    end
