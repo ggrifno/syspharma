@@ -1,4 +1,4 @@
-%% Systems Pharmacology Final Project DRAFT
+%% Systems Pharmacology Final Project FINAL SUBMISSION
 % Authors: Alanna Farrell, Gabrielle Grifno, Sarah Jane Burris
 
 %NOTES:
@@ -149,6 +149,8 @@ PercentChange = 1.05; %model a 5% increase
 
 for sensiVar = 1: numSensi
     [Time,sensiCQall(:,:,sensiVar), sensiDCQall(:,:,sensiVar), sensiAUCCQall(:, sensiVar),sensiAUCDCQall(:, sensiVar)] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, FirstDosing, OtherDosing, MissedDose, sensiVar, PercentChange);
+    disp('done with variable number:')
+    disp(sensiVar)
 end
 %% output the MEAN of the NORMALIZED AUC sensitivity with standard dev for visualization in Rstudio
 
@@ -178,8 +180,8 @@ end
 
 local_var = ["q" "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka"]';
 
-save LocalSensiAUCCQ.mat local_var sensiAUCCQmean sensiAUCCQstdev;
-save LocalSensiAUCDCQ.mat local_var sensiAUCDCQmean sensiAUCDCQstdev;
+save LocalSensiAUC.mat sensiAUCCQmean sensiAUCCQstdev sensiAUCDCQmean sensiAUCDCQstdev;
+% save LocalSensiAUCDCQ.mat sensiAUCDCQmean sensiAUCDCQstdev;
 
 %% MALARIA: Time-dependent local sensitivity
 sensiCQnorm = ones(timepoints, patients, numSensi);
@@ -215,8 +217,8 @@ for j = 1: numSensi
     end
 end
 
-save LocalSensiCQ.mat local_var sensiCQmean sensiCQstdev;
-save LocalSensiDCQ.mat local_var sensiDCQmean sensiDCQstdev;
+save LocalSensiCQ.mat sensiCQmean sensiCQstdev;
+save LocalSensiDCQ.mat sensiDCQmean sensiDCQstdev;
 
 %% MALARIA: Calculate how sensitivity to concentration changes with changing dose
 
@@ -240,7 +242,7 @@ end
 
 
 %% MALARIA: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
-%NEED TO SWITCH 'RUNCASE' TO VALUE '1' TO GET THE COVID-19 PATIENTS INFORMATION
+%NEED TO SWITCH 'RUNCASE' TO VALUE '2' TO GET THE COVID-19 PATIENTS INFORMATION
 Firstdose_vector_malaria = linspace(10,20,10)';
 Seconddose_vector_malaria = linspace(5,10,10)';
 dose_total_malaria = Firstdose_vector_malaria + 3.*Seconddose_vector_malaria;
