@@ -201,4 +201,14 @@ switch RunCase
         xlabel('time (hrs)')
         legend('Normal','Taking Fourth Dose 24*1/5 hrs after', 'Taking Fourth Dose 24*2/5 hrs after', 'Taking Fourth Dose 24*3/5 hrs after', 'Taking Fourth Dose 24*4/5 hrs after', 'Taking Fourth Dose 24 hrs after' )
     
+        TitleP = sprintf('MissedD%i_Malaria_PK_parameters',i);
+        save(TitleP, 'PatientsData')
+        TitleCQ = sprintf('MissedD%i_Malaria_PK_CQCentral',i);
+        save(TitleCQ, 'YCQCentral', 'Time')
+        TitleDQ =sprintf('MissedD%i_Malaria_PK_DQCentral',i);
+        save(TitleDQ, 'YDQCentral', 'Time')
+        TitleA =sprintf('MissedD%i_Malaria_PK_AUCCQ',i);
+        save(TitleA, 'AUCCQ')
+        TitleA =sprintf('MissedD%i_Malaria_PK_AUCDCQ',i);
+        save(TitleA, 'AUCDCQ')
 end

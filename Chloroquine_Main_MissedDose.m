@@ -1,5 +1,5 @@
 function [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose, LateDose, DeltaTime); 
-% Systems Pharmacology Final Project Main Driver
+% Systems Pharmacology Final Project Main File for Missed Dose Simulations 
 % Alanna Farrell, SJ Burris, Gabrielle Grifno
 % Spring 2020
 
@@ -10,7 +10,7 @@ function [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroqui
     %(2)if there is a missed dose
 
 %% Creating virtual patients: Distribution parameters 
-NumberOfSubjects = 2;
+NumberOfSubjects = 50;
 % Size of the populations - by making this a parameter, we can easily test 
 % the code with small numbers that run quickly, and then run it with 
 % larger populations once we're satisfied that it's working.
@@ -37,18 +37,6 @@ x = [1:1:300]; % x = weight, y = density
 for i=Male:Female
     y(i,:) = 1/(SD(i)*sqrt(2*pi()))*exp((-(x(:)-means(i)).^2)/(2*SD(i)^2));
 end
-% 
-% if DisplayPlots == 1
-% % Plotting the normal distributions by themselves
-% figure;
-% title('Distribution of weights');    
-% xlabel('weight (lb)');
-% ylabel('density');
-% hold on;
-% for i=Male:Female
-% 	plot (x,y(i,:),ls{i},'LineWidth',3); 
-% end
-% end
 
 
 %% PART TWO - GENERATE 2 SUBPOPULATIONS USING RANDOM NUMBERS

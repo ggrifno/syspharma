@@ -17,14 +17,8 @@ RunCase = 1;
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
-% 3. Malaria    Missed Dose
-% 4. COVID-19   Missed Dose
-MissedDose = 1; %only applies to cases 3 and 4
-%Dosing Schedule:
-%  1 = miss first dose   4 = miss fourth dose
-%  2 = miss second dose  3 = miss third dose
+MissedDose = 0;
 
-%%%Could add to change number of subjects?
 switch RunCase
   
     case 1
@@ -75,60 +69,6 @@ switch RunCase
         save(TitleA, 'AUCCQ')
         TitleA ='NormalD_COVID_PK_AUCDCQ';
         save(TitleA, 'AUCDCQ')
-
-    case 3
-% 3. Malaria    Missed Dose
-%========================
-     
-        DosingRegimen = 1;
-        FirstDosing  = 10;  %units - mg/kg, now listed in function inputs
-        OtherDosing = 5;    %units - mg/kg, now listed in function inputs
-        DisplayPlots = 1; %turns plot display of weight distributions OFF for Chloroquine_Main
-
-        [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose, DisplayPlots); 
-
-%         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
-        
-        %UpdateToShowWhichDoseMissed
-        i = MissedDose;
-        
-   
-        TitleP = sprintf('MissedD%i_Malaria_PK_parameters',i);
-        save(TitleP, 'PatientsData')
-        TitleCQ = sprintf('MissedD%i_Malaria_PK_CQCentral',i);
-        save(TitleCQ, 'YCQCentral', 'Time')
-        TitleDQ =sprintf('MissedD%i_Malaria_PK_DQCentral',i);
-        save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA =sprintf('MissedD%i_Malaria_PK_AUCCQ',i);
-        save(TitleA, 'AUCCQ')
-        TitleA =sprintf('MissedD%i_Malaria_PK_AUCDCQ',i);
-        save(TitleA, 'AUCDCQ')
-    
-	case 4
-% 4. oCOVID Missed Dosing
-%========================
-     
-        DosingRegimen = 2;
-        FirstDosing  = 500;  %units - mg/kg, now listed in function inputs
-        OtherDosing = 500;    %units - mg/kg, now listed in function inputs
-        %         DisplayPlots = 1;   %turns plot display of weight distributions ON for Chloroquine_Main
-        DisplayPlots =1; %turns plot display of weight distributions OFF for Chloroquine_Main
-        [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, FirstDosing,OtherDosing, MissedDose,DisplayPlots); 
-        
-%         [PatientsData, Time, YCQCentral, YDQCentral,AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
-        %UpdateToShowWhichDoseMissed
-        i = MissedDose;
-        TitleP = sprintf('MissedD%i_COVID_PK_parameters', i);
-        save(TitleP, 'PatientsData')
-        TitleCQ = sprintf('MissedD%i_COVID_PK_CQCentral', i);
-        save(TitleCQ, 'YCQCentral', 'Time')
-        TitleDQ = sprintf('MissedD%i_COVID_PK_DQCentral', i);
-        save(TitleDQ, 'YDQCentral', 'Time')
-        TitleA =sprintf('MissedD%i_COVID_PK_AUCCQ',i);
-        save(TitleA, 'AUCCQ')
-        TitleA =sprintf('MissedD%i_COVID_PK_AUCDCQ',i);
-        save(TitleA, 'AUCDCQ')
-           
 
 end
 
