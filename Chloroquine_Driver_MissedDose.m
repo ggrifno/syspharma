@@ -3,7 +3,7 @@
 
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 4;
+RunCase = 1;
 % 1. Malaria    Missed Dosing
 % 2. Malaria    Late Dose, 2
 % 3. Malaria    Late Dose, 3
@@ -44,7 +44,7 @@ switch RunCase
              MedianYCQCM1 = [MedianYCQCM1;median(YCQCentralM1(i,:))];
              MedianYCQCM2 = [MedianYCQCM2;median(YCQCentralM2(i,:))];
              MedianYCQCM3 = [MedianYCQCM3;median(YCQCentralM3(i,:))];
-             MedianYCQCM4 = [MedianYDQCM4;median(YDQCentralM4(i,:))];
+             MedianYCQCM4 = [MedianYCQCM4;median(YCQCentralM4(i,:))];
              MedianYDQCM0 = [MedianYDQCM0;median(YDQCentralM0(i,:))];
              MedianYDQCM1 = [MedianYDQCM1;median(YDQCentralM1(i,:))];
              MedianYDQCM2 = [MedianYDQCM2;median(YDQCentralM2(i,:))];
