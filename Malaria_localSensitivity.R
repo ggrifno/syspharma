@@ -134,20 +134,51 @@ figline <- plot_ly(df_CQtime, x = ~Time, y = ~q, name = 'q', type = 'scatter', m
 figline
 
 #Malaria [CQ] Heatmap time ------------------
+# save HeatDataCQdose.mat sensiCQmax_dose
+# save HeatDataCQtime.mat sensiCQtime_dose
+
 
 #import heatmap data
-dataCQheat = readMat('title.mat', header = T)
-dataCQtime = readMat('title.mat', header = T)
+dataCQheat = readMat('HeatDataCQdose.mat', header = T)
+dataCQheattime = readMat('HeatDataCQtime.mat', header = T)
 #make dataframes
 df_CQheat = as.data.frame(dataCQheat)
-df_CQtime = as.data.frame(dataCQtime)
+mat_CQheat = as.matrix.data.frame(dataCQheat)
+df_CQheattime = as.data.frame(dataCQheattime)
+
+#relabel the columns with dose sizes
+names(df_CQheat)[1] <- '25.0'
+names(df_CQheat)[2] <- '27.8'
+names(df_CQheat)[3] <- '30.6'
+names(df_CQheat)[4] <- '33.3'
+names(df_CQheat)[5] <- '36.1'
+names(df_CQheat)[6] <- '38.9'
+names(df_CQheat)[7] <- '41.7'
+names(df_CQheat)[8] <- '44.4'
+names(df_CQheat)[9] <- '47.2'
+names(df_CQheat)[10]<- '50.0'
+rownames(df_CQheat)<- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
 
 #heatmap plot of [CQ] in the central compartment
-heatCQ <- plot_ly(x=colnames(df_CQheat), y=rownames(df_CQheat), z = df_CQheat, type = "heatmap") %>%
-  layout(margin = list(l=120))
+heatCQ <- plot_ly(z = dataCQheat, type = "heatmap")
 heatCQ
 
-heatCQTime <- plot_ly(x=colnames(df_CQtime), y=rownames(df_CQtime), z = df_CQtime, type = "heatmap") %>%
+df_CQheat_melt <- melt(df_CQheat)
+
+pheatCQ <- ggplot(df_CQheat, aes(x=rownames(df_CQheat),y=colnames(df_CQheat),fill=df_CQheat) + geom_tile(color='black')) +
+  theme_minimal() +
+  scale_fill_gradient2(low='darkblue',high='darkred',mid='white',midpoint=3,limit=c(1,5),name='Peak [CQ] (mg/L)')+
+  theme(axis.text.x =element_text(angle=90,vjust=1,hjust=1), text=element_text(size=18))+
+  # coord_fixed()+
+  xlab('Variable')+
+  ylab('Dose (mg/day)')+
+  # ggtitle('Standard MIC: Chloroquine Efficacy for Variable Dose and Parasite Drug Sensitivity') # for the main title
+  ggtitle('local sensitivity to variable dose') # for the main title
+print(pheatCQ)
+
+
+
+heatCQTime <- plot_ly(x=colnames(df_CQtime), y=rownames(df_CQtime), z = ddf_CQtime, type = "heatmap") %>%
   layout(margin = list(l=120))
 heatCQTime
 
@@ -156,6 +187,8 @@ print(heatCQout)
 # ggsave(file="heatCQout.png",plot=heatCQout,width=12,height=6)
 
 #Malaria: [DCQ] Heatmap time ------------------
+# save HeatDataDCQdose.mat sensiDCQmax_dose
+# save HeatDataDCQtime.mat sensiDCQtime_dose
 # 
 # #import heatmap data
 # dataDCQheat = readMat('title.mat', header = T)
@@ -176,3 +209,11 @@ print(heatCQout)
 # heatDCQout <- ggarrange(heatDCQ, heatDCQTime, nrow=1, ncol=2)
 # print(heatDCQout)
 # # ggsave(file="heatCQout.png",plot=heatCQout,width=12,height=6)
+
+m <- matrix(rnorm(12), nrow = 4, ncol = 3)
+fig <- plot_ly(
+  # x = c("a", "b", "c"), y = c("d", "e", "f"),
+  z = m, type = "heatmap"
+)
+
+fig
