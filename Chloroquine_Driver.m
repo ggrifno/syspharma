@@ -13,7 +13,7 @@
 % figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 1;
+RunCase = 2;
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -121,6 +121,9 @@ end
 local_var = ["q" "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka"]';
 
 save LocalSensiAUC.mat sensiAUCCQmean sensiAUCCQstdev sensiAUCDCQmean sensiAUCDCQstdev;
+if RunCase ==2
+    save LocalSensiAUC-COVID-19.mat sensiAUCCQmean sensiAUCCQstdev sensiAUCDCQmean sensiAUCDCQstdev;
+end
 
 %% MALARIA: Time-dependent local sensitivity
 sensiCQnorm = ones(timepoints, patients, numSensi);
@@ -168,6 +171,11 @@ Timenew = Time(2:end,:)./24;
 
 save LocalSensiCQ.mat Timenew sensiCQmean sensiCQstdev;
 save LocalSensiDCQ.mat Timenew sensiDCQmean sensiDCQstdev;
+
+if RunCase ==2
+    save LocalSensiCQ-COVID19.mat Timenew sensiCQmean sensiCQstdev;
+    save LocalSensiDCQ-COVID19.mat Timenew sensiDCQmean sensiDCQstdev
+end
 
 %% MALARIA: Calculate how sensitivity to concentration changes with changing dose
 
@@ -230,6 +238,14 @@ save HeatDataCQdose.mat sensiCQmax_dose
 save HeatDataCQtime.mat sensiCQtime_dose
 save HeatDataDCQdose.mat sensiDCQmax_dose
 save HeatDataDCQtime.mat sensiDCQtime_dose
+
+if RunCase ==2
+    save HeatDataCQdoseCOVID19.mat sensiCQmax_dose
+    save HeatDataCQtimeCOVID19.mat sensiCQtime_dose
+    save HeatDataDCQdoseCOVID19.mat sensiDCQmax_dose
+    save HeatDataDCQtimeCOVID19.mat sensiDCQtime_dose
+end
+
 
 %% MALARIA: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
 %NEED TO SWITCH 'RUNCASE' TO VALUE '2' TO GET THE COVID-19 PATIENTS INFORMATION
