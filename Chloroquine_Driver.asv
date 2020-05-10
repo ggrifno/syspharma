@@ -186,8 +186,7 @@ for dose = 1:numDose %iterate through 10 doses
     for sensiVar = 1: numSensi
     [Time,sensiCQall_dose(:,:,sensiVar,dose), sensiDCQall_dose(:,:,sensiVar,dose), ~,~] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, Firstdose_vector_malaria(dose),Seconddose_vector_malaria(dose), MissedDose, sensiVar, PercentChange);
     end
-    disp('done with dose number')
-    disp(dose)
+    done
 end
 
 %% find the mean across all patients for all sensitivity and dose conditions
@@ -206,7 +205,7 @@ for k = 1: numDose
     end
 end
 
-%% find the peak sensitivity and time of peak sensitivity
+%% find the peak sensitivity and time of peak sensi -->
 sensiCQmax_dose = ones(numSensi, numDose); %hold the concentration of CQ in the central compartment for each timepoint over 3 days
 sensiDCQmax_dose= ones(numSensi, numDose); %hold the concentration of DCQ in the central compartment for each timepoint over 3 days
 sensiCQtime_dose = ones(numSensi, numDose); %hold the concentration of CQ in the central compartment for each timepoint over 3 days
@@ -215,21 +214,10 @@ sensiDCQtime_dose= ones(numSensi, numDose); %hold the concentration of DCQ in th
 for k = 1: numDose
     for j = 1: numSensi
          %find the max across all timepoints (i) and the INDEX of the max in the time vector
-         %[CQ] in the central compartment
-        [sensiCQmax_dose(j,k),CQmaxtime] = max(sensiCQmean_dose(:,j,k));
-        sensiCQtime_dose(j,k) = Time(CQmaxtime); %return the timepoint where the max sensitivity occurs
-         %[DCQ] in the central compartment       
-        [sensiDCQmax_dose(j,k),DCQmaxtime] = max(sensiDCQmean_dose(:,j,k));
-        sensiDCQtime_dose(j,k) = Time(DCQmaxtime); %return the timepoint where the max sensitivity occurs
+        [sensiCQmax_dose(j,k),maxtime] = max(sensiCQmean_dose(:,j,k))
+        sensiCQtime_dose(j,k) = Time(maxtime); %return the timepoint where the max sensitivity occurs
     end
 end
-
-%save for R visualization
-
-save HeatDataCQdose.mat sensiCQmax_dose
-save HeatDataCQtime.mat sensiCQtime_dose
-save HeatDataDCQdose.mat sensiDCQmax_dose
-save HeatDataDCQtime.mat sensiDCQtime_dose
 
 %% MALARIA: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
 %NEED TO SWITCH 'RUNCASE' TO VALUE '2' TO GET THE COVID-19 PATIENTS INFORMATION

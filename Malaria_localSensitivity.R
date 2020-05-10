@@ -69,4 +69,110 @@ figbar <- figbar %>% layout(xaxis = xformat, yaxis = yformat, showlegend = TRUE,
 # layout(xaxis = xform)
 figbar
 
+# MALARIA: Time-dependent sensitivity analysis line graph -------------------------
 
+#load in data for univariate analysis
+timeCQ = readMat('LocalSensiCQ.mat', header = T)
+timeDCQ = readMat('LocalSensiDCQ.mat', header = T)
+
+#organize as dataframes from .mat files
+df_CQtime = as.data.frame(timeCQ)
+df_DCQtime = as.data.frame(timeDCQ)
+
+#rename the columns as variables
+names(df_CQtime)[1] <- 'Time'
+names(df_CQtime)[2] <- 'q'
+names(df_CQtime)[3] <- 'vCQ1'
+names(df_CQtime)[4] <- 'vCQ2'
+names(df_CQtime)[5] <- 'vDCQ1'
+names(df_CQtime)[6] <- 'vDCQ2'
+names(df_CQtime)[7] <- 'k10'
+names(df_CQtime)[8] <- 'k30'
+names(df_CQtime)[9] <- 'k12'
+names(df_CQtime)[10] <- 'k21'
+names(df_CQtime)[11] <- 'k23'
+names(df_CQtime)[12] <- 'k34'
+names(df_CQtime)[13] <- 'k43'
+names(df_CQtime)[14] <- 'ka'
+
+f1 <- list(size = 22)
+
+xformat1 <- list(
+  title = "Time (days)",
+  titlefont = f1,
+  showticklabels = TRUE,
+  tickangle = 360,
+  tickfont = f1
+)
+
+yformat1 <- list(
+  title = "Normalized Sensitivity of Central Compartment [CQ]",
+  titlefont = f1,
+  showticklabels = TRUE,
+  # tickangle = 225,
+  tickfont = f1,
+  range = c(-1,1)
+  # exponentformat = "E"
+)
+
+
+figline <- plot_ly(df_CQtime, x = ~Time, y = ~q, name = 'q', type = 'scatter', mode = 'lines') 
+  figline<- figline%>% add_trace(y = ~vCQ1, name = 'vCQ1', mode = 'lines') 
+  figline<- figline%>% add_trace(y = ~vCQ2, name = 'vCQ2', mode = 'lines')
+  figline<- figline%>% add_trace(y = ~vDCQ1, name = 'vDCQ1', mode = 'lines') 
+  figline<- figline%>% add_trace(y = ~vDCQ2, name = 'vDCQ2', mode = 'lines')
+  figline<- figline%>% add_trace(y = ~k10, name = 'k10', mode = 'lines') 
+  figline<- figline%>% add_trace(y = ~k30, name = 'k30', mode = 'lines')
+  figline<- figline%>% add_trace(y = ~k12, name = 'k12', mode = 'lines') 
+  figline<- figline%>% add_trace(y = ~k21, name = 'k21', mode = 'lines')
+  figline<- figline%>% add_trace(y = ~k23, name = 'k23', mode = 'lines') 
+  figline<- figline%>% add_trace(y = ~k34, name = 'k34', mode = 'lines')
+  figline<- figline%>% add_trace(y = ~k43, name = 'k43', mode = 'lines')
+  figline<- figline%>% add_trace(y = ~ka, name = 'ka', mode = 'lines') 
+  figline<- figline%>% layout(xaxis = xformat1, yaxis = yformat1, showlegend = TRUE, legend = list(font = list(size = 20)))
+  
+figline
+
+#Malaria [CQ] Heatmap time ------------------
+
+#import heatmap data
+dataCQheat = readMat('title.mat', header = T)
+dataCQtime = readMat('title.mat', header = T)
+#make dataframes
+df_CQheat = as.data.frame(dataCQheat)
+df_CQtime = as.data.frame(dataCQtime)
+
+#heatmap plot of [CQ] in the central compartment
+heatCQ <- plot_ly(x=colnames(df_CQheat), y=rownames(df_CQheat), z = df_CQheat, type = "heatmap") %>%
+  layout(margin = list(l=120))
+heatCQ
+
+heatCQTime <- plot_ly(x=colnames(df_CQtime), y=rownames(df_CQtime), z = df_CQtime, type = "heatmap") %>%
+  layout(margin = list(l=120))
+heatCQTime
+
+heatCQout <- ggarrange(heatCQ, heatCQTime, nrow=1, ncol=2)
+print(heatCQout)
+# ggsave(file="heatCQout.png",plot=heatCQout,width=12,height=6)
+
+#Malaria: [DCQ] Heatmap time ------------------
+# 
+# #import heatmap data
+# dataDCQheat = readMat('title.mat', header = T)
+# dataDCQtime = readMat('title.mat', header = T)
+# #make dataframes
+# df_DCQheat = as.data.frame(dataCQheat)
+# df_DCQtime = as.data.frame(dataCQtime)
+# 
+# #heatmap plot of [CQ] in the central compartment
+# heatDCQ <- plot_ly(x=colnames(df_DCQheat), y=rownames(df_DCQheat), z = df_DCQheat, type = "heatmap") %>%
+#   layout(margin = list(l=120))
+# heatDCQ
+# 
+# heatDCQTime <- plot_ly(x=colnames(df_DCQtime), y=rownames(df_DCQtime), z = df_DCQtime, type = "heatmap") %>%
+#   layout(margin = list(l=120))
+# heatDCQTime
+# 
+# heatDCQout <- ggarrange(heatDCQ, heatDCQTime, nrow=1, ncol=2)
+# print(heatDCQout)
+# # ggsave(file="heatCQout.png",plot=heatCQout,width=12,height=6)

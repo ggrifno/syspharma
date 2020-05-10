@@ -89,7 +89,7 @@ end
 
 %  for i =  1:21 %observe over 21 days for full timecourse
 % for i =  1:7 %observe over only 7 days for global sensitivity and local COVID sensitivity
-for i =  1:3 %observe over only 3 days for LOCAL MALARIA sensitivity
+for i =  1:7 %observe over only 3 days for LOCAL MALARIA sensitivity
   options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
 %   tspan = 0:.2:TimeBetweenDoses; %set time frame
   tspan = 0:.9:TimeBetweenDoses; %set time frame
