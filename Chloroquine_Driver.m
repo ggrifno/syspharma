@@ -13,7 +13,7 @@
 % figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 2;
+RunCase = 1;
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -321,21 +321,22 @@ xlabel('Time (hrs)','FontSize',12)
 ylabel('Plasma [DCQ] (mg/L)','FontSize',12)
 hold off
 
-subplot(2,2,[2,4]); %AUCC figure
-bar(dose_total_C19, varDose_AUCCQmedian);
-xlabel('Dose (mg/kg)','FontSize',12)
-ylabel('Mean AUCC','FontSize',12)
-hold off
-
+% subplot(2,2,[2,4]); %AUCC figure
+% bar(dose_total_C19, varDose_AUCCQmedian);
+% xlabel('Dose (mg/kg)','FontSize',12)
+% ylabel('Mean AUCC','FontSize',12)
+% hold off
+Timeday = Time./24;
 %save data for later visualization in R
 if RunCase ==1
-    save varDose_CQ_Malaria.mat dose_total_malaria varDose_CQmedian varDose_CQ_iqr_upper varDose_CQ_iqr_lower;
-    save varDose_DQ_Malaria.mat dose_total_malaria varDose_DCQmedian varDose_DCQ_iqr_upper varDose_DCQ_iqr_lower;
-    save varDose_AUCCQ_Malaria.mat dose_total_malaria varDose_AUCCQmedian varDose_AUCCQ_iqr_upper varDose_AUCCQ_iqr_lower;
+    save varDose_CQ_Malaria.mat Timeday varDose_CQmedian varDose_CQ_iqr_upper varDose_CQ_iqr_lower;
+    save varDose_DQ_Malaria.mat Timeday varDose_DCQmedian varDose_DCQ_iqr_upper varDose_DCQ_iqr_lower;
+    save varDose_AUCCQ_Malaria.mat varDose_AUCCQmedian varDose_AUCCQ_iqr_upper varDose_AUCCQ_iqr_lower;
 elseif RunCase ==2
-    save varDose_CQ_COVID19.mat dose_total_C19 varDose_CQmedian varDose_CQ_iqr_upper varDose_CQ_iqr_lower;
-    save varDose_DQ_COVID19.mat dose_total_C19 varDose_DCQmedian varDose_DCQ_iqr_upper varDose_DCQ_iqr_lower;
-    save varDose_AUCCQ_COVID19.mat dose_total_C19 varDose_AUCCQmedian varDose_AUCCQ_iqr_upper varDose_AUCCQ_iqr_lower;
+    save dose_COVID19.mat dose_total_C19 
+    save varDose_CQ_COVID19.mat Timeday varDose_CQmedian varDose_CQ_iqr_upper varDose_CQ_iqr_lower;
+    save varDose_DQ_COVID19.mat Timeday varDose_DCQmedian varDose_DCQ_iqr_upper varDose_DCQ_iqr_lower;
+    save varDose_AUCCQ_COVID19.mat varDose_AUCCQmedian varDose_AUCCQ_iqr_upper varDose_AUCCQ_iqr_lower;
 end
 %% COVID-19: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
 
