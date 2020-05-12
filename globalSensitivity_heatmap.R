@@ -1,8 +1,6 @@
 #ggrifno systems pharma FINAL PROJECT
 
-#plot heatmap of percent of patients who are "cured" of malaria
-#cured = have parasites below detection limit (10^9) at the end of 3 weeks
-
+#plots for the global sensitivity
 #call libraries that will be needed
 library(R.matlab)
 library(ggplot2)
@@ -15,9 +13,48 @@ library(plotly)
 #get the simulation data from MATLAB
 Data_Malaria <- readMat('global_sensi_Malaria.mat',header=T)
 df1a <- as.data.frame(Data_Malaria)# Convert from list to data frame
+df1a_values <- select(df1a, 'peakCQ.mean.Malaria.10','peakCQ.mean.Malaria.9', 'peakCQ.mean.Malaria.8', 'peakCQ.mean.Malaria.7', 'peakCQ.mean.Malaria.6', 'peakCQ.mean.Malaria.5','peakCQ.mean.Malaria.4', 'peakCQ.mean.Malaria.3', 'peakCQ.mean.Malaria.2', 'peakCQ.mean.Malaria.1')
+mat_1a <- as.matrix(df1a_values, rownames.force = NA)
+#format matrix for heatmap
+
+rownames(mat_1a)<- c("0.00144", '0.00018', '0.00099', '0.00086', '0.00076', '0.00068', '0.000618', '0.000565', '0.000519', '0.00048')
+colnames(mat_1a)<- c('25.0','27.77','30.55','33.3','36.1','38.88','41.66', '44.44', '47.22','50.0')
+
+#formatting for heat maps with Plotly
+f1 <- list(size = 20)
+xformat1 <- list(title = "CQ Clearance rate (hr-1)", titlefont = f1, showticklabels = TRUE, tickfont = f1)
+yformat1 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
+
+#heatmap plot of [CQ] in the central compartment
+heatMalaria <- plot_ly(x=rownames(mat_1a),y=colnames(mat_1a),z = mat_1a, type = "heatmap", colorbar = list(title = list(text = "Peak [CQ]", font = f1), tickfont = f1))
+heatMalaria<- heatMalaria%>% layout(xaxis = xformat1, yaxis = yformat1)
+heatMalaria
+
+#FIGURE 1B--------------------------------------------------
+
+Data_COVID19 <- readMat('global_sensi_COVID19.mat',header=T)
+df1b <- as.data.frame(Data_COVID19)# Convert from list to data frame
+df1b_values <- select(df1b, 'peakCQ.mean.C19.10','peakCQ.mean.C19.9', 'peakCQ.mean.C19.8', 'peakCQ.mean.C19.7', 'peakCQ.mean.C19.6', 'peakCQ.mean.C19.5','peakCQ.mean.C19.4', 'peakCQ.mean.C19.3', 'peakCQ.mean.C19.2', 'peakCQ.mean.C19.1')
+mat_1b <- as.matrix(df1b_values, rownames.force = NA)
+#format matrix for heatmap
+
+rownames(mat_1b)<- c("0.00144", '0.00018', '0.00099', '0.00086', '0.00076', '0.00068', '0.000618', '0.000565', '0.000519', '0.00048')
+colnames(mat_1b)<- c('500.0','555.55','611.11','666.66','722.22','777.77','833.33', '888.88', '944.44','1000.00')
+
+#formatting for heat maps with Plotly
+f1 <- list(size = 20)
+xformat1 <- list(title = "CQ Clearance rate (hr-1)", titlefont = f1, showticklabels = TRUE, tickfont = f1)
+yformat1 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
+
+#heatmap plot of [CQ] in the central compartment
+heatCOVID19 <- plot_ly(x=rownames(mat_1b),y=colnames(mat_1b),z = mat_1b, type = "heatmap", colorbar = list(title = list(text = "Peak [CQ]", font = f1), tickfont = f1))
+heatCOVID19<- heatCOVID19%>% layout(xaxis = xformat1, yaxis = yformat1)
+heatCOVID19
+
+#OLD CODE --------------------
 
 #make a new dataframe with just the cure values (have to select in reverse to get axes to format correctly)
-df1_values <- select(df1a, 'dose.total', 'peakCQ.mean.10','peakCQ.mean.9', 'peakCQ.mean.8', 'peakCQ.mean.7', 'peakCQ.mean.6', 'peakCQ.mean.5','peakCQ.mean.4', 'peakCQ.mean.3', 'peakCQ.mean.2', 'peakCQ.mean.1')
+df1_values <- select(df1a, 'dose.total.Malaria', 'peakCQ.mean.Malaria.10','peakCQ.mean.Malaria.9', 'peakCQ.mean.Malaria.8', 'peakCQ.mean.Malaria.7', 'peakCQ.mean.Malaria.6', 'peakCQ.mean.Malaria.5','peakCQ.mean.Malaria.4', 'peakCQ.mean.Malaria.3', 'peakCQ.mean.Malaria.2', 'peakCQ.mean.Malaria.1')
 #rename the column headers from default names that were passed in from MATLAB to the kP values
 names(df1_values)[1] <- 'Dose'
 names(df1_values)[2] <- '0.00048'
