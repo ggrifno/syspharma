@@ -10,22 +10,22 @@ library(tidyverse)
 library(reshape2) #need this to use melt funtion
 library(plotly) #for plotly graphing
 
-# MALARIA: Univariate analysis local sensitivity bar graph -------------------------
+# COVID19: Univariate analysis local sensitivity bar graph -------------------------
 
 #load in data for univariate analysis
 DataAUC_COVID19 = readMat('LocalSensiAUC-COVID-19.mat', header = T)
 
 #organize as dataframes from .mat files
-df_AUC = as.data.frame(DataAUC_COVID19)
+df_AUC_COVID19 = as.data.frame(DataAUC_COVID19)
 
 #add in a column for the variable names
-df_AUC$variables <- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
+df_AUC_COVID19$variables <- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
 
 #rename columns to reflect the type of data
-names(df_AUC)[1] <- 'CQ'
-names(df_AUC)[2] <- 'CQstdev'
-names(df_AUC)[3] <- 'DCQ'
-names(df_AUC)[4] <- 'DCQstdev'
+names(df_AUC_COVID19)[1] <- 'CQ'
+names(df_AUC_COVID19)[2] <- 'CQstdev'
+names(df_AUC_COVID19)[3] <- 'DCQ'
+names(df_AUC_COVID19)[4] <- 'DCQstdev'
 
 #Local sensitivity figure 1: univariate analysis bar graph
 #formatting for plotly graph
@@ -34,18 +34,18 @@ xformat <- list(title = "Variables", titlefont = f1,showticklabels = TRUE,  tick
 yformat <- list(title = "Normalized Sensitivity of AUC",titlefont = f1,showticklabels = TRUE, tickfont = f1, range = c(-1,1))
 
 #make the plot
-figbar <- plot_ly(df_AUC, 
+figbar <- plot_ly(df_AUC_COVID19, 
                   x = ~variables,
                   y = ~CQ, type = 'bar',color = I("light blue"), name = 'CQ central',
                   error_y = ~list(array = CQstdev, color= '#000000'))
-figbar <- figbar %>% add_trace(df_AUC,
+figbar <- figbar %>% add_trace(df_AUC_COVID19,
                                x = ~variables,
                                y = ~DCQ, type = 'bar',color = I("pink"), name = 'CDQ central',
                                error_y = ~list(array = DCQstdev, color = '#000000'))
 figbar <- figbar %>% layout(xaxis = xformat, yaxis = yformat, showlegend = TRUE, legend = list(font = list(size = 25)))
 figbar
 
-# MALARIA: Time-dependent sensitivity analysis line graph -------------------------
+# COVID19: Time-dependent sensitivity analysis line graph -------------------------
 
 #load in data for univariate analysis
 timeCQ = readMat('LocalSensiCQ-COVID19.mat', header = T)
@@ -100,7 +100,7 @@ figlineDCQ<- figlineDCQ%>% layout(xaxis = xformat1, yaxis = yformat2, showlegend
 
 figlineDCQ
 
-#Malaria [CQ] Heatmap time ------------------
+#COVID19 [CQ] Heatmap time ------------------
 
 #import heatmap data
 dataCQheat = readMat('HeatDataCQdoseCOVID19.mat', header = T)
@@ -124,7 +124,7 @@ heatCQ <- plot_ly(x=colnames(mat_CQheat),y=rownames(mat_CQheat),z = mat_CQheat, 
 heatCQ<- heatCQ%>% layout(xaxis = xformat1, yaxis = yformat1)
 heatCQ
 
-#Malaria: [DCQ] Heatmap time ------------------
+#COVID19: [DCQ] Heatmap time ------------------
 
 #import heatmap data
 dataDCQheat = readMat('HeatDataDCQdoseCOVID19.mat', header = T)

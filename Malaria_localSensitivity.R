@@ -13,19 +13,19 @@ library(plotly) #for plotly graphing
 # MALARIA: Univariate analysis local sensitivity bar graph -------------------------
 
 #load in data for univariate analysis
-DataAUC = readMat('LocalSensiAUC.mat', header = T)
+DataAUC_Malaria = readMat('LocalSensiAUC.mat', header = T)
 
 #organize as dataframes from .mat files
-df_AUC = as.data.frame(DataAUC)
+df_AUC_Malaria = as.data.frame(DataAUC_Malaria)
 
 #add in a column for the variable names
-df_AUC$variables <- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
+df_AUC_Malaria$variables <- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
 
 #rename columns to reflect the type of data
-names(df_AUC)[1] <- 'CQ'
-names(df_AUC)[2] <- 'CQstdev'
-names(df_AUC)[3] <- 'DCQ'
-names(df_AUC)[4] <- 'DCQstdev'
+names(df_AUC_Malaria)[1] <- 'CQ'
+names(df_AUC_Malaria)[2] <- 'CQstdev'
+names(df_AUC_Malaria)[3] <- 'DCQ'
+names(df_AUC_Malaria)[4] <- 'DCQstdev'
 
 #Local sensitivity figure 1: univariate analysis bar graph
 #formatting for plotly graph
@@ -34,11 +34,11 @@ xformat <- list(title = "Variables", titlefont = f1,showticklabels = TRUE,  tick
 yformat <- list(title = "Normalized Sensitivity of AUC",titlefont = f1,showticklabels = TRUE, tickfont = f1, range = c(-1,1))
 
 #make the plot
-figbar <- plot_ly(df_AUC, 
+figbar <- plot_ly(df_AUC_Malaria, 
                   x = ~variables,
                   y = ~CQ, type = 'bar',color = I("light blue"), name = 'CQ central',
                   error_y = ~list(array = CQstdev, color= '#000000'))
-figbar <- figbar %>% add_trace(df_AUC,
+figbar <- figbar %>% add_trace(df_AUC_Malaria,
                   x = ~variables,
                   y = ~DCQ, type = 'bar',color = I("pink"), name = 'CDQ central',
                   error_y = ~list(array = DCQstdev, color = '#000000'))

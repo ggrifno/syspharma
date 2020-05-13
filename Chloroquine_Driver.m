@@ -246,7 +246,7 @@ elseif RunCase ==2
     save HeatDataDCQtimeCOVID19.mat sensiDCQtime_dose
 end
 
-%% MALARIA: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
+%% VARIABLE DOSE: Collect the changes in Concentration of CQ, DCQ and AUCCQ
 %NEED TO SWITCH 'RUNCASE' TO VALUE '2' TO GET THE COVID-19 PATIENTS INFORMATION
 if RunCase ==1
     Firstdose_vector = linspace(10,20,10)';
@@ -303,23 +303,23 @@ for dose = 1:10
 end
 
 %plot data
-subplot(2,2,1); %CQ figure
-for dose = 1:10
-    hold on
-plot(Time, varDose_CQmedian(:,dose));
-end
-xlabel('Time (hrs)','FontSize',12)
-ylabel('Plasma [CQ] (mg/L)','FontSize',12)
-hold off
-
-subplot(2,2,3); %DCQ figure
-for dose = 1:10
-    hold on
-plot(Time, varDose_DCQmedian(:,dose));
-end
-xlabel('Time (hrs)','FontSize',12)
-ylabel('Plasma [DCQ] (mg/L)','FontSize',12)
-hold off
+% subplot(2,2,1); %CQ figure
+% for dose = 1:10
+%     hold on
+% plot(Time, varDose_CQmedian(:,dose));
+% end
+% xlabel('Time (hrs)','FontSize',12)
+% ylabel('Plasma [CQ] (mg/L)','FontSize',12)
+% hold off
+% 
+% subplot(2,2,3); %DCQ figure
+% for dose = 1:10
+%     hold on
+% plot(Time, varDose_DCQmedian(:,dose));
+% end
+% xlabel('Time (hrs)','FontSize',12)
+% ylabel('Plasma [DCQ] (mg/L)','FontSize',12)
+% hold off
 
 % subplot(2,2,[2,4]); %AUCC figure
 % bar(dose_total_C19, varDose_AUCCQmedian);
