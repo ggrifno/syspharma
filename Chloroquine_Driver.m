@@ -13,7 +13,7 @@
 % figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 1;
+RunCase = 2;
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -72,7 +72,7 @@ switch RunCase
 
 end
 
-%% MALARIA: Local sensitivity analysis 
+%% Local sensitivity analysis - central compartment AUC
 % MAKE SURE TO SET THE TIME DISTANCE IN "CHLOROQUINE_SIM" TO CALCUATE OVER ONLY THE FIRST 3 DAYS FOR MALARIA SIMULATION
 % run baseline case using the DRIVER section defined above, which creates patients and runs the simulation
 % now perturb only ONE of the variables in the parameter vector at a time and return the AUC for both CQ and DCQ
@@ -126,7 +126,7 @@ elseif RunCase ==2 %COVID-19
     save LocalSensiAUC-COVID-19.mat sensiAUCCQmean sensiAUCCQstdev sensiAUCDCQmean sensiAUCDCQstdev;
 end
 
-%% MALARIA: Time-dependent local sensitivity
+%% Time-dependent local sensitivity
 sensiCQnorm = ones(timepoints, patients, numSensi);
 sensiDCQnorm= ones(timepoints, patients, numSensi);
 
@@ -178,7 +178,7 @@ elseif RunCase ==2
     save LocalSensiDCQ-COVID19.mat Timenew sensiDCQmean sensiDCQstdev
 end
 
-%% MALARIA: Calculate how sensitivity to concentration changes with changing dose
+%% Sensitivity to concentrations changes with changing dose
 
 %set the doses to be used
 numDose = 10; %ten dose conditions
