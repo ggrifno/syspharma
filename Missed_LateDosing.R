@@ -115,11 +115,11 @@ pL2CQ <- ggplot(D2_CQ, aes(x = T/24, y = MedianYCQCM0)) +
         panel.border = element_blank(),
         panel.background = element_blank(),
         legend.title = element_blank(),
-        legend.position = "none",
+
         plot.title = element_text(size = 11, face = "bold"),
         axis.title = element_text(size = 10))  +
   scale_y_continuous(limits = c(0.3, 1.1))+
-  scale_x_continuous(limits = c(0, 6))
+  scale_x_continuous(limits = c(0, 2))
                      
 pL2CQ
 
@@ -130,6 +130,11 @@ pL2DQ <- ggplot(D2_DQ, aes(x = T/24, y = MedianYDQCM0)) +
   geom_line(aes(y = MedianYDQCM3, color = '14.4 Hours Late'),alpha = 0.7, size = 1) +
   geom_line(aes(y = MedianYDQCM4, color = '19.2 Hours Late'),alpha = 0.7, size = 1) +
   geom_line(aes(y = MedianYDQCM5, color = '24 Hours Late'),alpha = 0.7, size = 1) +
+  geom_ribbon(aes(ymin=P25YDQCM0, ymax=P75YDQCM0, color = '4.8 Hours Late'), fill = 'yellow', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YDQCM2, ymax=P75YDQCM2, color = '14.4 Hours Late'), fill = 'violetred4', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YDQCM3, ymax=P75YDQCM3, color = '19.2 Hours Late'), fill = 'orange', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = '24 Hours Late'), fill = 'purple4', alpha=0.1) +
+  
   #formating lines
   ggtitle('Desethylchloroquine') + # for the main title
   xlab('Time (days)') + # for the x axis label
@@ -170,7 +175,7 @@ pL3CQ <- ggplot(D3_CQ, aes(x = T/24, y = MedianYCQCM0)) +
         plot.title = element_text(size = 11, face = "bold"),
         axis.title = element_text(size = 10))  +
   scale_y_continuous(limits = c(0.3, 1.1))+
-  scale_x_continuous(limits = c(0, 6))
+  scale_x_continuous(limits = c(0, 1))
 
 
 
@@ -248,7 +253,7 @@ pL4DQ <- ggplot(D4_DQ, aes(x = T/24, y = MedianYDQCM0)) +
   scale_y_continuous(limits = c(0.06, 0.225))+
   scale_x_continuous(limits = c(0, 6))
 
-#out <- grid.arrange(pL2CQ,pL2DQ,pL3CQ,pL3DQ,pL4CQ,pL4DQ,ncol=2) 
+out <- grid.arrange(pL2CQ,pL2DQ,pL3CQ,pL3DQ,pL4CQ,pL4DQ,ncol=2) 
 
 
 

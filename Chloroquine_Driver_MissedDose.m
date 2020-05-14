@@ -3,7 +3,7 @@
 
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 1;
+RunCase = 2;
 % 1. Malaria    Missed Dosing
 % 2. Malaria    Late Dose, 2
 % 3. Malaria    Late Dose, 3
@@ -163,14 +163,9 @@ switch RunCase
          
         i = 2;
         TitleCQ = sprintf('LateDose%i_Malaria_PK_CQCentral',i);
-        save(TitleCQ, 'T', 'MedianYCQCM0','MedianYCQCM1','MedianYCQCM2','MedianYCQCM3','MedianYCQCM4','MedianYCQCM5')
+        save(TitleCQ, 'T', 'MedianYCQCM0','MedianYCQCM1','MedianYCQCM2','MedianYCQCM3','MedianYCQCM4','MedianYCQCM5', 'P25YCQCM0','P75YCQCM0','P25YCQCM1','P75YCQCM1','P25YCQCM2','P75YCQCM2','P25YCQCM3','P75YCQCM3', 'P25YCQCM4','P75YCQCM4','P25YCQCM5','P75YCQCM5')
         TitleDQ =sprintf('LateDose%i_Malaria_PK_DQCentral',i);
-        save(TitleDQ, 'T', 'MedianYDQCM0','MedianYDQCM1','MedianYDQCM2','MedianYDQCM3','MedianYDQCM4','MedianYDQCM5')
-        
-        TitleCQIQ = sprintf('LateDose%i_Malaria_PK_CQCentral_IQ',i);
-        save(TitleCQIQ, 'T', 'P25YCQCM0','P75YCQCM0','P25YCQCM1','P75YCQCM1','P25YCQCM2','P75YCQCM2','P25YCQCM3','P75YCQCM3', 'P25YCQCM4','P75YCQCM4','P25YCQCM5','P75YCQCM5')
-        TitleDQIQ =sprintf('LateDose%i_Malaria_PK_CQCentral_IQ',i);
-        save(TitleDQIQ, 'T', 'P25YDQCM0','P75YDQCM0','P25YDQCM1','P25YDQCM1','P25YDQCM2','P75YDQCM2', 'P25YDQCM3' , 'P75YDQCM3', 'P25YDQCM4', 'P75YDQCM4','P25YDQCM5', 'P75YDQCM5' )
+        save(TitleDQ, 'T', 'MedianYDQCM0','MedianYDQCM1','MedianYDQCM2','MedianYDQCM3','MedianYDQCM4','MedianYDQCM5', 'P25YDQCM0','P75YDQCM0','P25YDQCM1','P75YDQCM1','P25YDQCM2','P75YDQCM2', 'P25YDQCM3' , 'P75YDQCM3', 'P25YDQCM4', 'P75YDQCM4','P25YDQCM5', 'P75YDQCM5' )
         
     case 3
         DosingRegimen = 1;
