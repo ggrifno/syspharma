@@ -13,7 +13,7 @@
 % figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 1;
+RunCase = 2;
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
