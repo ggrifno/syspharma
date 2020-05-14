@@ -40,7 +40,7 @@ ui <- fluidPage(
         selectInput('disease',"Disease",c('Malaria','COVID-19'))
     )
     ),
-    tabPanel("Missed",
+    tabPanel("Missed/Late Dosing, Malaria",
              fluidRow(
                  column(6,
                         plotlyOutput('MissedCQ',height=350,width=400),
@@ -320,11 +320,11 @@ server <- function(input, output) {
       geom_line(aes(y = MedianYCQCM4, color = '4.8 Hours Late'),alpha = 0.7, size = 1) +
       geom_line(aes(y = MedianYCQCM5, color = '6 Hours Late'),alpha = 0.7, size = 1) +
       geom_ribbon(aes(ymin=P25YCQCM0, ymax=P75YCQCM0, color = 'Normal'), fill = 'yellow', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YCQCM1, ymax=P75YCQCM1, color = '1.2 Hours Late'), fill = 'red', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YCQCM2, ymax=P75YCQCM2, color = '2.4 Hours Late'), fill = 'orange', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YCQCM3, ymax=P75YCQCM3, color = '3.6 Hours Late'), fill = 'grey', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4, color = '4.8 Hours Late'), fill = 'purple4', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '6 Hours Late'), fill = 'violetred4', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YCQCM1, ymax=P75YCQCM1, color = '1.2 Hours Late'), fill = 'grey', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YCQCM2, ymax=P75YCQCM2, color = '2.4 Hours Late'), fill = 'purple4', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YCQCM3, ymax=P75YCQCM3, color = '3.6 Hours Late'), fill = 'violetred4', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4, color = '4.8 Hours Late'), fill = 'red', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '6 Hours Late'), fill = 'orange', alpha=0.1) +
       
       #formating lines
       ggtitle('B: Taking Second Dose Late') + # for the main title
@@ -351,11 +351,11 @@ server <- function(input, output) {
       geom_line(aes(y = MedianYDQCM4, color = '4.8 Hours Late'),alpha = 0.7, size = 1) +
       geom_line(aes(y = MedianYDQCM5, color = '6 Hours Late'),alpha = 0.7, size = 1) +
       geom_ribbon(aes(ymin=P25YDQCM0, ymax=P75YDQCM0, color = 'Normal'), fill = 'yellow', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YDQCM1, ymax=P75YDQCM1, color = '1.2 Hours Late'), fill = 'red', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YDQCM2, ymax=P75YDQCM2, color = '2.4 Hours Late'), fill = 'orange', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YDQCM3, ymax=P75YDQCM3, color = '3.6 Hours Late'), fill = 'grey', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = '4.8 Hours Late'), fill = 'purple4', alpha=0.1) +
-      geom_ribbon(aes(ymin=P25YDQCM5, ymax=P75YDQCM5, color = '6 Hours Late'), fill = 'violetred4', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YDQCM1, ymax=P75YDQCM1, color = '1.2 Hours Late'), fill = 'grey', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YDQCM2, ymax=P75YDQCM2, color = '2.4 Hours Late'), fill = 'purple4', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YDQCM3, ymax=P75YDQCM3, color = '3.6 Hours Late'), fill = 'violetred4', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = '4.8 Hours Late'), fill = 'red', alpha=0.1) +
+      geom_ribbon(aes(ymin=P25YDQCM5, ymax=P75YDQCM5, color = '6 Hours Late'), fill = 'orange', alpha=0.1) +
       
       #formating lines
       xlab('Time (days)') + # for the x axis label
