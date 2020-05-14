@@ -15,6 +15,11 @@ ui <- fluidPage(
 
     # Application title
     titlePanel("Chloroquine in Malaria vs. COVID-19"),
+    #creates tabs in a main panel
+    mainPanel(
+        tabsetPanel(
+            #first panel shows PK plots
+            tabPanel("PK",
     #One row w/ 2 plots each
     fluidRow(
         column(6,
@@ -33,7 +38,18 @@ ui <- fluidPage(
     wellPanel(
         selectInput('disease',"Disease",c('Malaria','COVID-19'))
     )
-)
+    ),
+    tabPanel("Missed",
+             fluidRow(
+                 column(6,
+                        plotlyOutput('Missed',height=350,width=400),
+                        h5('Panel A: Concentration vs. time plots of chloroquine in central compartment for all patients.')
+                 ),
+             )))
+    
+  
+    ))
+
 #==================================================================================
 
 mal_CQ_mat <- readMat('data/NormalD_Malaria_PK_CQCentral.mat',header=T)
@@ -75,6 +91,17 @@ mal_CQ <- melt(mal_CQ_dat, id.vars = "Time")
 mal_DCQ <- melt(mal_DCQ_dat, id.vars = "Time")
 cov_CQ <- melt(cov_CQ_dat, id.vars = "Time")
 cov_DCQ <- melt(cov_DCQ_dat, id.vars = "Time")
+
+#Load Missed/LateDose Data
+DataMD_CQ <- readMat("data/MissedDose_Malaria_PK_CQCentral.mat",header=T) # from mat file
+DMD_CQ <- as.data.frame(DataMD_CQ) # Convert .mat data into a data frame.
+#Data2_CQ <- readMat("data/LateDose2_Malaria_PK_CQCentral.mat",header=T) # from mat file
+#D2_CQ <- as.data.frame(Data2_CQ) # Convert .mat data into a data frame.
+#Data3_CQ <- readMat("LateDose3_Malaria_PK_CQCentral.mat",header=T) # from mat file
+#D3_CQ <- as.data.frame(Data3_CQ) # Convert .mat data into a data frame.
+#Data4_CQ <- readMat("LateDose4_Malaria_PK_CQCentral.mat",header=T) # from mat file
+#D4_CQ <- as.data.frame(Data4_CQ) # Convert .mat data into a data frame.
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -134,6 +161,36 @@ server <- function(input, output) {
         
         fig
     })
+    output$Missed <- renderPlotly({ 
+        pMDCQ <- ggplot(DMD_CQ, aes(x = T/24, y = MedianYCQCM0)) + 
+            geom_line(aes(color = 'Normal'),alpha = 1, size = 1) +
+            geom_ribbon(aes(ymin=P25YCQCM0, ymax=P75YCQCM0), fill = 'yellow', alpha=0.1) +
+            geom_line(aes(y = MedianYCQCM1, color = 'Missed First'),alpha = 0.7, size = 1) +
+            geom_ribbon(aes(ymin=P25YCQCM1, ymax=P75YCQCM1), fill = 'grey',alpha=0.3) +
+            geom_line(aes(y = MedianYCQCM2, color = 'Missed Second'),alpha = 0.7, size = 1) +
+            geom_ribbon(aes(ymin=P25YCQCM2, ymax=P75YCQCM2), fill = 'violetred4',alpha=0.1) +
+            geom_line(aes(y = MedianYCQCM3, color = 'Missed Third', ),alpha = 0.7, size = 1) +
+            geom_ribbon(aes(ymin=P25YCQCM3, ymax=P75YCQCM3), fill = 'orange',alpha=0.1) +
+            geom_line(aes(y = MedianYCQCM4, color = 'Missed Fourth'),alpha = 0.7, size = 1) +
+            geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4), fill = 'purple4', alpha=0.1) +
+            #formating lines
+            ggtitle('Chloroquine') + # for the main title
+            xlab('Time (days)') + # for the x axis label
+            ylab('Concentration (mg/L)') + # for the y axis label
+            theme_bw()+
+            scale_color_viridis(discrete = TRUE, option = "B")+
+            theme(axis.line = element_line(colour = "black"),
+                  panel.grid.major = element_blank(),
+                  panel.grid.minor = element_blank(),
+                  panel.border = element_blank(),
+                  panel.background = element_blank(),
+                  legend.title = element_blank(),
+                  legend.position = "none",
+                  plot.title = element_text(size = 11, face = "bold"),
+                  axis.title = element_text(size = 10))+
+            scale_y_continuous(limits = c(0.0, 1.2))
+        
+    }) 
 }
 
 # Run the application 

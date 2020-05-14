@@ -164,6 +164,8 @@ server <- function(input, output) {
             scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
         p1 <- ggplotly(g1) 
     })
+    
+    
 }  
 
 
