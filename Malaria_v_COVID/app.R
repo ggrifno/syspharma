@@ -44,40 +44,86 @@ ui <- fluidPage(
              fluidRow(
                  column(6,
                         plotlyOutput('MissedCQ',height=350,width=400),
-                        h5('Panel A: Chloroquine Concentration as a result of missing a dose.')
+                        h5('Chloroquine Concentration')
                  ),
                  column(6,
                         plotlyOutput('MissedDCQ',height=350,width=400),
-                        h5('Panel B: Desethlychloroquine Concentration as a result of missing a dose.')
+                        h5('Desethlychloroquine Concentration')
                  ),
                  column(6,
                         plotlyOutput('Late2CQ',height=350,width=400),
-                        h5('Panel C: Chloroquine Concentration as a result of missing a dose.')
+                        h5('Chloroquine Concentration')
                  ),
                  column(6,
                         plotlyOutput('Late2DQ',height=350,width=400),
-                        h5('Panel D: Chloroquine Concentration as a result of missing a dose.')
+                        h5('Desethylchloroquine Concentration')
                  ),
                  column(6,
                         plotlyOutput('Late3CQ',height=350,width=400),
-                        h5('Panel E: Chloroquine Concentration as a result of missing a dose.')
+                        h5('Chloroquine Concentration')
                  ),
                  column(6,
                         plotlyOutput('Late3DQ',height=350,width=400),
-                        h5('Panel F: Chloroquine Concentration as a result of missing a dose.')
+                        h5('Desethylchloroquine Concentration')
                  ),
                  column(6,
                         plotlyOutput('Late4CQ',height=350,width=400),
-                        h5('Panel G: Chloroquine Concentration as a result of missing a dose.')
+                        h5('Chloroquine Concentration')
                  ),
                  column(6,
                         plotlyOutput('Late4DQ',height=350,width=400),
-                        h5('Panel H: Chloroquine Concentration as a result of missing a dose.')
+                        h5('Desethylchloroquine Concentration')
                  ),
-             )))
-    
+             )),
+    tabPanel("Population Parameters",
+      
+      # Application title
+      titlePanel("Population Parameters"),
+      
+      # Sidebar with a slider input for number of bins 
+      fluidRow(
+        column(6,
+               plotlyOutput('wt'),
+               h5('Panel A: Violin plots displaying the distribution of weight for each sex in the patient population.')
+        ),
+        column(6,
+               plotlyOutput('v1cq'),
+               h5('Panel B: Scatter plot of Chloroquine central compartment volume (V1) and weight.')
+        ),
+        column(6,
+               plotlyOutput('v2cq'),
+               h5('Panel C: Scatter plot of Chloroquine peripheral compartment volume (V2) and weight.')
+        ),
+        column(6,
+               plotlyOutput('v1dcq'),
+               h5('Panel D: Scatter plot of Desethylchloroquine central compartment volume (V1) and weight.')
+        ),
+        column(6,
+               plotlyOutput('v2dcq'),
+               h5('Panel E: Scatter plot of Desethylchloroquine peripheral compartment volume (V2) and weight.')
+        ),
+        column(6,
+               plotlyOutput('K10'),
+               h5('Panel F: Scatter plot of Chloroquine central clearance and weight.')
+        ),
+        column(6,
+               plotlyOutput('K30'),
+               h5('Panel G: Scatter plot of Desethylchloroquine central clearance and weight.')
+        ),
+        
+      ),
+      hr(),
+      wellPanel(
+        sliderInput("Weight", label = h3("Weight Range"), min = 0, 
+                    max = 450, value = c(0, 450), width = 900)
+        
+      ),
+      fluidRow(
+        h5('')
+      )
+
   
-    ))
+    ))))
 
 #==================================================================================
 
@@ -128,7 +174,7 @@ Data2_CQ <- readMat("data/LateDose2_Malaria_PK_CQCentral.mat",header=T) # from m
 D2_CQ <- as.data.frame(Data2_CQ) # Convert .mat data into a data frame.
 Data3_CQ <- readMat("data/LateDose3_Malaria_PK_CQCentral.mat",header=T) # from mat file
 D3_CQ <- as.data.frame(Data3_CQ) # Convert .mat data into a data frame.
-Data4_CQ <- readMat("LateDose4_Malaria_PK_CQCentral.mat",header=T) # from mat file
+Data4_CQ <- readMat("data/LateDose4_Malaria_PK_CQCentral.mat",header=T) # from mat file
 D4_CQ <- as.data.frame(Data4_CQ) # Convert .mat data into a data frame.
 
 DataMD_DQ <- readMat("data/MissedDose_Malaria_PK_DQCentral.mat",header=T) # from mat file
@@ -139,6 +185,13 @@ Data3_DQ <- readMat("data/LateDose3_Malaria_PK_DQCentral.mat",header=T) # from m
 D3_DQ <- as.data.frame(Data3_DQ) # Convert .mat data into a data frame.
 Data4_DQ <- readMat("data/LateDose4_Malaria_PK_DQCentral.mat",header=T) # from mat file
 D4_DQ <- as.data.frame(Data4_DQ) # Convert .mat data into a data frame.
+
+mat <- readMat('data/data.mat',header=T)
+dat <- as.data.frame(mat)
+dat $SexLabels<- as.factor(dat$SexLabels)
+
+df_m<-dat[1:50,]
+df_f<-dat[51:100,]
 
 
 # Define server logic required to draw a histogram
@@ -212,7 +265,7 @@ server <- function(input, output) {
             geom_line(aes(y = MedianYCQCM4, color = 'Missed Fourth'),alpha = 0.7, size = 1) +
             geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4, color = 'Missed Fourth'), fill = 'purple4', alpha=0.1) +
             #formating lines
-            ggtitle('Chloroquine') + # for the main title
+            ggtitle('A: Missed Dosing') + # for the main title
             xlab('Time (days)') + # for the x axis label
             ylab('Concentration (mg/L)') + # for the y axis label
             theme_bw()+
@@ -243,7 +296,6 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = 'Missed Fourth'), fill = 'purple4',alpha=0.1) +
         
         #formating lines
-        ggtitle('Desethylchloroquine') + # for the main title
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
         theme_bw()+
@@ -275,7 +327,7 @@ server <- function(input, output) {
       geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '6 Hours Late'), fill = 'violetred4', alpha=0.1) +
       
       #formating lines
-      ggtitle('Chloroquine') + # for the main title
+      ggtitle('B: Taking Second Dose Late') + # for the main title
       xlab('Time (days)') + # for the x axis label
       ylab('Concentration (mg/L)') + # for the y axis label
       theme_bw()+
@@ -306,7 +358,6 @@ server <- function(input, output) {
       geom_ribbon(aes(ymin=P25YDQCM5, ymax=P75YDQCM5, color = '6 Hours Late'), fill = 'violetred4', alpha=0.1) +
       
       #formating lines
-      ggtitle('Desethylchloroquine') + # for the main title
       xlab('Time (days)') + # for the x axis label
       ylab('Concentration (mg/L)') + # for the y axis label
       theme_bw()+
@@ -338,7 +389,7 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '24 Hours Late'), fill = 'violetred4', alpha=0.1) +
         
         #formating lines
-        ggtitle('Chloroquine') + # for the main title
+        ggtitle('C: Taking Third Dose Late') + # for the main title
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
         theme_bw()+
@@ -370,7 +421,6 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM5, color = '24 Hours Late'), fill = 'violetred4', alpha=0.1) +
         
         #formating lines
-        ggtitle('Desethylchloroquine') + # for the main title
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
         theme_bw()+
@@ -402,7 +452,7 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '24 Hours Late'), fill = 'violetred4', alpha=0.1) +
         
         #formating lines
-        ggtitle('Chloroquine') + # for the main title
+        ggtitle('D: Taking Final Dose Late') + # for the main title
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
         theme_bw()+
@@ -449,6 +499,104 @@ server <- function(input, output) {
               axis.title = element_text(size = 10))
       
     })
+    
+    output$wt <- renderPlotly({
+      fig <- dat %>%
+        plot_ly(
+          x = ~SexLabels,
+          y = ~WeightVal,
+          split = ~SexLabels,
+          type = 'violin',
+          box = list(
+            visible = T
+          ),
+          meanline = list(
+            visible = T
+          )
+        ) 
+      
+      fig <- fig %>%
+        layout(
+          xaxis = list(
+            title = "Sex"
+          ),
+          yaxis = list(
+            title = "Weight (lb)",
+            range = input$Weight,
+            zeroline = F
+          ),
+          title = 'Distribution of Weight'
+        )
+      fig
+    })
+    output$v1cq <- renderPlotly({
+      g1<-ggplot(NULL) + 
+        geom_point(data = df_m, aes(x = WeightVal, y = v1cq, col = "Male"))+
+        geom_point(data = df_f, aes(x = WeightVal, y = v1cq, col = "Female"))+
+        ggtitle('Chloroquine Central Compartment Volume (V1) vs. Weight') +
+        xlab('Weight (lb)')+
+        ylab('Central Compartment Volume: V1 (L)')+
+        scale_x_continuous('Weight (lb)',limits = input$Weight)+
+        scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
+      p1 <- ggplotly(g1) 
+    })
+    output$v2cq <- renderPlotly({
+      g1<-ggplot(NULL) + 
+        geom_point(data = df_m, aes(x = WeightVal, y = v2cq, col = "Male"))+
+        geom_point(data = df_f, aes(x = WeightVal, y = v2cq, col = "Female"))+
+        ggtitle('Chloroquine Peripheral Compartment Volume (V2) vs. Weight') +
+        xlab('Weight (lb)')+
+        ylab('Peripheral Compartment Volume: V2 (L)')+
+        scale_x_continuous('Weight (lb)',limits = input$Weight)+
+        scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
+      p1 <- ggplotly(g1) 
+    })
+    output$v1dcq <- renderPlotly({
+      g1<-ggplot(NULL) + 
+        geom_point(data = df_m, aes(x = WeightVal, y = v1dcq, col = "Male"))+
+        geom_point(data = df_f, aes(x = WeightVal, y = v1dcq, col = "Female"))+
+        ggtitle('Desethylhloroquine Central Compartment Volume (V1) vs. Weight') +
+        xlab('Weight (lb)')+
+        ylab('Central Compartment Volume: V1 (L)')+
+        scale_x_continuous('Weight (lb)',limits = input$Weight)+
+        scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
+      p1 <- ggplotly(g1) 
+    })
+    output$v2dcq <- renderPlotly({
+      g1<-ggplot(NULL) + 
+        geom_point(data = df_m, aes(x = WeightVal, y = v2dcq, col = "Male"))+
+        geom_point(data = df_f, aes(x = WeightVal, y = v2dcq, col = "Female"))+
+        ggtitle('Desethylhloroquine Peripheral Compartment Volume (V2) vs. Weight') +
+        xlab('Weight (lb)')+
+        ylab('Peripheral Compartment Volume: V2 (L)')+
+        scale_x_continuous('Weight (lb)',limits = input$Weight)+
+        scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
+      p1 <- ggplotly(g1) 
+    })
+    output$K10 <- renderPlotly({
+      g1<-ggplot(NULL) + 
+        geom_point(data = df_m, aes(x = WeightVal, y = K10, col = "Male"))+
+        geom_point(data = df_f, aes(x = WeightVal, y = K10, col = "Female"))+
+        ggtitle('Clearance of Chloroquine from Central Compartment (hr^-1) vs. Weight') +
+        xlab('Weight (lb)')+
+        ylab('CQ Central Clearance (hr^-1)')+
+        scale_x_continuous('Weight (lb)',limits = input$Weight)+
+        scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
+      p1 <- ggplotly(g1) 
+    })
+    output$K30 <- renderPlotly({
+      g1<-ggplot(NULL) + 
+        geom_point(data = df_m, aes(x = WeightVal, y = K30, col = "Male"))+
+        geom_point(data = df_f, aes(x = WeightVal, y = K30, col = "Female"))+
+        ggtitle('Clearance of Desethylhloroquine from Central Compartment (hr^-1) vs. Weight') +
+        xlab('Weight (lb)')+
+        ylab('DCQ Central Clearance (hr^-1)')+
+        scale_x_continuous('Weight (lb)',limits = input$Weight)+
+        scale_color_manual(name='',values=c('Female'='#1F77B4','Male'='#FF7F0E'))
+      p1 <- ggplotly(g1) 
+    })
+    
+    
 }
 
 # Run the application 
