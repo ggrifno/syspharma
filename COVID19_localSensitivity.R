@@ -14,10 +14,8 @@ library(plotly) #for plotly graphing
 
 #load in data for univariate analysis
 DataAUC_COVID19 = readMat('LocalSensiAUC-COVID-19.mat', header = T)
-
 #organize as dataframes from .mat files
 df_AUC_COVID19 = as.data.frame(DataAUC_COVID19)
-
 #add in a column for the variable names
 df_AUC_COVID19$variables <- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
 
