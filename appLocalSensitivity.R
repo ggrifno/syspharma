@@ -65,6 +65,20 @@ names(df_AUC_Malaria)[2] <- 'CQstdev'
 names(df_AUC_Malaria)[3] <- 'DCQ'
 names(df_AUC_Malaria)[4] <- 'DCQstdev'
 
+#load in data for univariate analysis
+DataAUC_COVID19 = readMat('LocalSensiAUC-COVID-19.mat', header = T)
+#organize as dataframes from .mat files
+df_AUC_COVID19 = as.data.frame(DataAUC_COVID19)
+#add in a column for the variable names
+df_AUC_COVID19$variables <- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
+
+#rename columns to reflect the type of data
+names(df_AUC_COVID19)[1] <- 'CQ'
+names(df_AUC_COVID19)[2] <- 'CQstdev'
+names(df_AUC_COVID19)[3] <- 'DCQ'
+names(df_AUC_COVID19)[4] <- 'DCQstdev'
+
+
 #Local sensitivity figure 1: univariate analysis bar graph
 #formatting for plotly graph
 f1 <- list(size = 25)
@@ -77,15 +91,14 @@ server <- function(input, output) {
     output$AUCbar <- renderPlotly({
         df <- switch(input$disease, 'Malaria' = df_AUC_Malaria, 'COVID-19' = df_AUC_COVID19)
         figbar <- df %>% #use the melted dataframe that contains data for each scenario
-            plot_ly(df_AUC_Malaria, 
+            plot_ly(df, 
                   x = ~variables,
                   y = ~CQ, type = 'bar',color = I("light blue"), name = 'CQ central',
                               error_y = ~list(array = CQstdev, color= '#000000'))
-        figbar <- figbar %>% add_trace(df_AUC_Malaria,
-                   x = ~variables,
+        figbar <- figbar %>% add_trace(x = ~variables,
                    y = ~DCQ, type = 'bar',color = I("pink"), name = 'CDQ central',
                    error_y = ~list(array = DCQstdev, color = '#000000'))
-        figbar <- figbar %>% layout(xaxis = xformat, yaxis = yformat, showlegend = TRUE, legend = list(font = list(size = 25)))
+        # figbar <- figbar %>% layout(xaxis = xformat, yaxis = yformat, showlegend = TRUE, legend = list(font = list(size = 25)))
         figbar
     })
 
