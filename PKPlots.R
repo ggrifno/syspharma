@@ -85,7 +85,7 @@ pCCQ <- ggplot(DCCQ, aes(x = Time/24, y = MedianYCQ)) +
         plot.title = element_text(size = 11, face = "bold"),
         axis.title = element_text(size = 10))+
   scale_y_continuous(limits = c(0.0, 3))+
-  scale_x_continuous(limits = c(0, 5))
+  scale_x_continuous(limits = c(0, 7))
 
 pCDQ <- ggplot(DCDQ, aes(x = Time/24, y = MedianYDQ)) + 
   geom_line(aes(color = 'Normal'),alpha = 0.7, size = 1) +
@@ -106,6 +106,49 @@ pCDQ <- ggplot(DCDQ, aes(x = Time/24, y = MedianYDQ)) +
         plot.title = element_text(size = 11, face = "bold"),
         axis.title = element_text(size = 10))+
   scale_y_continuous(limits = c(0.0, 3))+
-  scale_x_continuous(limits = c(0, 5))
+  scale_x_continuous(limits = c(0, 7))
 
-out <- grid.arrange(pCCQ,pCDQ,ncol=2) 
+pCCQ2 <- ggplot(DCCQ, aes(x = Time/24, y = MedianYCQ)) + 
+  geom_line(aes(color = 'Normal'),alpha = 1, size = 1) +
+  geom_ribbon(aes(ymin=P25YCQ, ymax=P75YCQ, color = 'Normal'), fill = 'grey', alpha=0.1)+
+  #formating lines
+  ggtitle('C') + # for the main title
+  xlab('Time (days)') + # for the x axis label
+  ylab('Concentration (mg/L)') + # for the y axis label
+  theme_bw()+
+  scale_color_viridis(discrete = TRUE, option = "B")+
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        legend.title = element_blank(),
+        legend.position = "none",
+        plot.title = element_text(size = 11, face = "bold"),
+        axis.title = element_text(size = 10))+
+  scale_y_continuous(limits = c(0.0, 2))+
+  scale_x_continuous(limits = c(0, 2))
+
+pCDQ2 <- ggplot(DCDQ, aes(x = Time/24, y = MedianYDQ)) + 
+  geom_line(aes(color = 'Normal'),alpha = 0.7, size = 1) +
+  geom_ribbon(aes(ymin=P25YDQ, ymax=P75YDQ, color = 'Normal'), fill = 'grey', alpha=0.1)+
+  #formating lines
+  ggtitle('D') + # for the main title
+  xlab('Time (days)') + # for the x axis label
+  ylab('Concentration (mg/L)') + # for the y axis label
+  theme_bw()+
+  scale_color_viridis(discrete = TRUE, option = "B")+
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        legend.title = element_blank(),
+        legend.position = "none",
+        plot.title = element_text(size = 11, face = "bold"),
+        axis.title = element_text(size = 10))+
+  scale_y_continuous(limits = c(0.0, 2))+
+  scale_x_continuous(limits = c(0, 2))
+
+
+out <- grid.arrange(pCCQ,pCDQ, pCCQ2,pCDQ2,ncol=2) 
