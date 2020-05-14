@@ -13,14 +13,11 @@ library(plotly) #for plotly graphing
 # MALARIA: Univariate analysis local sensitivity bar graph -------------------------
 
 #load in data for univariate analysis
-DataAUC_Malaria = readMat('LocalSensiAUC.mat', header = T)
-
+DataAUC_Malaria = readMat('LocalSensiAUC_Malaria.mat', header = T)
 #organize as dataframes from .mat files
 df_AUC_Malaria = as.data.frame(DataAUC_Malaria)
-
 #add in a column for the variable names
 df_AUC_Malaria$variables <- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
-
 #rename columns to reflect the type of data
 names(df_AUC_Malaria)[1] <- 'CQ'
 names(df_AUC_Malaria)[2] <- 'CQstdev'
@@ -48,15 +45,14 @@ figbar
 # MALARIA: Time-dependent sensitivity analysis line graph -------------------------
 
 #load in data for univariate analysis
-timeCQ = readMat('LocalSensiCQ.mat', header = T)
-timeDCQ = readMat('LocalSensiDCQ.mat', header = T)
+timeCQ_M = readMat('LocalSensiCQ_Malaria.mat', header = T)
+timeDCQ_M = readMat('LocalSensiDCQ_Malaria.mat', header = T)
 #organize as dataframes from .mat files
-df_CQtime = as.data.frame(timeCQ)
-df_DCQtime = as.data.frame(timeDCQ)
-
+df_CQtime_M = as.data.frame(timeCQ_M)
+df_DCQtime_M = as.data.frame(timeDCQ_M)
 #rename the columns as variables
-colnames(df_CQtime) <- c("Time", "q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
-colnames(df_DCQtime)<- c("Time", "q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
+colnames(df_CQtime_M) <- c("Time", "q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
+colnames(df_DCQtime_M)<- c("Time", "q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
 
 #establish settings for line graphs
 f1 <- list(size = 20)
@@ -65,87 +61,85 @@ yformat1 <- list(title = "Normalized Sensitivity of Central Compartment [CQ]",ti
 yformat2 <- list(title = "Normalized Sensitivity of Central Compartment [DCQ]",titlefont = f1, showticklabels = TRUE, tickfont = f1,range = c(-1,1))
 
 #make the graph for changes in CQ sensitivity over time
-figlineCQ <- plot_ly(df_CQtime, x = ~Time, y = ~q, name = 'q', type = 'scatter', mode = 'lines') 
-  figlineCQ<- figlineCQ%>% add_trace(y = ~vCQ1, name = 'vCQ1', mode = 'lines') 
-  figlineCQ<- figlineCQ%>% add_trace(y = ~vCQ2, name = 'vCQ2', mode = 'lines')
-  figlineCQ<- figlineCQ%>% add_trace(y = ~vDCQ1, name = 'vDCQ1', mode = 'lines') 
-  figlineCQ<- figlineCQ%>% add_trace(y = ~vDCQ2, name = 'vDCQ2', mode = 'lines')
-  figlineCQ<- figlineCQ%>% add_trace(y = ~k10, name = 'k10', mode = 'lines') 
-  figlineCQ<- figlineCQ%>% add_trace(y = ~k30, name = 'k30', mode = 'lines')
-  figlineCQ<- figlineCQ%>% add_trace(y = ~k12, name = 'k12', mode = 'lines') 
-  figlineCQ<- figlineCQ%>% add_trace(y = ~k21, name = 'k21', mode = 'lines')
-  figlineCQ<- figlineCQ%>% add_trace(y = ~k23, name = 'k23', mode = 'lines') 
-  figlineCQ<- figlineCQ%>% add_trace(y = ~k34, name = 'k34', mode = 'lines')
-  figlineCQ<- figlineCQ%>% add_trace(y = ~k43, name = 'k43', mode = 'lines')
-  figlineCQ<- figlineCQ%>% add_trace(y = ~ka, name = 'ka', mode = 'lines') 
-  figlineCQ<- figlineCQ%>% layout(xaxis = xformat1, yaxis = yformat1, showlegend = TRUE, legend = list(font = list(size = 20)))
+figlineCQ_M <- plot_ly(df_CQtime_M, x = ~Time, y = ~q, name = 'q', type = 'scatter', mode = 'lines') 
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~vCQ1, name = 'vCQ1', mode = 'lines') 
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~vCQ2, name = 'vCQ2', mode = 'lines')
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~vDCQ1, name = 'vDCQ1', mode = 'lines') 
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~vDCQ2, name = 'vDCQ2', mode = 'lines')
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~k10, name = 'k10', mode = 'lines') 
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~k30, name = 'k30', mode = 'lines')
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~k12, name = 'k12', mode = 'lines') 
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~k21, name = 'k21', mode = 'lines')
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~k23, name = 'k23', mode = 'lines') 
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~k34, name = 'k34', mode = 'lines')
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~k43, name = 'k43', mode = 'lines')
+  figlineCQ_M<- figlineCQ_M%>% add_trace(y = ~ka, name = 'ka', mode = 'lines') 
+  figlineCQ_M<- figlineCQ_M%>% layout(xaxis = xformat1, yaxis = yformat1, showlegend = TRUE, legend = list(font = list(size = 20)))
   
-figlineCQ
+figlineCQ_M
 
 #make the graph for changes in DCQ sensitivity over time
-figlineDCQ <- plot_ly(df_DCQtime, x = ~Time, y = ~q, name = 'q', type = 'scatter', mode = 'lines') 
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~vCQ1, name = 'vCQ1', mode = 'lines') 
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~vCQ2, name = 'vCQ2', mode = 'lines')
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~vDCQ1, name = 'vDCQ1', mode = 'lines') 
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~vDCQ2, name = 'vDCQ2', mode = 'lines')
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~k10, name = 'k10', mode = 'lines') 
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~k30, name = 'k30', mode = 'lines')
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~k12, name = 'k12', mode = 'lines') 
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~k21, name = 'k21', mode = 'lines')
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~k23, name = 'k23', mode = 'lines') 
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~k34, name = 'k34', mode = 'lines')
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~k43, name = 'k43', mode = 'lines')
-figlineDCQ<- figlineDCQ%>% add_trace(y = ~ka, name = 'ka', mode = 'lines') 
-figlineDCQ<- figlineDCQ%>% layout(xaxis = xformat1, yaxis = yformat2, showlegend = TRUE, legend = list(font = list(size = 20)))
+figlineDCQ_M <- plot_ly(df_DCQtime_M, x = ~Time, y = ~q, name = 'q', type = 'scatter', mode = 'lines') 
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~vCQ1, name = 'vCQ1', mode = 'lines') 
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~vCQ2, name = 'vCQ2', mode = 'lines')
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~vDCQ1, name = 'vDCQ1', mode = 'lines') 
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~vDCQ2, name = 'vDCQ2', mode = 'lines')
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~k10, name = 'k10', mode = 'lines') 
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~k30, name = 'k30', mode = 'lines')
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~k12, name = 'k12', mode = 'lines') 
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~k21, name = 'k21', mode = 'lines')
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~k23, name = 'k23', mode = 'lines') 
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~k34, name = 'k34', mode = 'lines')
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~k43, name = 'k43', mode = 'lines')
+figlineDCQ_M<- figlineDCQ_M%>% add_trace(y = ~ka, name = 'ka', mode = 'lines') 
+figlineDCQ_M<- figlineDCQ_M%>% layout(xaxis = xformat1, yaxis = yformat2, showlegend = TRUE, legend = list(font = list(size = 20)))
 
-figlineDCQ
+figlineDCQ_M
 
 #Malaria [CQ] Heatmap time ------------------
 
 #import heatmap data
-dataCQheat = readMat('HeatDataCQdose.mat', header = T)
-# dataCQheattime = readMat('HeatDataCQtime.mat', header = T)
+dataCQheat_M = readMat('HeatDataCQdose.mat', header = T)
 #make dataframes
-df_CQheat = as.data.frame(dataCQheat)
-mat_CQheat = as.matrix(df_CQheat, rownames.force = NA)
-# df_CQheattime = as.data.frame(dataCQheattime)
-# mat_CQheattime = as.matrix(time, rownames.force = NA)
+df_CQheat_M = as.data.frame(dataCQheat_M)
+#change dataframe to a matrix to use plotly heatmaps (dataframe not supported by plotly heatmap)
+mat_CQheat_M = as.matrix(df_CQheat_M, rownames.force = NA)
 
 #format matrices for heatmaps
-rownames(mat_CQheat)<- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
-colnames(mat_CQheat)<- c('25.0','27.8','30.6','33.3', '36.1','38.9','41.7','44.4','47.2','50.0')
-mat_CQheat <- t(mat_CQheat)
+rownames(mat_CQheat_M)<- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
+colnames(mat_CQheat_M)<- c('25.0','27.8','30.6','33.3', '36.1','38.9','41.7','44.4','47.2','50.0')
+mat_CQheat_M <- t(mat_CQheat_M) #transpose to get desired axes
 
 #formatting for heat maps
-f1 <- list(size = 30)
-xformat1 <- list(title = "Variable", titlefont = f1, showticklabels = TRUE,  tickangle = 290, tickfont = f1)
-yformat1 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
+f2 <- list(size = 30)
+xformat2 <- list(title = "Variable", titlefont = f1, showticklabels = TRUE,  tickangle = 290, tickfont = f1)
+yformat2 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
 
 #heatmap plot of [CQ] in the central compartment
-heatCQ <- plot_ly(x=colnames(mat_CQheat),y=rownames(mat_CQheat),z = mat_CQheat, type = "heatmap", colorbar = list(title = list(text = "Peak [CQ]", font = f1), tickfont = f1))
-heatCQ<- heatCQ%>% layout(xaxis = xformat1, yaxis = yformat1)
-heatCQ
+heatCQ_M <- plot_ly(x=colnames(mat_CQheat_M),y=rownames(mat_CQheat_M),z = mat_CQheat_M, type = "heatmap", colorbar = list(title = list(text = "Peak [CQ]", font = f1), tickfont = f1))
+heatCQ_M <- heatCQ_M%>% layout(xaxis = xformat2, yaxis = yformat2)
+heatCQ_M
 
 #Malaria: [DCQ] Heatmap time ------------------
 
 #import heatmap data
-dataDCQheat = readMat('HeatDataDCQdose.mat', header = T)
+dataDCQheat_M = readMat('HeatDataDCQdose.mat', header = T)
 # dataDCQtime = readMat('HeatDataDCQtime.mat', header = T)
 #make dataframes
-df_DCQheat = as.data.frame(dataDCQheat)
-mat_DCQheat = as.matrix(df_DCQheat,rownames.force = NA)
+df_DCQheat_M = as.data.frame(dataDCQheat_M)
+mat_DCQheat_M = as.matrix(df_DCQheat_M,rownames.force = NA)
 
 #format matrix for heatmaps
-rownames(mat_DCQheat)<- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
-colnames(mat_DCQheat)<- c('25.0','27.8','30.6','33.3', '36.1','38.9','41.7','44.4','47.2','50.0')
-mat_DCQheat <- t(mat_DCQheat)
+rownames(mat_DCQheat_M)<- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
+colnames(mat_DCQheat_M)<- c('25.0','27.8','30.6','33.3', '36.1','38.9','41.7','44.4','47.2','50.0')
+mat_DCQheat_M <- t(mat_DCQheat_M)
 
 #heatmap plot of [CQ] in the central compartment
-f1 <- list(size = 30)
-xformat1 <- list(title = "Variable", titlefont = f1, showticklabels = TRUE,  tickangle = 290, tickfont = f1)
-yformat1 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
+f2 <- list(size = 30)
+xformat2 <- list(title = "Variable", titlefont = f1, showticklabels = TRUE,  tickangle = 290, tickfont = f1)
+yformat2 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
 
 #heatmap plot of [CQ] in the central compartment
-heatDCQ <- plot_ly(x=colnames(mat_DCQheat),y=rownames(mat_DCQheat),z = mat_DCQheat, type = "heatmap", colorbar = list(title = list(text = "Peak [DCQ]", font = f1), tickfont = f1))
-heatDCQ<- heatDCQ%>% layout(xaxis = xformat1, yaxis = yformat1)
-heatDCQ
+heatDCQ_M <- plot_ly(x=colnames(mat_DCQheat_M),y=rownames(mat_DCQheat_M),z = mat_DCQheat_M, type = "heatmap", colorbar = list(title = list(text = "Peak [DCQ]", font = f1), tickfont = f1))
+heatDCQ_M<- heatDCQ_M%>% layout(xaxis = xformat2, yaxis = yformat2)
+heatDCQ_M
