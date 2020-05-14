@@ -42,8 +42,12 @@ ui <- fluidPage(
     tabPanel("Missed",
              fluidRow(
                  column(6,
-                        plotlyOutput('Missed',height=350,width=400),
-                        h5('Panel A: Concentration vs. time plots of chloroquine in central compartment for all patients.')
+                        plotlyOutput('MissedCQ',height=350,width=400),
+                        h5('Panel A: Chloroquine Concentration as a result of missing a dose.')
+                 ),
+                 column(6,
+                        plotlyOutput('MissedDCQ',height=350,width=400),
+                        h5('Panel B: Desethlychloroquine Concentration as a result of missing a dose.')
                  ),
              )))
     
@@ -161,18 +165,18 @@ server <- function(input, output) {
         
         fig
     })
-    output$Missed <- renderPlotly({ 
+    output$MissedCQ<- renderPlotly({ 
         pMDCQ <- ggplot(DMD_CQ, aes(x = T/24, y = MedianYCQCM0)) + 
             geom_line(aes(color = 'Normal'),alpha = 1, size = 1) +
-            geom_ribbon(aes(ymin=P25YCQCM0, ymax=P75YCQCM0), fill = 'yellow', alpha=0.1) +
+            geom_ribbon(aes(ymin=P25YCQCM0, ymax=P75YCQCM0, color = 'Normal'), fill = 'yellow', alpha=0.1) +
             geom_line(aes(y = MedianYCQCM1, color = 'Missed First'),alpha = 0.7, size = 1) +
-            geom_ribbon(aes(ymin=P25YCQCM1, ymax=P75YCQCM1), fill = 'grey',alpha=0.3) +
+            geom_ribbon(aes(ymin=P25YCQCM1, ymax=P75YCQCM1, color = 'Missed First'), fill = 'grey',alpha=0.3) +
             geom_line(aes(y = MedianYCQCM2, color = 'Missed Second'),alpha = 0.7, size = 1) +
-            geom_ribbon(aes(ymin=P25YCQCM2, ymax=P75YCQCM2), fill = 'violetred4',alpha=0.1) +
-            geom_line(aes(y = MedianYCQCM3, color = 'Missed Third', ),alpha = 0.7, size = 1) +
-            geom_ribbon(aes(ymin=P25YCQCM3, ymax=P75YCQCM3), fill = 'orange',alpha=0.1) +
+            geom_ribbon(aes(ymin=P25YCQCM2, ymax=P75YCQCM2, color = 'Missed Second'), fill = 'violetred4',alpha=0.1) +
+            geom_line(aes(y = MedianYCQCM3, color = 'Missed Third'),alpha = 0.7, size = 1) +
+            geom_ribbon(aes(ymin=P25YCQCM3, ymax=P75YCQCM3, color = 'Missed Third'), fill = 'orange',alpha=0.1) +
             geom_line(aes(y = MedianYCQCM4, color = 'Missed Fourth'),alpha = 0.7, size = 1) +
-            geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4), fill = 'purple4', alpha=0.1) +
+            geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4, color = 'Missed Fourth'), fill = 'purple4', alpha=0.1) +
             #formating lines
             ggtitle('Chloroquine') + # for the main title
             xlab('Time (days)') + # for the x axis label
@@ -185,11 +189,41 @@ server <- function(input, output) {
                   panel.border = element_blank(),
                   panel.background = element_blank(),
                   legend.title = element_blank(),
-                  legend.position = "none",
+                  #legend.position = "none",
                   plot.title = element_text(size = 11, face = "bold"),
                   axis.title = element_text(size = 10))+
             scale_y_continuous(limits = c(0.0, 1.2))
         
+    }) 
+    output$MissedDCQ<- renderPlotly({ 
+      pMDDQ <- ggplot(DMD_DQ, aes(x = T/24, y = MedianYDQCM0)) + 
+        geom_line(aes(color = 'Normal'),alpha = 0.7, size = 1) +
+        geom_ribbon(aes(ymin=P25YDQCM0, ymax=P75YDQCM0, color = 'Normal'), fill = 'yellow', alpha=0.1) +
+        geom_line(aes(y = MedianYDQCM1, color = 'Missed First'),alpha = 0.7, size = 1) +
+        geom_ribbon(aes(ymin=P25YDQCM1, ymax=P75YDQCM1, color = 'Missed First'), fill = 'grey', alpha=0.3) +
+        geom_line(aes(y = MedianYDQCM2, color = 'Missed Second'),alpha = 0.7, size = 1) +
+        geom_ribbon(aes(ymin=P25YDQCM2, ymax=P75YDQCM2, color = 'Missed Second'), fill = 'violetred4',alpha=0.1) +
+        geom_line(aes(y = MedianYDQCM3, color = 'Missed Third'),alpha = 0.7, size = 1) +
+        geom_ribbon(aes(ymin=P25YDQCM3, ymax=P75YDQCM3, color = 'Missed Third'), fill = 'orange',alpha=0.1) +
+        geom_line(aes(y = MedianYDQCM4, color = 'Missed Fourth'),alpha = 0.7, size = 1) +
+        geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = 'Missed Fourth'), fill = 'purple4',alpha=0.1) +
+        
+        #formating lines
+        ggtitle('Desethylchloroquine') + # for the main title
+        xlab('Time (days)') + # for the x axis label
+        ylab('Concentration (mg/L)') + # for the y axis label
+        theme_bw()+
+        scale_color_viridis(discrete = TRUE, option = "B")+
+        theme(axis.line = element_line(colour = "black"),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.border = element_blank(),
+              panel.background = element_blank(),
+              legend.title = element_blank(),
+              plot.title = element_text(size = 11, face = "bold"),
+              axis.title = element_text(size = 10))+
+        scale_y_continuous(limits = c(0.0, 1.2))
+      
     }) 
 }
 
