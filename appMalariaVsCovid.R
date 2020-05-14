@@ -31,11 +31,11 @@ ui <- fluidPage(
         ),
         column(6,
                plotlyOutput('violin1',height=350,width=400),
-               h5('Panel C: Violin plot showing distribution of AUC of Chloroquine for all patients.')
+               h5('Panel C: Violin plot showing distribution of AUC of Chloroquine in the central compartment for all patients.')
         ),
         column(6,
                plotlyOutput('violin2',height=350,width=400),
-               h5('Panel D: Violin plot showing distribution of AUC of Desethylchloroquine for all patients.')
+               h5('Panel D: Violin plot showing distribution of AUC of Desethylchloroquine in the central compartment for all patients.')
         ),
     ),
     wellPanel(
@@ -231,6 +231,7 @@ server <- function(input, output) {
           geom_ribbon(aes(ymin=P25YCQ, ymax=P75YCQ),fill='blue', alpha=0.1) +
           #formating lines
           ggtitle('[CQ] in Central Compartment over Time') + # for the main title
+          theme(plot.title = element_text(size=10))+
           xlab('Time (days)') + # for the x axis label
           ylab('Concentration (mg/L)') # for the y axis label
           CQ<-ggplotly(pCQ)
@@ -245,6 +246,7 @@ server <- function(input, output) {
         #formating lines
         ggtitle('[DCQ] in Central Compartment over Time') + # for the main title
         xlab('Time (days)') + # for the x axis label
+        theme(plot.title = element_text(size=10))+
         ylab('Concentration (mg/L)') # for the y axis label
       DCQ<- ggplotly(pDCQ)
     }) 
