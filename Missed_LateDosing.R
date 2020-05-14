@@ -92,16 +92,17 @@ pMDDQ <- ggplot(DMD_DQ, aes(x = T/24, y = MedianYDQCM0)) +
 
 pL2CQ <- ggplot(D2_CQ, aes(x = T/24, y = MedianYCQCM0)) + 
   geom_line(aes(color = 'Normal'), size = 1) +
+  geom_ribbon(aes(ymin=P25YCQCM0, ymax=P75YCQCM0, color = '4.8 Hours Late'), fill = 'yellow', alpha=0.1) +
   geom_line(aes(y = MedianYCQCM1, color = '4.8 Hours Late'),alpha = 0.7, size = 1) +
   geom_line(aes(y = MedianYCQCM2, color = '9.6 Hours Late'),alpha = 0.7, size = 1) +
   geom_line(aes(y = MedianYCQCM3, color = '14.4 Hours Late'),alpha = 0.7, size = 1) +
   geom_line(aes(y = MedianYCQCM4, color = '19.2 Hours Late'),alpha = 0.7, size = 1) +
   geom_line(aes(y = MedianYCQCM5, color = '24 Hours Late'),alpha = 0.7, size = 1) +
-  geom_ribbon(aes(ymin=P25YCQCM0, ymax=P75YCQCM0, color = '4.8 Hours Late'), fill = 'yellow', alpha=0.1) +
-  geom_ribbon(aes(ymin=P25YCQCM1, ymax=P75YCQCM1, color = '9.6 Hours Late'), fill = 'grey', alpha=0.3) +
-  geom_ribbon(aes(ymin=P25YCQCM2, ymax=P75YCQCM2, color = '14.4 Hours Late'), fill = 'violetred4', alpha=0.1) +
-  geom_ribbon(aes(ymin=P25YCQCM3, ymax=P75YCQCM3, color = '19.2 Hours Late'), fill = 'orange', alpha=0.1) +
-  geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4, color = '24 Hours Late'), fill = 'purple4', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YCQCM1, ymax=P75YCQCM1, color = '4.8 Hours Late'), fill = 'red', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YCQCM2, ymax=P75YCQCM2, color = '9.6 Hours Late'), fill = 'grey', alpha=0.3) +
+  geom_ribbon(aes(ymin=P25YCQCM3, ymax=P75YCQCM3, color = '14.4 Hours Late'), fill = 'violetred4', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4, color = '19.2 Hours Late'), fill = 'orange', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '24 Hours Late'), fill = 'purple4', alpha=0.1) +
 
   #formating lines
   ggtitle('Chloroquine') + # for the main title
@@ -115,7 +116,6 @@ pL2CQ <- ggplot(D2_CQ, aes(x = T/24, y = MedianYCQCM0)) +
         panel.border = element_blank(),
         panel.background = element_blank(),
         legend.title = element_blank(),
-
         plot.title = element_text(size = 11, face = "bold"),
         axis.title = element_text(size = 10))  +
   scale_y_continuous(limits = c(0.3, 1.1))+
@@ -130,7 +130,8 @@ pL2DQ <- ggplot(D2_DQ, aes(x = T/24, y = MedianYDQCM0)) +
   geom_line(aes(y = MedianYDQCM3, color = '14.4 Hours Late'),alpha = 0.7, size = 1) +
   geom_line(aes(y = MedianYDQCM4, color = '19.2 Hours Late'),alpha = 0.7, size = 1) +
   geom_line(aes(y = MedianYDQCM5, color = '24 Hours Late'),alpha = 0.7, size = 1) +
-  geom_ribbon(aes(ymin=P25YDQCM0, ymax=P75YDQCM0, color = '4.8 Hours Late'), fill = 'yellow', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YDQCM0, ymax=P75YDQCM0, color = 'Normal'), fill = 'yellow', alpha=0.1) +
+  geom_ribbon(aes(ymin=P25YDQCM1, ymax=P75YDQCM1, color = '4.8 Hours Late'), fill = 'red', alpha=0.1) +
   geom_ribbon(aes(ymin=P25YDQCM2, ymax=P75YDQCM2, color = '14.4 Hours Late'), fill = 'violetred4', alpha=0.1) +
   geom_ribbon(aes(ymin=P25YDQCM3, ymax=P75YDQCM3, color = '19.2 Hours Late'), fill = 'orange', alpha=0.1) +
   geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = '24 Hours Late'), fill = 'purple4', alpha=0.1) +
