@@ -39,7 +39,7 @@ switch RunCase
         P25YCQ = []; P25YDQ = [];
         P75YCQ = []; P75YDQ = []; 
 
-        D = size(Time);
+        D = size(T);
          for i = 1:D(1)
              MedianYCQ = [MedianYCQ;median(YCQCentral(i,:))];
              MedianYDQ = [MedianYDQ;median(YDQCentral(i,:))];
@@ -57,7 +57,7 @@ switch RunCase
          TitleCQ ='NormalD_Malaria_PK_CQCentral';
          save(TitleCQ, 'YCQCentral', 'Time', 'MedianYCQ', 'P25YCQ', 'P75YCQ')
          TitleDQ ='NormalD_Malaria_PK_DQCentral';
-         save(TitleDQ, 'YDQCentral', 'Time', 'MedianYDQ', 'P25YDQ', 'P75YDQ')
+         save(TitleDQ, 'YDQCentral', 'Time')
          TitleA ='NormalD_Malaria_PK_AUCCQ';
          save(TitleA, 'AUCCQ')
          TitleA ='NormalD_Malaria_PK_AUCDCQ';
@@ -78,23 +78,7 @@ switch RunCase
 %         [PatientsData, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen,FirstDosing,OtherDosing, MissedDose); 
         
         
-        MedianYCQ = [];
-        MedianYDQ = [];
-
-        P25YCQ = []; P25YDQ = [];
-        P75YCQ = []; P75YDQ = []; 
-
-        D = size(Time);
-         for i = 1:D(1)
-             MedianYCQ = [MedianYCQ;median(YCQCentral(i,:))];
-             MedianYDQ = [MedianYDQ;median(YDQCentral(i,:))];
-             P25YCQ = [P25YCQ;prctile(YCQCentral(i,:),25)];
-             P75YCQ = [P75YCQ;prctile(YCQCentral(i,:),75)];
-             P25YDQ = [P25YDQ;prctile(YDQCentral(i,:),25)];
-             P75YDQ = [P75YDQ;prctile(YDQCentral(i,:),75)];
-
-             
-         end
+        
         TitleP ='NormalD_COVID_PK_parameters';
         save(TitleP, 'PatientsData')
         TitleCQ ='NormalD_COVID_PK_CQCentral';
