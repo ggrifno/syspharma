@@ -168,22 +168,22 @@ cov_CQ <- melt(cov_CQ_dat, id.vars = "Time")
 cov_DCQ <- melt(cov_DCQ_dat, id.vars = "Time")
 
 #Load Missed/LateDose Data
-DataMD_CQ <- readMat("data/MissedDose_Malaria_PK_CQCentral.mat",header=T) # from mat file
+DataMD_CQ <- readMat("MissedDose_Malaria_PK_CQCentral.mat",header=T) # from mat file
 DMD_CQ <- as.data.frame(DataMD_CQ) # Convert .mat data into a data frame.
-Data2_CQ <- readMat("data/LateDose2_Malaria_PK_CQCentral.mat",header=T) # from mat file
+Data2_CQ <- readMat("LateDose2_Malaria_PK_CQCentral.mat",header=T) # from mat file
 D2_CQ <- as.data.frame(Data2_CQ) # Convert .mat data into a data frame.
-Data3_CQ <- readMat("data/LateDose3_Malaria_PK_CQCentral.mat",header=T) # from mat file
+Data3_CQ <- readMat("LateDose3_Malaria_PK_CQCentral.mat",header=T) # from mat file
 D3_CQ <- as.data.frame(Data3_CQ) # Convert .mat data into a data frame.
-Data4_CQ <- readMat("data/LateDose4_Malaria_PK_CQCentral.mat",header=T) # from mat file
+Data4_CQ <- readMat("LateDose4_Malaria_PK_CQCentral.mat",header=T) # from mat file
 D4_CQ <- as.data.frame(Data4_CQ) # Convert .mat data into a data frame.
 
-DataMD_DQ <- readMat("data/MissedDose_Malaria_PK_DQCentral.mat",header=T) # from mat file
+DataMD_DQ <- readMat("MissedDose_Malaria_PK_DQCentral.mat",header=T) # from mat file
 DMD_DQ <- as.data.frame(DataMD_DQ) # Convert .mat data into a data frame.
-Data2_DQ <- readMat("data/LateDose2_Malaria_PK_DQCentral.mat",header=T) # from mat file
+Data2_DQ <- readMat("LateDose2_Malaria_PK_DQCentral.mat",header=T) # from mat file
 D2_DQ <- as.data.frame(Data2_DQ) # Convert .mat data into a data frame.
-Data3_DQ <- readMat("data/LateDose3_Malaria_PK_DQCentral.mat",header=T) # from mat file
+Data3_DQ <- readMat("LateDose3_Malaria_PK_DQCentral.mat",header=T) # from mat file
 D3_DQ <- as.data.frame(Data3_DQ) # Convert .mat data into a data frame.
-Data4_DQ <- readMat("data/LateDose4_Malaria_PK_DQCentral.mat",header=T) # from mat file
+Data4_DQ <- readMat("LateDose4_Malaria_PK_DQCentral.mat",header=T) # from mat file
 D4_DQ <- as.data.frame(Data4_DQ) # Convert .mat data into a data frame.
 
 mat <- readMat('data/data.mat',header=T)
