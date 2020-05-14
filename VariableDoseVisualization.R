@@ -121,30 +121,31 @@ f1 <- list(size = 25)
 xformat1 <- list(title = "Time (days)", titlefont = f1,showticklabels = TRUE, tickfont = f1)
 yformat1 <- list(title = "Central Compartment [CQ] mg/mL",titlefont = f1,showticklabels = TRUE, tickfont = f1)
 
+colnames(mat_DCQheat_C19)<- c('500.0','555.55','611.11','666.66','722.22','777.77','833.33', '888.88', '944.44','1000.00')
 
 #format matrix for heatmap
 C19P1 <- ggplot(df_COVID19CQ, aes(x = Timeday))+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.1, ymax = varDose.CQ.iqr.upper.1, color = '25 mg/kg'), fill = "pink")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.2, ymax = varDose.CQ.iqr.upper.2, color = '27 mg/kg'), fill = "peachpuff")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.3, ymax = varDose.CQ.iqr.upper.3, color = '30 mg/kg'), fill = "wheat1")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.4, ymax = varDose.CQ.iqr.upper.4, color = '33 mg/kg'), fill = "palegreen")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.5, ymax = varDose.CQ.iqr.upper.5, color = '36 mg/kg'), fill = "paleturquoise1")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.6, ymax = varDose.CQ.iqr.upper.6, color = '38 mg/kg'), fill = "lightblue1")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.7, ymax = varDose.CQ.iqr.upper.7, color = '41 mg/kg'), fill = "thistle1")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.8, ymax = varDose.CQ.iqr.upper.8, color = '44 mg/kg'), fill = "skyblue")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.9, ymax = varDose.CQ.iqr.upper.9, color = '47 mg/kg'), fill = "plum1")+
-  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.10,ymax = varDose.CQ.iqr.upper.10,color = '50 mg/kg'), fill = "snow2")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.1, ymax = varDose.CQ.iqr.upper.1, color = '500 mg/day'), fill = "pink")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.2, ymax = varDose.CQ.iqr.upper.2, color = '556 mg/day'), fill = "peachpuff")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.3, ymax = varDose.CQ.iqr.upper.3, color = '611 mg/day'), fill = "wheat1")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.4, ymax = varDose.CQ.iqr.upper.4, color = '667 mg/day'), fill = "palegreen")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.5, ymax = varDose.CQ.iqr.upper.5, color = '722 mg/day'), fill = "paleturquoise1")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.6, ymax = varDose.CQ.iqr.upper.6, color = '778 mg/day'), fill = "lightblue1")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.7, ymax = varDose.CQ.iqr.upper.7, color = '883 mg/day'), fill = "thistle1")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.8, ymax = varDose.CQ.iqr.upper.8, color = '889 mg/day'), fill = "skyblue")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.9, ymax = varDose.CQ.iqr.upper.9, color = '944 mg/day'), fill = "plum1")+
+  geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.10,ymax = varDose.CQ.iqr.upper.10,color = '1000 mg/day'), fill = "snow2")+
   
-  geom_line(aes(y = varDose.CQmedian.1, color = '25 mg/kg'))+
-  geom_line(aes(y = varDose.CQmedian.2, color = '27 mg/kg'))+
-  geom_line(aes(y = varDose.CQmedian.3, color = '30 mg/kg'))+
-  geom_line(aes(y = varDose.CQmedian.4, color = '33 mg/kg' ))+
-  geom_line(aes(y = varDose.CQmedian.5, color = '36 mg/kg' ))+
-  geom_line(aes(y = varDose.CQmedian.6, color = '38 mg/kg' ))+
-  geom_line(aes(y = varDose.CQmedian.7, color = '41 mg/kg' ))+
-  geom_line(aes(y = varDose.CQmedian.8, color = '44 mg/kg' ))+
-  geom_line(aes(y = varDose.CQmedian.9, color = '47 mg/kg' ))+
-  geom_line(aes(y = varDose.CQmedian.10, color ='50 mg/kg' ))+
+  geom_line(aes(y = varDose.CQmedian.1, color = '500 mg/day'))+
+  geom_line(aes(y = varDose.CQmedian.2, color = '556 mg/day'))+
+  geom_line(aes(y = varDose.CQmedian.3, color = '611 mg/day'))+
+  geom_line(aes(y = varDose.CQmedian.4, color = '667 mg/day' ))+
+  geom_line(aes(y = varDose.CQmedian.5, color = '722 mg/day' ))+
+  geom_line(aes(y = varDose.CQmedian.6, color = '778 mg/day' ))+
+  geom_line(aes(y = varDose.CQmedian.7, color = '883 mg/day' ))+
+  geom_line(aes(y = varDose.CQmedian.8, color = '889 mg/day' ))+
+  geom_line(aes(y = varDose.CQmedian.9, color = '944 mg/day' ))+
+  geom_line(aes(y = varDose.CQmedian.10, color ='1000 mg/day' ))+
   labs(color = "Total Dose") +
   theme_bw(base_size = 22)
 
@@ -163,27 +164,27 @@ yformat2 <- list(title = "Central Compartment [DCQ] mg/mL",titlefont = f1,showti
 
 #format matrix for heatmap
 C19P2 <- ggplot(df_COVID19DCQ, aes(x = Timeday))+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.1, ymax = varDose.DCQ.iqr.upper.1, color = '25 mg/kg'), fill = "pink")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.2, ymax = varDose.DCQ.iqr.upper.2, color = '27 mg/kg'), fill = "peachpuff")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.3, ymax = varDose.DCQ.iqr.upper.3, color = '30 mg/kg'), fill = "wheat1")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.4, ymax = varDose.DCQ.iqr.upper.4, color = '33 mg/kg'), fill = "palegreen")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.5, ymax = varDose.DCQ.iqr.upper.5, color = '36 mg/kg'), fill = "paleturquoise1")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.6, ymax = varDose.DCQ.iqr.upper.6, color = '38 mg/kg'), fill = "lightblue1")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.7, ymax = varDose.DCQ.iqr.upper.7, color = '41 mg/kg'), fill = "thistle1")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.8, ymax = varDose.DCQ.iqr.upper.8, color = '44 mg/kg'), fill = "skyblue")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.9, ymax = varDose.DCQ.iqr.upper.9, color = '47 mg/kg'), fill = "plum1")+
-  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.10, ymax = varDose.DCQ.iqr.upper.10, color = '50 mg/kg'), fill = "snow2")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.1, ymax = varDose.DCQ.iqr.upper.1, color = '500 mg/day'), fill = "pink")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.2, ymax = varDose.DCQ.iqr.upper.2, color = '556 mg/day'), fill = "peachpuff")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.3, ymax = varDose.DCQ.iqr.upper.3, color = '611 mg/day'), fill = "wheat1")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.4, ymax = varDose.DCQ.iqr.upper.4, color = '667 mg/day'), fill = "palegreen")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.5, ymax = varDose.DCQ.iqr.upper.5, color = '722 mg/day'), fill = "paleturquoise1")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.6, ymax = varDose.DCQ.iqr.upper.6, color = '778 mg/day'), fill = "lightblue1")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.7, ymax = varDose.DCQ.iqr.upper.7, color = '883 mg/day'), fill = "thistle1")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.8, ymax = varDose.DCQ.iqr.upper.8, color = '889 mg/day'), fill = "skyblue")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.9, ymax = varDose.DCQ.iqr.upper.9, color = '944 mg/day'), fill = "plum1")+
+  geom_ribbon(aes(ymin =varDose.DCQ.iqr.lower.10, ymax = varDose.DCQ.iqr.upper.10, color = '1000 mg/day'), fill = "snow2")+
   
-  geom_line(aes(y = varDose.DCQmedian.1, color = '25 mg/kg'))+
-  geom_line(aes(y = varDose.DCQmedian.2, color = '27 mg/kg'))+
-  geom_line(aes(y = varDose.DCQmedian.3, color = '30 mg/kg' ))+
-  geom_line(aes(y = varDose.DCQmedian.4, color = '33 mg/kg' ))+
-  geom_line(aes(y = varDose.DCQmedian.5, color = '36 mg/kg' ))+
-  geom_line(aes(y = varDose.DCQmedian.6, color = '38 mg/kg' ))+
-  geom_line(aes(y = varDose.DCQmedian.7, color = '41 mg/kg' ))+
-  geom_line(aes(y = varDose.DCQmedian.8, color = '44 mg/kg' ))+
-  geom_line(aes(y = varDose.DCQmedian.9, color = '47 mg/kg' ))+
-  geom_line(aes(y = varDose.DCQmedian.10, color ='50 mg/kg' ))+
+  geom_line(aes(y = varDose.DCQmedian.1, color = '500 mg/day'))+
+  geom_line(aes(y = varDose.DCQmedian.2, color = '556 mg/day'))+
+  geom_line(aes(y = varDose.DCQmedian.3, color = '611 mg/day' ))+
+  geom_line(aes(y = varDose.DCQmedian.4, color = '667 mg/day' ))+
+  geom_line(aes(y = varDose.DCQmedian.5, color = '722 mg/day' ))+
+  geom_line(aes(y = varDose.DCQmedian.6, color = '778 mg/day' ))+
+  geom_line(aes(y = varDose.DCQmedian.7, color = '883 mg/day' ))+
+  geom_line(aes(y = varDose.DCQmedian.8, color = '889 mg/day' ))+
+  geom_line(aes(y = varDose.DCQmedian.9, color = '944 mg/day' ))+
+  geom_line(aes(y = varDose.DCQmedian.10, color ='1000 mg/day' ))+
   labs(color = "Total Dose") +
   theme_bw(base_size = 22)
 

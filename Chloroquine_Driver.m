@@ -218,9 +218,15 @@ end
 
 %set the doses to be used
 numDose = 10; %ten dose conditions
-Firstdose_vector_malaria = linspace(10,20,numDose)';
-Seconddose_vector_malaria = linspace(5,10,numDose)';
-dose_total_malaria = Firstdose_vector_malaria + 3.*Seconddose_vector_malaria;
+if RunCase ==1
+    Firstdose_vector = linspace(10,20,numDose)';
+    Seconddose_vector = linspace(5,10,numDose)';
+    dose_total_malaria = Firstdose_vector + 3.*Seconddose_vector;
+elseif RunCase ==2
+    Firstdose_vector = linspace(500,1000,numDose)';
+    Seconddose_vector = linspace(500,1000,numDose)';
+    dose_total_C19 = Firstdose_vector + 9.*Seconddose_vector; %ten total doses
+end
 
 % initialize matrices to hold data
 sensiCQall_dose = ones(timepoints, patients, numSensi, numDose); %hold the concentration of CQ in the central compartment for each timepoint over 3 days
@@ -228,7 +234,7 @@ sensiDCQall_dose= ones(timepoints, patients, numSensi, numDose); %hold the conce
 
 for dose = 1:numDose %iterate through 10 doses
     for sensiVar = 1: numSensi
-    [Time,sensiCQall_dose(:,:,sensiVar,dose), sensiDCQall_dose(:,:,sensiVar,dose), ~,~] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, Firstdose_vector_malaria(dose),Seconddose_vector_malaria(dose), MissedDose, sensiVar, PercentChange);
+    [Time,sensiCQall_dose(:,:,sensiVar,dose), sensiDCQall_dose(:,:,sensiVar,dose), ~,~] = Chloroquine_LocalSensi(WeightVal, v1cq, v2cq, v1dcq, v2dcq, K10, K30,kabs, DosingRegimen, Firstdose_vector(dose),Seconddose_vector(dose), MissedDose, sensiVar, PercentChange);
     end
     disp('done with dose number')
     disp(dose)
