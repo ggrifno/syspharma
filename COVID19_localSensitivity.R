@@ -108,13 +108,13 @@ mat_CQheat_C19 = as.matrix(df_CQheat_C19, rownames.force = NA)
 
 #format matrices for heatmaps
 rownames(mat_CQheat_C19)<- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
-colnames(mat_CQheat_C19)<- c('25.0','27.8','30.6','33.3', '36.1','38.9','41.7','44.4','47.2','50.0')
+colnames(mat_CQheat_C19)<- c('500.0','555.55','611.11','666.66','722.22','777.77','833.33', '888.88', '944.44','1000.00')
 mat_CQheat_C19 <- t(mat_CQheat_C19)
 
 #formatting for heat maps
 f1 <- list(size = 30)
 xformat1 <- list(title = "Variable", titlefont = f1, showticklabels = TRUE,  tickangle = 290, tickfont = f1)
-yformat1 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
+yformat1 <- list(title = "Total Dose (mg/day)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
 
 #heatmap plot of [CQ] in the central compartment
 heatCQ_C19 <- plot_ly(x=colnames(mat_CQheat_C19),y=rownames(mat_CQheat_C19),z = mat_CQheat_C19, type = "heatmap", colorbar = list(title = list(text = "Peak [CQ]", font = f1), tickfont = f1))
@@ -132,13 +132,13 @@ mat_DCQheat_C19 = as.matrix(df_DCQheat_C19,rownames.force = NA)
 
 #format matrix for heatmaps
 rownames(mat_DCQheat_C19)<- c("q", "vCQ1", "vCQ2", "vDCQ1", "vDCQ2", "k10", "k30","k12", "k21", "k23", "k34", "k43", "ka")
-colnames(mat_DCQheat_C19)<- c('25.0','27.8','30.6','33.3', '36.1','38.9','41.7','44.4','47.2','50.0')
+colnames(mat_DCQheat_C19)<- c('500.0','555.55','611.11','666.66','722.22','777.77','833.33', '888.88', '944.44','1000.00')
 mat_DCQheat_C19 <- t(mat_DCQheat_C19)
 
 #heatmap plot of [CQ] in the central compartment
 f1 <- list(size = 30)
 xformat1 <- list(title = "Variable", titlefont = f1, showticklabels = TRUE,  tickangle = 290, tickfont = f1)
-yformat1 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
+yformat1 <- list(title = "Total Dose (mg/day)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
 
 #heatmap plot of [CQ] in the central compartment
 heatDCQ_C19 <- plot_ly(x=colnames(mat_DCQheat_C19),y=rownames(mat_DCQheat_C19),z = mat_DCQheat_C19, type = "heatmap", colorbar = list(title = list(text = "Peak [DCQ]", font = f1), tickfont = f1))
