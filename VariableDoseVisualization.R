@@ -1,7 +1,5 @@
 #ggrifno systems pharma FINAL PROJECT
 
-
-
 #call libraries that will be needed
 library(R.matlab)
 library(ggplot2)

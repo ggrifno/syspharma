@@ -21,7 +21,7 @@ rownames(mat_1a)<- c("0.00144", '0.00018', '0.00099', '0.00086', '0.00076', '0.0
 colnames(mat_1a)<- c('25.0','27.77','30.55','33.3','36.1','38.88','41.66', '44.44', '47.22','50.0')
 
 #formatting for heat maps with Plotly
-f1 <- list(size = 20)
+f1 <- list(size = 25)
 xformat1 <- list(title = "CQ Clearance rate (hr-1)", titlefont = f1, showticklabels = TRUE, tickfont = f1)
 yformat1 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
 
@@ -42,13 +42,13 @@ rownames(mat_1b)<- c("0.00144", '0.00018', '0.00099', '0.00086', '0.00076', '0.0
 colnames(mat_1b)<- c('500.0','555.55','611.11','666.66','722.22','777.77','833.33', '888.88', '944.44','1000.00')
 
 #formatting for heat maps with Plotly
-f1 <- list(size = 20)
-xformat1 <- list(title = "CQ Clearance rate (hr-1)", titlefont = f1, showticklabels = TRUE, tickfont = f1)
-yformat1 <- list(title = "Total Dose (mg/kg)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
+f1 <- list(size = 25)
+xformat2 <- list(title = "CQ Clearance rate (hr-1)", titlefont = f1, showticklabels = TRUE, tickfont = f1)
+yformat2 <- list(title = "Total Dose (mg/day)", titlefont = f1, showticklabels = TRUE,tickfont = f1)
 
 #heatmap plot of [CQ] in the central compartment
 heatCOVID19 <- plot_ly(x=rownames(mat_1b),y=colnames(mat_1b),z = mat_1b, type = "heatmap", colorbar = list(title = list(text = "Peak [CQ]", font = f1), tickfont = f1))
-heatCOVID19<- heatCOVID19%>% layout(xaxis = xformat1, yaxis = yformat1)
+heatCOVID19<- heatCOVID19%>% layout(xaxis = xformat2, yaxis = yformat2)
 heatCOVID19
 
 #OLD CODE --------------------
