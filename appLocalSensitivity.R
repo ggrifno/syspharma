@@ -31,9 +31,14 @@ ui <- fluidPage(
                            "COVID-19" = "COVID-19")),
             
             # br() element to introduce extra vertical spacing
-            br(),
-            h3('ADD IN FIGURE CAPTION')
-            
+            # br(),
+            h3('Local Sensitivity Analysis'),
+            # h4('Sensitivity of the Central Compartment AUC'),
+            h6('A. The normalized sensitivity ((dY/y)/(dP/p)) of the area-under-the-curve (AUC) of the central compartment concentration of either CQ or DCQ is plotted in response to a 5% increase of each of the model input parameters'),
+            # h4('Time-Dependent Sensitivity of Concentration'),
+            h6('B. The changes in the normalized sensitivity of the central compartment concentration of either CQ or DCQ is plotted over two weeks in response to a 5% increase of each of the model input parameters'),
+            # h4('Variable Dose Heatmap'),
+            h6('C. The peak central compartment concentration of either CQ or DCQ is plotted in response to a 5% increase of each of the model input parameters, for ten initial dose conditions that range from the standard dose size to 200% of the standard dose. Doses are weight-based for malaria and fixed for COVID-19'),
         ),
         
         # Main panel for displaying outputs
@@ -41,14 +46,14 @@ ui <- fluidPage(
             
             # Output: Tabset w/ plot, summary, and table
             tabsetPanel(type = "tabs",
-                        tabPanel("Sensitivity of AUC", plotlyOutput("AUCbar")),
-                        tabPanel("Sensitivity Timecourse",
+                        tabPanel("A. Sensitivity of AUC", plotlyOutput("AUCbar")),
+                        tabPanel("B. Sensitivity Timecourse",
                                  br(),
                                  fluidRow(plotlyOutput("TimecourseCQ", width = "700px", height = "350px")),
                                  br(),
                                  fluidRow(plotlyOutput("TimecourseDCQ", width = "700px", height = "350px")),
                                  br()),
-                        tabPanel("Variable Dose Heatmap", 
+                        tabPanel("C. Variable Dose Heatmap", 
                                  fluidRow(plotlyOutput("HeatmapCQ"),plotlyOutput("HeatmapDCQ")))
             )
             
