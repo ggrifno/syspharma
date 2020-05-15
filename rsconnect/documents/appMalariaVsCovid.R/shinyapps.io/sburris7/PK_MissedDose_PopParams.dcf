@@ -5,9 +5,9 @@ account: sburris7
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2302002
-bundleId: 3149537
+bundleId: 3149573
 url: https://sburris7.shinyapps.io/PK_MissedDose_PopParams/
-when: 1589501105.12271
+when: 1589501707.2715
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: appLocalSensitivity.R|Chloroquine_Driver_MissedDose.m|Chloroquine_Driver.asv|Chloroquine_Driver.m|Chloroquine_Driver.m~|Chloroquine_eqns.m|Chloroquine_LocalSensi.m|Chloroquine_Main_MissedDose.m|Chloroquine_Main.m|Chloroquine_Malaria.m|Chloroquine_PK_CQCentral.mat|Chloroquine_PK_DQCentral.mat|Chloroquine_PK_parameters.mat|Chloroquine_PK.mat|Chloroquine_popPK.m|Chloroquine_sim_altdosing.m|Chloroquine_sim.m|COVID19_localSensitivity.R|CQ_TRIAL.m|demo_parasitedynamics.png|dose_COVID19.mat|fig1A_heatmap.R|fig1A.png|fig1Malaria.mat|fig1ParasiteBurden.mat|Fig1Results.png|fig2A.mat|fig2B.mat|fig2Malaria.mat|fig2ParasiteBurden.mat|Fig2Results.png|fig3A.mat|fig3B.mat|fig3Malaria.mat|fig3ParasiteBurden.mat|Fig3Results.png|figA1.mat|figA2.mat|global_sensi_COVID19.mat|global_sensi_Malaria.mat|Global_sensitivity.m|globalSensitivity_heatmap.R|globalSensResults.png|HeatDataCQdose.mat|HeatDataCQdoseCOVID19.mat|HeatDataCQtime.mat|HeatDataCQtimeCOVID19.mat|HeatDataDCQdose.mat|HeatDataDCQdoseCOVID19.mat|HeatDataDCQtime.mat|HeatDataDCQtimeCOVID19.mat|LateDosingFigure.jpeg|LocalSensiAUC_Malaria.mat|LocalSensiAUC-COVID-19.mat|LocalSensiAUC.mat|LocalSensiAUCCQ.mat|LocalSensiAUCDCQ.mat|LocalSensiCQ_Malaria.mat|LocalSensiCQ-COVID19.mat|LocalSensiCQ.mat|LocalSensiDCQ_Malaria.mat|LocalSensiDCQ-COVID19.mat|LocalSensiDCQ.mat|Malaria_localSensitivity.R|Missed_LateDosing.R|MissedFourth.jpg|NormalD_COVID_PK_AUC.mat|NormalD_COVID_PK_parameters.mat|NormalD_Malaria_PK_AUC.mat|NormalD_Malaria_PK_parameters.mat|OLDmalariaPDmodelDONTsubmit.m|Parasite_eqns.m|README.md|Rplot.pdf|Rplot01.jpeg|varDose_AUCCQ_COVID19.mat|varDose_AUCCQ_Malaria.mat|varDose_AUCCQ.mat|varDose_CQ_COVID19.mat|varDose_CQ_Malaria.mat|varDose_CQ.mat|varDose_DQ_COVID19.mat|varDose_DQ_Malaria.mat|varDose_DQ.mat|varDosefig_COVID19.png|varDosefig_malaria.fig|varDosefig_malaria.png|variableclearancefigure.png|VariableDoseVisualization.R|WeightDistribs.mat|weightDistribution_PK.png|weightsgraph_PK.png
