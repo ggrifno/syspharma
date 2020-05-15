@@ -121,8 +121,6 @@ f1 <- list(size = 25)
 xformat1 <- list(title = "Time (days)", titlefont = f1,showticklabels = TRUE, tickfont = f1)
 yformat1 <- list(title = "Central Compartment [CQ] mg/mL",titlefont = f1,showticklabels = TRUE, tickfont = f1)
 
-colnames(mat_DCQheat_C19)<- c('500.0','555.55','611.11','666.66','722.22','777.77','833.33', '888.88', '944.44','1000.00')
-
 #format matrix for heatmap
 C19P1 <- ggplot(df_COVID19CQ, aes(x = Timeday))+
   geom_ribbon(aes(ymin =varDose.CQ.iqr.lower.1, ymax = varDose.CQ.iqr.upper.1, color = '500 mg/day'), fill = "pink")+
