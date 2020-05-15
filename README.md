@@ -13,4 +13,4 @@ SJ Burris
 To run appMalariaVsCovid.R:
 1) Run the file Chloroquine_Driver.m in MATLAB so necessary data files are produced
 2) Run the file Chloroquine_Driver_MissedDose.m in MATLAB so necessary data files are produced
-3) Run the app in R
+3) Run the file appMalariaVsCovid.R in R. All necessary data should exist within the folden
