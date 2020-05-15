@@ -65,7 +65,7 @@ ui <- fluidPage(
 
 # Malaria: Univariate analysis local sensitivity bar graph -------------------------
 #load in data for univariate analysis
-DataAUC_Malaria = readMat('LocalSensiAUC.mat', header = T)
+DataAUC_Malaria = readMat('LocalSensiAUC_Malaria.mat', header = T)
 #organize as dataframes from .mat files
 df_AUC_Malaria = as.data.frame(DataAUC_Malaria)
 #add in a column for the variable names

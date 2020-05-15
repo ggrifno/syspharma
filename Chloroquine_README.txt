@@ -88,7 +88,8 @@ Produces:
 R VISUALIZATION and SHINY APPS
 
 RUN INSTRUCTIONS
-
+- You must run BOTH the malaria AND COVID-19 simulations using the MATLAB drivers before all the shiny apps will run
+- You must run the Chloroquine Missed Dose Driver for ALL 4 CASES before appMalariaVsCovid will run
 - You should be able to run all regular R files from Rstudio by highlighting all the lines of code and running them.
 Some figures will look different than the figures in our report file because we had to reduce the number of timepoints used for speed (see above)
 so that it doesn't take hours and hours to get all the needed data.

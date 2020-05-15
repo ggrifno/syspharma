@@ -13,7 +13,7 @@
 % figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 1;
+RunCase = 2;
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -376,7 +376,7 @@ CQclear_vector_Malaria = log(2)./(HL_vector_Malaria.*24);
 % save global sensitivity data - MALARIA
 dose_total_Malaria = dose_vector_Malaria(:,1) + 3.*dose_vector_Malaria(:,2); %sum the columns of the dose vector
 save global_sensi_Malaria.mat peakCQ_mean_Malaria dose_total_Malaria CQclear_vector_Malaria;
-disp('DONE WITH VARIABLE DOSE SIMULATION - MALARIA ')
+disp('DONE WITH GLOBAL SENSITIVITY - MALARIA ')
 elseif RunCase == 2 %CHOOSE COVID-19 SIMULATION
 % Global Sensitivity Plots - COVID-19
 
@@ -388,7 +388,7 @@ CQclear_vector_C19 = log(2)./(HL_vector_C19.*24);
 
 % save global sensitivity data - COVID-19
 save global_sensi_COVID19.mat peakCQ_mean_C19 dose_vector_C19 CQclear_vector_C19;
-disp('DONE WITH VARIABLE DOSE SIMULATION - COVID-19 ')
+disp('DONE WITH GLOBAL SENSITIVITY - COVID-19 ')
 end
 %% MALARIA PHARMACODYNAMICS: DEMO FIGURES (USED FOR CLASS PRESENTATION ONLY, NOT FOR FINAL REPORT)
 
