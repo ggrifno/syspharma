@@ -10,7 +10,7 @@ library(gtable)
 library(Hmisc)
 library(pracma)
 library("viridis")
-# Define UI for application that draws a histogram
+# Define UI
 ui <- fluidPage(
 
     # Application title
@@ -36,7 +36,7 @@ ui <- fluidPage(
         column(6,
                plotlyOutput('violin2',height=350,width=400),
                h5('Panel D: Violin plot showing distribution of AUC of Desethylchloroquine in the central compartment for all patients.')
-        ),
+        )
     ),
     wellPanel(
         selectInput('disease',"Disease",c('Malaria','COVID-19'))
@@ -44,38 +44,61 @@ ui <- fluidPage(
     ),
     tabPanel("Missed/Late Dosing, Malaria",
              fluidRow(
+               column(12,
+                      h5('Click on an object in the legend to remove/add a trace. Double-click on an object in the legend to isolate the trace.')
+               ),
+               hr(),
+               column(12,align='center',
+                      h5(tags$b('A: Missed Dose'))
+               ),
+               hr(),
                  column(6,
                         plotlyOutput('MissedCQ',height=350,width=400),
-                        h5('Chloroquine Concentration')
+                        h5('Panel A1: Concentration of chloroquine over time for normal dosing and missing the second, third, and fourth doses. The dark lines represent the medians and the ribbons represent the interquartile ranges.')
                  ),
                  column(6,
                         plotlyOutput('MissedDCQ',height=350,width=400),
-                        h5('Desethlychloroquine Concentration')
+                        h5('Panel A2: Concentration of desethylchoroquine over time for normal dosing and missing the second, third, and fourth doses. The dark lines represent the medians and the ribbons represent the interquartile ranges.')
                  ),
+               hr(),
+               column(12,align='center',
+                      h5(tags$b('B: Late Second Dose'))
+               ),
+               hr(),
                  column(6,
                         plotlyOutput('Late2CQ',height=350,width=400),
-                        h5('Chloroquine Concentration')
+                        h5('Panel B1: Concentration of chloroquine over time for taking the second dose late by certain intervals. The dark lines represent the medians and the ribbons represent the interquartile ranges.')
                  ),
                  column(6,
                         plotlyOutput('Late2DQ',height=350,width=400),
-                        h5('Desethylchloroquine Concentration')
+                        h5('Panel B2: Concentration of desethylchloroquine over time for taking the second dose late by certain intervals. The dark lines represent the medians and the ribbons represent the interquartile ranges.')
                  ),
+               hr(),
+               column(12,align='center',
+                      h5(tags$b('C: Late Third Dose'))
+               ),
+               hr(),
                  column(6,
                         plotlyOutput('Late3CQ',height=350,width=400),
-                        h5('Chloroquine Concentration')
+                        h5('Panel C1: Concentration of chloroquine over time for taking the third dose late by certain intervals. The dark lines represent the medians and the ribbons represent the interquartile ranges.')
                  ),
                  column(6,
                         plotlyOutput('Late3DQ',height=350,width=400),
-                        h5('Desethylchloroquine Concentration')
+                        h5('Panel C2: Concentration of desethylchloroquine over time for taking the third dose late by certain intervals. The dark lines represent the medians and the ribbons represent the interquartile ranges.')
                  ),
+               hr(),
+               column(12,align='center',
+                      h5(tags$b('D: Late Fourth Dose'))
+               ),
+               hr(),
                  column(6,
                         plotlyOutput('Late4CQ',height=350,width=400),
-                        h5('Chloroquine Concentration')
+                        h5('Panel D1: Concentration of chloroquine over time for taking the fourth dose late by certain intervals. The dark lines represent the medians and the ribbons represent the interquartile ranges.')
                  ),
                  column(6,
                         plotlyOutput('Late4DQ',height=350,width=400),
-                        h5('Desethylchloroquine Concentration')
-                 ),
+                        h5('Panel D2: Concentration of desethylchloroquine over time for taking the fourth dose late by certain intervals. The dark lines represent the medians and the ribbons represent the interquartile ranges.')
+                 )
              )),
     tabPanel("Population Parameters",
       # Sidebar with a slider input for number of bins 
@@ -86,7 +109,7 @@ ui <- fluidPage(
         ),
         column(6,
                plotlyOutput('scatter'),
-               h5('Pabel B: A scatter plot displaying the disribution of the selected parameter over the weight range')
+               h5('Panel B: A scatter plot displaying the disribution of the selected parameter over the weight range')
         ),
         column(6,
                wellPanel(sliderInput("Weight", label = h3("Weight Range"), min = 0, 
@@ -317,7 +340,7 @@ server <- function(input, output) {
             geom_line(aes(y = MedianYCQCM4, color = 'Missed Fourth'),alpha = 0.7, size = 1) +
             geom_ribbon(aes(ymin=P25YCQCM4, ymax=P75YCQCM4, color = 'Missed Fourth'), fill = 'purple4', alpha=0.1) +
             #formating lines
-            ggtitle('A: Missed Dosing') + # for the main title
+            ggtitle('Chloroquine Concentration') + # for the main title
             xlab('Time (days)') + # for the x axis label
             ylab('Concentration (mg/L)') + # for the y axis label
             theme_bw()+
@@ -346,7 +369,7 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YDQCM3, ymax=P75YDQCM3, color = 'Missed Third'), fill = 'orange',alpha=0.1) +
         geom_line(aes(y = MedianYDQCM4, color = 'Missed Fourth'),alpha = 0.7, size = 1) +
         geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = 'Missed Fourth'), fill = 'purple4',alpha=0.1) +
-        
+        ggtitle('Desethylchloroquine Concentration')+
         #formating lines
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
@@ -379,7 +402,7 @@ server <- function(input, output) {
       geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '6 Hours Late'), fill = 'orange', alpha=0.1) +
       
       #formating lines
-      ggtitle('B: Taking Second Dose Late') + # for the main title
+      ggtitle('Chloroquine Concentration') + # for the main title
       xlab('Time (days)') + # for the x axis label
       ylab('Concentration (mg/L)') + # for the y axis label
       theme_bw()+
@@ -408,7 +431,7 @@ server <- function(input, output) {
       geom_ribbon(aes(ymin=P25YDQCM3, ymax=P75YDQCM3, color = '3.6 Hours Late'), fill = 'violetred4', alpha=0.1) +
       geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = '4.8 Hours Late'), fill = 'red', alpha=0.1) +
       geom_ribbon(aes(ymin=P25YDQCM5, ymax=P75YDQCM5, color = '6 Hours Late'), fill = 'orange', alpha=0.1) +
-      
+      ggtitle('Desethylchloroquine Concentration') + # for the main title
       #formating lines
       xlab('Time (days)') + # for the x axis label
       ylab('Concentration (mg/L)') + # for the y axis label
@@ -441,7 +464,7 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '24 Hours Late'), fill = 'violetred4', alpha=0.1) +
         
         #formating lines
-        ggtitle('C: Taking Third Dose Late') + # for the main title
+        ggtitle('Chloroquine Concentration') + # for the main title
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
         theme_bw()+
@@ -471,7 +494,7 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YDQCM3, ymax=P75YDQCM3, color = '14.4 Hours Late'), fill = 'grey', alpha=0.1) +
         geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM4, color = '19.2 Hours Late'), fill = 'purple4', alpha=0.1) +
         geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM5, color = '24 Hours Late'), fill = 'violetred4', alpha=0.1) +
-        
+        ggtitle('Desethylchloroquine Concentration') + # for the main title
         #formating lines
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
@@ -504,7 +527,7 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YCQCM5, ymax=P75YCQCM5, color = '24 Hours Late'), fill = 'violetred4', alpha=0.1) +
         
         #formating lines
-        ggtitle('D: Taking Final Dose Late') + # for the main title
+        ggtitle('Chloroquine Concentration') + # for the main title
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
         theme_bw()+
@@ -536,7 +559,7 @@ server <- function(input, output) {
         geom_ribbon(aes(ymin=P25YDQCM4, ymax=P75YDQCM5, color = '24 Hours Late'), fill = 'violetred4', alpha=0.1) +
         
         #formating lines
-        ggtitle('Desethylchloroquine') + # for the main title
+        ggtitle('Desethylchloroquine Concentration') + # for the main title
         xlab('Time (days)') + # for the x axis label
         ylab('Concentration (mg/L)') + # for the y axis label
         theme_bw()+
