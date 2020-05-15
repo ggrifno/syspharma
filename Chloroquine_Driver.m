@@ -13,7 +13,7 @@
 % figures exactly as they are present in the report would take several hours of run time.
 %% Run simulations for different disease and dosing cases
 clear all;
-RunCase = 2;
+RunCase = 1;
 
 % 1. Malaria    Normal Dosing
 % 2. COVID-19   Normal Dosing
@@ -344,30 +344,6 @@ for dose = 1:10
     end
 end
 
-%plot data
-% subplot(2,2,1); %CQ figure
-% for dose = 1:10
-%     hold on
-% plot(Time, varDose_CQmedian(:,dose));
-% end
-% xlabel('Time (hrs)','FontSize',12)
-% ylabel('Plasma [CQ] (mg/L)','FontSize',12)
-% hold off
-% 
-% subplot(2,2,3); %DCQ figure
-% for dose = 1:10
-%     hold on
-% plot(Time, varDose_DCQmedian(:,dose));
-% end
-% xlabel('Time (hrs)','FontSize',12)
-% ylabel('Plasma [DCQ] (mg/L)','FontSize',12)
-% hold off
-
-% subplot(2,2,[2,4]); %AUCC figure
-% bar(dose_total_C19, varDose_AUCCQmedian);
-% xlabel('Dose (mg/kg)','FontSize',12)
-% ylabel('Mean AUCC','FontSize',12)
-% hold off
 Timeday = Time./24;
 %save data for later visualization in R
 if RunCase ==1
@@ -380,73 +356,6 @@ elseif RunCase ==2
     save varDose_DQ_COVID19.mat Timeday varDose_DCQmedian varDose_DCQ_iqr_upper varDose_DCQ_iqr_lower;
     save varDose_AUCCQ_COVID19.mat varDose_AUCCQmedian varDose_AUCCQ_iqr_upper varDose_AUCCQ_iqr_lower;
 end
-%% COVID-19: Collect the changes in Concentration of CQ, DCQ and AUCCQ, AUCDCQ for varible doses
-
-%NEED TO SWITCH 'RUNCASE' TO VALUE '2' TO GET THE COVID-19 PATIENTS INFORMATION
-% Firstdose_vector_C19 = linspace(500,1000,10)';
-% Seconddose_vector_C19 = linspace(500,1000,10)';
-% dose_total_C19 = Firstdose_vector_C19 + 9.*Seconddose_vector_C19; %ten total doses
-% [timepoints, patients] = size(YCQCentral);
-% %get all the traces for all the patients
-% varDose_CQ_C19 = zeros(timepoints, patients, 10); %output AVERAGE YCQcentral, YDQcentral, AUC
-% varDose_DCQ_C19= zeros(timepoints, patients, 10); %output AVERAGE YCQcentral, YDQcentral, AUC
-% varDose_AUCCQ_C19 = zeros(1, patients, 10); %output AVERAGE YCQcentral, YDQcentral, AUC
-% 
-% for i = 1:10 %iterate througha all the doses
-% [PatientsData, WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs, Time, YCQCentral, YDQCentral, AUCCQ, AUCDCQ] = Chloroquine_Main(DosingRegimen, Firstdose_vector_C19(i),Seconddose_vector_C19(i), MissedDose, DisplayPlots); 
-%     varDose_CQ_C19(:,:,i) = YCQCentral;
-%     varDose_DCQ_C19(:,:,i) = YDQCentral;
-%     varDose_AUCCQ_C19(:,:,i) = AUCCQ;
-% 
-% end
-% %% find the mean value ACROSS PATIENTS of the output for each dose condition, for each time point
-% varDose_CQ_mean_C19 = zeros(timepoints, 10, 1);
-% varDose_DCQ_mean_C19 = zeros(timepoints, 10, 1);
-% varDose_AUCCQ_mean_C19 = zeros(10, 1);
-% 
-% for dose = 1:10
-%     for t = 1:timepoints
-% %         meanvar = mean(varDose_CQ_M(t,:,dose));
-%         varDose_CQ_mean_C19(t,dose,1) = mean(varDose_CQ_C19(t,:,dose));
-%         varDose_DCQ_mean_C19(t,dose,1) = mean(varDose_DCQ_C19(t,:,dose));
-%         varDose_AUCCQ_mean_C19(dose,1) = mean(varDose_AUCCQ_C19(1,:,dose));
-%     end
-% end
-% 
-% %plot data
-% 
-% subplot(2,2,1); %CQ figure
-% for dose = 1:10
-%     hold on
-% plot(Time, varDose_CQ_mean_C19(:,dose));
-% end
-% xlabel('Time (hrs)','FontSize',12)
-% ylabel('Plasma [CQ] (mg/L)','FontSize',12)
-% % title('Mean Plasma [CQ] for Variable Dose Size','FontSize',14)
-% % lgd = legend('25.0','27.8', '30.5','33.3', '36.1', '38.9','41.7','44.4','47.22','50.0');
-% % title(lgd,'Total Dose Size (mg/kg)')
-% hold off
-% 
-% subplot(2,2,3); %DCQ figure
-% for dose = 1:10
-%     hold on
-% plot(Time, varDose_DCQ_mean_C19(:,dose));
-% end
-% xlabel('Time (hrs)','FontSize',12)
-% ylabel('Plasma [DCQ] (mg/L)','FontSize',12)
-% % title('Mean Central Compartment [DCQ] for Variable Dose Size','FontSize',14)
-% % lgd = legend('25.0','27.8', '30.5','33.3', '36.1', '38.9','41.7','44.4','47.22','50.0');
-% % title(lgd,'Total Dose Size (mg/kg)')
-% hold off
-% 
-% subplot(2,2,[2,4]); %AUCC figure
-% bar(Firstdose_vector_C19, varDose_AUCCQ_mean_C19);
-% xlabel('Dose (mg/kg)','FontSize',12)
-% ylabel('Mean AUCC','FontSize',12)
-% % title('Mean Central Compartment [DCQ] for Variable Dose Size','FontSize',14)
-% % lgd = legend('25.0','27.8', '30.5','33.3', '36.1', '38.9','41.7','44.4','47.22','50.0');
-% % title(lgd,'Total Dose Size (mg/kg)')
-% hold off
 
 %% Global Sensitivity Plots - MALARIA
 
@@ -545,9 +454,9 @@ legend('total parasites', 'parasites cleared', 'parasite growth')
 %REDUCED FOR THE PROJECT DRAFT FOR CODE SPEED (WOULD TAKE ~25 MINUTES
 %OTHERWISE)
 
-doseRange = 2; %test 10 timepoints in the dose range
-rangekP = 2;
-rangeBurden = 2; %test across 10 possible initial burdens
+doseRange = 10; %test 10 points in the dose range
+rangekP = 10;
+rangeBurden = 10; %test across 10 possible initial burdens
 MIC = 0.0067;   %literature reported value for MIC is 0.0067
 
 %% Figure 1: vary dose and parasite clearance
