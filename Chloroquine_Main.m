@@ -159,6 +159,7 @@ kabs = [KA(:,1); KA(:,2);];
 %% Save Data
 %Save datafiles for each parameters, with respective labels
 PatientsData = [WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs];
+save('PatientData.mat','SexLabels','WeightVal','v1cq','v2cq','v1dcq','v2dcq','K10','K30','kabs');
 
 %% Simulation
 YCQCentral = []; YDQCentral= []; Time = [];
