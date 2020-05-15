@@ -67,7 +67,7 @@ for clearanceCounter = 1:rangekP %iterate through all the parasite clearance OR,
 for dose = 1:doseRange %iterate through all the CQ dose settings (ten total)
 for patient =1:patients %iterate through all 100 patients
     if CQconcBelow_MIC1(dose,patient) ==0 %just looking at all 100 patients for the first dose condition (dose conditions 1/10)
-    tspan = 0:3.5:Time(end); %if the patient never drops below MIC, simulate ALL observation time
+    tspan = 0:3.7:Time(end); %if the patient never drops below MIC, simulate ALL observation time
     kP_val = kP_vector(clearanceCounter); %run model using one of the kPs to indicate parasite sensitivity to CQ
     r = 0.009625;   %hr-1; let the parasites double every 3 days rate = .693/72hr
     a = [kP_val r]; %input vector for ODE parasite solver
@@ -80,7 +80,7 @@ for patient =1:patients %iterate through all 100 patients
     
     else %this means that the patient DOES drop below MIC in the first half of simulation
     droppoint = CQconcBelow_MIC1(dose,patient); %time point at which the patient's [CQ] drops below MIC
-    tspan1 = 0:1.5:Time(droppoint,1); %index the Time vector get the TIME (in hrs) where the conc falls below 0 
+    tspan1 = 0:3.5:Time(droppoint,1); %index the Time vector get the TIME (in hrs) where the conc falls below 0 
     kP_val = kP_vector(clearanceCounter); %demonstrate model using median kP AT FIRST
     r = 0.009625;   %hr-1; let the growth rate of the parasite be double every 3 days = .693/72hr
     a = [kP_val r]; %input vector for ODE solver

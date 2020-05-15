@@ -86,12 +86,13 @@ if MissedDose ~= 2
     y00(3) = y00(3) + OtherDose;
     TotalDrug = TotalDrug + OtherDose;
 end
-% for i =  1:3 % OBSERVE OVER 3 DAYS FOR TESTING/DEBUGGING (FASTEST SIMULATION)
- for i =  1:21 %observe over 21 days for full timecourse - NEED THIS FOR PHARMACODYNAMICS
-% for i =  1:7 %observe over only 7 days for global sensitivity and local MALARIA sensitivity
-% for i =  1:14 %observe over only 14 days for global sensitivity and local COVID-19 sensitivity
+for i =  1:3 % OBSERVE OVER 3 DAYS FOR FASTEST SIMULATION
+%  for i =  1:21 %observe over 21 days for full timecourse - ONLY USE FOR
+%  GENERATING FULL PHARMACODYNAMICS RESULTS, WILL TAKE 1 HOUR TO RUN
+% for i =  1:7 %observe over 7 days for global sensitivity and local MALARIA sensitivity
+% for i =  1:14 %observe over 7 days (14 half-days) for LOCAL COVID-19 sensitivity
   options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
-  tspan = 0:.9:TimeBetweenDoses; %set time frame
+  tspan = 0:5.9:TimeBetweenDoses; %set time frame
   [t,y] = ode45(@Chloroquine_eqns,tspan,y00,options,p);
   
   %update time and concentration values for entire simulation
