@@ -22,7 +22,7 @@ weightCutOff = 50;  %lbs
 Male = 1;
 Female = 2; % indexing for matrices
 
-%NEED TO JUSTIFY WHY WE CHOSE THESE, these should all be in lbs
+%all in lbs
 means(Male) = 148;
 means(Female) = 134;
 SD(Male) = 61.57;
