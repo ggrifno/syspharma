@@ -168,7 +168,7 @@ Data4_DQ <- readMat("LateDose4_Malaria_PK_DQCentral.mat",header=T) # from mat fi
 D4_DQ <- as.data.frame(Data4_DQ) # Convert .mat data into a data frame.
 
 #Load Patient Parameters data
-mat <- readMat('data.mat',header=T) # from mat file
+mat <- readMat('PatientData.mat',header=T) # from mat file
 dat <- as.data.frame(mat) # Convert .mat data into a data frame.
 #reformat data
 dat $SexLabels<- as.factor(dat$SexLabels)
