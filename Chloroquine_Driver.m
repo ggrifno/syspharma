@@ -109,9 +109,11 @@ switch RunCase
 end
 
 %% Local sensitivity analysis - central compartment AUC
-% MAKE SURE TO SET THE TIME DISTANCE IN "CHLOROQUINE_SIM" TO CALCUATE OVER ONLY THE FIRST 3 DAYS FOR MALARIA SIMULATION
+%% RUN THE SIMULATION WITH RUNCASE = 1 FOR MALARIA,THEN RE-RUN WITH RUNCASE = 2 FOR COVID-19
+% SET THE TIME DISTANCE IN "CHLOROQUINE_SIM" TO CALCUATE ONLY THE FIRST 7 DAYS FOR MALARIA SIMULATION
 % run baseline case using the DRIVER section defined above, which creates patients and runs the simulation
 % now perturb only ONE of the variables in the parameter vector at a time and return the AUC for both CQ and DCQ
+
 numSensi = 13;%number of variables in need of local sensitivity testing
 %initialize matrix of sensitivity values
 [patients, ~] = size(WeightVal);
@@ -161,8 +163,9 @@ if RunCase ==1 %Malaria
 elseif RunCase ==2 %COVID-19
     save LocalSensiAUC-COVID-19.mat sensiAUCCQmean sensiAUCCQstdev sensiAUCDCQmean sensiAUCDCQstdev;
 end
-
+disp('done with univariate local sensitivity analysis bar graph data simulation');
 %% Time-dependent local sensitivity
+%%  SET THE TIME DISTANCE IN "CHLOROQUINE_SIM" TO CALCUATE THE FIRST 7 DAYS FOR TIMECOURSE SIMULATION
 sensiCQnorm = ones(timepoints, patients, numSensi);
 sensiDCQnorm= ones(timepoints, patients, numSensi);
 
@@ -213,9 +216,9 @@ elseif RunCase ==2
     save LocalSensiCQ-COVID19.mat Timenew sensiCQmean sensiCQstdev;
     save LocalSensiDCQ-COVID19.mat Timenew sensiDCQmean sensiDCQstdev
 end
-
+disp('done with time-dependent local sensitivity analysis data simulation');
 %% Sensitivity to concentrations changes with changing dose
-
+%%  SET THE TIME DISTANCE IN "CHLOROQUINE_SIM" TO CALCUATE THE FIRST 7 DAYS FOR THIS SIMULATION
 %set the doses to be used
 numDose = 10; %ten dose conditions
 if RunCase ==1
@@ -287,9 +290,10 @@ elseif RunCase ==2
     save HeatDataDCQdoseCOVID19.mat sensiDCQmax_dose
     save HeatDataDCQtimeCOVID19.mat sensiDCQtime_dose
 end
-
+disp('done with local sensitivity variable dose heatmap data simulation');
+disp('DONE WITH LOCAL SENSITIVITY');
 %% VARIABLE DOSE: Collect the changes in Concentration of CQ, DCQ and AUCCQ
-%NEED TO SWITCH 'RUNCASE' TO VALUE '2' TO GET THE COVID-19 PATIENTS INFORMATION
+%%  SET THE TIME DISTANCE IN "CHLOROQUINE_SIM" TO CALCUATE THE FIRST 7 DAYS FOR THIS TIMECOURSE SIMULATION
 if RunCase ==1
     Firstdose_vector = linspace(10,20,10)';
     Seconddose_vector = linspace(5,10,10)';
@@ -356,12 +360,12 @@ elseif RunCase ==2
     save varDose_DQ_COVID19.mat Timeday varDose_DCQmedian varDose_DCQ_iqr_upper varDose_DCQ_iqr_lower;
     save varDose_AUCCQ_COVID19.mat varDose_AUCCQmedian varDose_AUCCQ_iqr_upper varDose_AUCCQ_iqr_lower;
 end
-
-%% Global Sensitivity Plots - MALARIA
-
-%SIZE OF VECTORS INDICATE NUMBER OF CONDITIONS TO TEST. THIS IS GREATLY
-%REDUCED FOR THE PROJECT DRAFT FOR CODE SPEED (WOULD TAKE ~25 MINUTES
-%OTHERWISE)
+disp('DONE WITH VARIABLE DOSE SIMULATION')
+%% Global Sensitivity Analysis Plots
+if RunCase == 1 %MALARIA SIMULATION
+% Global Sensitivity Plots - MALARIA
+%SIZE OF VECTORS INDICATE NUMBER OF CONDITIONS TO TEST. THIS IS REDUCED FOR THE PROJECT SUBMISSION
+%FOR CODE SPEED (WOULD TAKE ~25 MINUTES OTHERWISE)
 dose_vector_Malaria = [linspace(10,20,10)', linspace(5,10,10)'];
 HL_vector_Malaria = linspace(20, 60,10)';
 CQclear_vector_Malaria = log(2)./(HL_vector_Malaria.*24);
@@ -372,8 +376,9 @@ CQclear_vector_Malaria = log(2)./(HL_vector_Malaria.*24);
 % save global sensitivity data - MALARIA
 dose_total_Malaria = dose_vector_Malaria(:,1) + 3.*dose_vector_Malaria(:,2); %sum the columns of the dose vector
 save global_sensi_Malaria.mat peakCQ_mean_Malaria dose_total_Malaria CQclear_vector_Malaria;
-
-%% Global Sensitivity Plots - COVID-19
+disp('DONE WITH VARIABLE DOSE SIMULATION - MALARIA ')
+elseif RunCase == 2 %CHOOSE COVID-19 SIMULATION
+% Global Sensitivity Plots - COVID-19
 
 dose_vector_C19 = [linspace(500,1000,10)', linspace(500,1000,10)'];
 HL_vector_C19 = linspace(20, 60,10)';
@@ -382,10 +387,10 @@ CQclear_vector_C19 = log(2)./(HL_vector_C19.*24);
 [peakCQ_C19, peakCQ_mean_C19, timePeak_C19, timePeak_mean_C19] = Global_sensitivity(WeightVal, SexLabels, v1cq, v2cq, v1dcq, v2dcq, K10, K30, kabs,DosingRegimen, dose_vector_C19, CQclear_vector_C19);
 
 % save global sensitivity data - COVID-19
-% dose_total = dose_vector(:,1) + 3.*dose_vector(:,2); %sum the columns of the dose vector
 save global_sensi_COVID19.mat peakCQ_mean_C19 dose_vector_C19 CQclear_vector_C19;
-
-%% PHARMACODYNAMICS: P. vivax infection response to CQ administration (DEFINE PARAMETERS)
+disp('DONE WITH VARIABLE DOSE SIMULATION - COVID-19 ')
+end
+%% MALARIA PHARMACODYNAMICS: DEMO FIGURES (USED FOR CLASS PRESENTATION ONLY, NOT FOR FINAL REPORT)
 
 % %numbers and mechanism specific to P. vivax
 % %given information
@@ -448,11 +453,10 @@ save global_sensi_COVID19.mat peakCQ_mean_C19 dose_vector_C19 CQclear_vector_C19
 % title('Demonstration of First-Order Model of Parasite Dynamics')
 % legend('total parasites', 'parasites cleared', 'parasite growth')
 
-%% PHARMACODYNAMICS: determining PD response of Malaria P.vivax infection to CQ administration with variable dose, kP and inital parasite burden
+%% MALARIA PHARMACODYNAMICS: determining PD response of P.vivax infection to CQ with variable dose, kP and inital parasite burden
 [timepoints, patients] = size(YCQCentral); %get the size to determine sizes of matrices inside Malaria simulation
 %SIZE OF VECTORS INDICATE NUMBER OF CONDITIONS TO TEST. THIS IS GREATLY
-%REDUCED FOR THE PROJECT DRAFT FOR CODE SPEED (WOULD TAKE ~25 MINUTES
-%OTHERWISE)
+%REDUCED FOR THE PROJECT SUBMISSION FOR CODE SPEED (WOULD TAKE 1 HOUR OTHERWISE)
 
 doseRange = 2; %test 10 points in the dose range
 rangekP = 2;
@@ -509,5 +513,5 @@ save fig3Malaria.mat percentCured3MIC1 kP_vector3 totalDose;
 MIC2 = 2*0.067;
 [Parasites_at_end3MIC2, percentCured3MIC2] = Chloroquine_Malaria(DosingRegimen, doseRange,rangekP,rangeBurden, FirstDosing,OtherDosing,timepoints,kP_vector1, P0_vector1,FirstDoseRange, SecondDoseRange, patients, MIC2, MissedDose,DisplayPlots);
 
-save fig3Malaria.mat percentCured1 kP_vector3 totalDose;
+save fig3Malaria.mat percentCured3MIC2 kP_vector3 totalDose;
 disp('done with Malaria PD figure 3');
